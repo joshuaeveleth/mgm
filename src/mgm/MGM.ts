@@ -11,6 +11,7 @@ import { Host, HostMgr } from './Host';
 import { UUIDString } from '../halcyon/UUID';
 import { Sql } from '../mysql/sql';
 import { SetupRoutes } from './routes/MGMRouter';
+import { JWT } from './util/JWT';
 
 import * as express from 'express';
 import * as http from 'http';
@@ -73,6 +74,7 @@ export class MGM {
     new HostMgr(db);
     new EmailMgr(this.conf.mgm.mail);
     new PendingUserMgr(db);
+    new JWT(this.conf.halcyon.user_server);
   }
 
   static isUser(req, res, next) {

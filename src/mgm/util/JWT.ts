@@ -1,9 +1,24 @@
 
 var urllib = require('urllib');
 
-export class ConsoleToken {
+export class JWT {
+  private static _instance: JWT = null;
   
-  static getToken(userServerURL: string, username: string, password: string): Promise<string>{
+  private userServerURL: string = '';
+
+  constructor(userServerURL: string) {
+    if (JWT._instance) {
+      throw new Error('JWT singleton has already been initialized');
+    }
+    this.userServerURL = userServerURL;
+    JWT._instance = this;
+  }
+
+  public static instance(): JWT {
+    return JWT._instance;
+  }
+  
+  static GetConsoleToken(username: string, password: string): Promise<string>{
     let url = userServerURL + '/auth/jwt/remote-console';
     return urllib.request(url, {
       method: 'POST',

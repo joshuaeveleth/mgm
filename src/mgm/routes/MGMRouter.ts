@@ -18,11 +18,11 @@ import { OfflineMessageHandler } from './OfflineMessageHandler';
 import { RegisterHandler } from './RegisterHandler';
 import { FreeswitchHandler } from './FreeswitchHandler';
 
-export function SetupRoutes(mgm: MGM, userServerURL: string, voiceIP: string): express.Router{
+export function SetupRoutes(mgm: MGM, voiceIP: string): express.Router{
   let router = express.Router();
   let fs = new Freeswitch(voiceIP);
 
-  router.use('/auth', AuthHandler(userServerURL));
+  router.use('/auth', AuthHandler());
   router.use('/console', ConsoleHandler(mgm));
   router.use('/task', TaskHandler(mgm));
   router.use('/estate', EstateHandler());

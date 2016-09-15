@@ -3,14 +3,14 @@ import * as express from 'express';
 import { User, UserMgr, Credential } from '../../halcyon/User';
 import { MGM } from '../MGM';
 import { UUIDString } from '../../halcyon/UUID';
-import { ConsoleToken } from '../util/consoleToken';
+import { JWT } from '../util/JWT';
 
 export interface Halcyon {
   getUserByName(string): Promise<User>
   setUserPassword(string, Credential): Promise<void>
 }
 
-export function AuthHandler(userServerURL: string): express.Router {
+export function AuthHandler(): express.Router {
   let router: express.Router = express.Router();
 
   //resume session
@@ -62,21 +62,21 @@ export function AuthHandler(userServerURL: string): express.Router {
         throw new Error('Account Suspended');
       }
       if(godLevel < 250){
-        return false;
+        return '';
       }
       // we have already checked the credential and user level, this should only succeed
-      return ConsoleToken.getToken(userServerURL, username, password);
+      return JWT.GetConsoleToken(username, password);
     }).then( (token) => {
-      res.cookie('name', u.getUsername());
-      res.cookie('uuid', u.getUUID().toString());
-      res.cookie('userLevel', u.getGodLevel());
-      res.cookie('email', u.getEmail());
+      res.cookie('name', candidateUser.getUsername());
+      res.cookie('uuid', candidateUser.getUUID().toString());
+      res.cookie('userLevel', candidateUser.getGodLevel());
+      res.cookie('email', candidateUser.getEmail());
 
       res.send(JSON.stringify({
         Success: true,
-        username: u.getUsername(),
-        accessLevel: u.getGodLevel(),
-        email: u.getEmail()
+        username: candidateUser.getUsername(),
+        accessLevel: candidateUser.getGodLevel(),
+        email: candidateUser.getEmail(),
         token: token
       }));
     }).catch((err: Error) => {
