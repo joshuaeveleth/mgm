@@ -1,12 +1,19 @@
 # mgm
 
-This branch of MGM is a partial rewrite in node-js.  MOSES is shifting towards supporting the halcyon fork of OpenSimulator, and is dropping support for Simiangrid-based front-ends.  This rewrite currently has less funcitonality than the normal MGM: 1- halcyon does not have IAR support.  2- halcyon does not load OAR files accross a network connection, so the controls do not work in MGM. 3- Suspending users is not as explicit in halcyon as in simian, so the front-end must be configured using minloginlevel set to 1 for it to work.
+This is a complete rewrite of MGM with a new look at security and performance.  It is aimed at new MOSES deployments using the halcyon codebase in place of Opensimulator.
+
+While Halcyon supports oar files, not everything works perfectly.
+
+Halcyon does not support IAR files at this time, and there is no workaround.
 
 # Upgrading
 
 This branch does not perform any MySQL migration, use at your own risk.
 
 # Installation
+
+npm install -g typescript typings webpack
+npm i
 
 typings install
 npm install
