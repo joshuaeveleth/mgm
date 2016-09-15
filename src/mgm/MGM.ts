@@ -19,8 +19,6 @@ var urllib = require('urllib');
 import fs = require('fs');
 import { RegionLogs } from './util/regionLogs';
 
-var urllib = require('urllib');
-
 export interface Config {
   mgm: {
     db_host: string
