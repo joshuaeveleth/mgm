@@ -15,8 +15,8 @@ import { Sql } from './mysql';
 import { Auth } from './auth';
 
 //connect to the databases
-let mgmDb = new Sql(conf.mgm.db);
-let halcyonDB = new Sql(conf.halcyon.db);
+let mgmDb = Sql.connectMGM(conf.mgm.db);
+let halcyonDB = Sql.connectHalcyon(conf.halcyon.db);
 
 //initialize singletons
 new Auth();
