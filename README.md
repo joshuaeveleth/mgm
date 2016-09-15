@@ -12,7 +12,7 @@ This branch does not perform any MySQL migration, use at your own risk.
 
 # Installation
 
-sudo npm install -g typescript typings webpack
+sudo npm install -g typescript typings
 npm install
 sudo npm link typescript
 typings install
@@ -32,6 +32,9 @@ Initialize the mgm database by applying the sql files under doc in order.
 
 Compile the html client using the following:
 npm run build-client
+
+build the server by using:
+npm run build-server
 
 # Other Information
 

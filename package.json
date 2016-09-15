@@ -3,8 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "config": "^1.21.0",
+    "express": "^4.14.0",
+    "jsonwebtoken": "^7.1.9",
+    "log4js": "^0.6.38",
+    "mysql": "^2.11.1",
     "react": "^15.3.1",
-    "react-dom": "^15.3.1"
+    "react-dom": "^15.3.1",
+    "socket.io": "^1.4.8",
+    "socketio-jwt": "^4.5.0",
+    "typescript": "^1.8.10",
+    "webpack": "^1.13.2"
   },
   "repository": {},
   "devDependencies": {
@@ -15,6 +24,8 @@
     "node": ">=5.8.0"
   },
   "scripts": {
-    "build-client": "webpack && cp src/client/index.html dist/public"
+    "start": "node dist/server.js",
+    "build-client": "node_modules/.bin/webpack && cp src/client/index.html dist/public",
+    "build-server": "node_modules/.bin/tsc --project src/server/tsconfig.json"
   }
 }

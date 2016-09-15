@@ -1,6 +1,42 @@
 
-/// <reference path="../typings/index.d.ts" />
+/// <reference path="../../typings/index.d.ts" />
+/// <reference path="../definitions/socketio-jwt.d.ts" />
 
+import * as express from 'express';
+import * as log4js from 'log4js';
+import * as io from 'socket.io';
+import * as jwt from 'jsonwebtoken'
+import * as io_jwt from 'socketio-jwt'
+import * as bodyParser from 'body-parser'
+
+var conf = require('../settings.js');
+
+import { Sql } from './mysql';
+import { Auth } from './auth';
+
+//connect to the databases
+let mgmDb = new Sql(conf.mgm.db);
+let halcyonDB = new Sql(conf.halcyon.db);
+
+//initialize singletons
+new Auth();
+
+
+
+/*let app = express();
+
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+//static file hosting optionally here
+
+app.post('/auth', bodyParser.json(), (req, res) => {
+
+})*/
+
+
+/*
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as path from "path";
@@ -35,3 +71,4 @@ app.use('/', mgm.getRouter());
 app.listen(3000, function() {
   console.log('MGM listening on port 3000!');
 });
+*/
