@@ -9,7 +9,7 @@
                 <button style="float: left;" ng-click="estate.showAddModal()" ng-if="auth.activeUser.accessLevel > 249" class="btn btn-secondary btn-sm">Add A New Estate</button>
             </div>
             <div style="top: 6em; bottom:0; position:absolute; width: 95%; overflow: auto;">
-                <div class="row" style="width: 100%;" ng-repeat="est in estates | orderBy:'name'" ng-class-odd="'odd'" ng-class-even="'even'">
+                <div class="row" style="width: 100%;" ng-repeat="est in estates | orderBy:'name' track by est.id" ng-class-odd="'odd'" ng-class-even="'even'">
                     <span style="float: left; width: 15em; padding-left: 1em;">{{est.name}} <button ng-click="estate.remove(est)" style="float: right;">Remove</button></span>
                     <span style="float: left; width: 10em">{{est.regions.length}}</span>
                     <span style="float: left; width: 20em">{{userName(est.owner)}}</span>
