@@ -14,5 +14,7 @@
   "engines": {
     "node": ">=5.8.0"
   },
-  "scripts": {}
+  "scripts": {
+    "build-client": "webpack && cp src/client/index.html dist/public"
+  }
 }

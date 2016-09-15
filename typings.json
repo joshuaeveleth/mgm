@@ -9,6 +9,8 @@
     "multer": "registry:dt/multer#0.0.0+20160317120654",
     "mysql": "registry:dt/mysql#0.0.0+20160316155526",
     "node": "registry:dt/node#6.0.0+20160514165920",
+    "react": "registry:dt/react#0.14.0+20160829191040",
+    "react-dom": "registry:dt/react-dom#0.14.0+20160412154040",
     "serve-static": "registry:dt/serve-static#0.0.0+20160501131543",
     "xml2js": "registry:dt/xml2js#0.0.0+20160317120654"
   }

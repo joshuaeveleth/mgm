@@ -12,9 +12,12 @@ This branch does not perform any MySQL migration, use at your own risk.
 
 # Installation
 
-npm install -g typescript typings webpack
-npm i
+sudo npm install -g typescript typings webpack
+npm install
+sudo npm link typescript
+typings install
 
+~~~~!~!~!~!!!~~~~~~
 typings install
 npm install
 cp settings.js.example settings.js && vim settings.js
@@ -24,6 +27,11 @@ to manually create users on the command line:
 node dist/cli.js createUser FNAME LNAME PASSWORD [EMAIL] [GODLEVEL]
 
 Initialize the mgm database by applying the sql files under doc in order.
+
+# Building
+
+Compile the html client using the following:
+npm run build-client
 
 # Other Information
 
