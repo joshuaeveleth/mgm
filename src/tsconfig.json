@@ -42,6 +42,7 @@
     "./mgm/util/Freeswitch.ts",
     "./mgm/util/OfflineMgr.ts",
     "./mgm/util/regionLogs.ts",
+    "./mgm/util/consoleToken.ts",
     "./migrate.ts",
     "./mysql/sql.ts",
     "./simian/Connector.ts",

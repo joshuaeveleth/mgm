@@ -90,7 +90,7 @@ export class MGM {
   }
 
   getRouter(): express.Router {
-    return SetupRoutes(this, this.conf.mgm.voiceIP);
+    return SetupRoutes(this, this.conf.halcyon.user_server, this.conf.mgm.voiceIP);
   }
 
   getGridInfo(): any {

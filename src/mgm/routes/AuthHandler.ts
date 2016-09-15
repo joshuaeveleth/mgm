@@ -3,13 +3,14 @@ import * as express from 'express';
 import { User, UserMgr, Credential } from '../../halcyon/User';
 import { MGM } from '../MGM';
 import { UUIDString } from '../../halcyon/UUID';
+import { ConsoleToken } from '../util/consoleToken';
 
 export interface Halcyon {
   getUserByName(string): Promise<User>
   setUserPassword(string, Credential): Promise<void>
 }
 
-export function AuthHandler(): express.Router {
+export function AuthHandler(userServerURL: string): express.Router {
   let router: express.Router = express.Router();
 
   //resume session
@@ -46,6 +47,11 @@ export function AuthHandler(): express.Router {
     let auth = req.body;
     let username: string = auth.username || '';
     let password: string = auth.password || '';
+    ConsoleToken.getToken(userServerURL, username, password).then( (token) => {
+      console.log('received console token: ' + token)
+    }).catch( (err) => {
+      console.log('Error getting console token: ' + err.message);
+    });
     UserMgr.instance().getUserByName(username).then((u: User) => {
       if (u.getCredential().compare(password)) {
 
