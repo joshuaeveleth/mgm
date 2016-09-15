@@ -8,11 +8,11 @@ import * as path from "path";
 import { Sql } from './mysql/sql';
 import { MGM } from './mgm/MGM';
 import { User } from './halcyon/User';
-import { Host } from './mgm/host';
+import { Host } from './mgm/Host';
 import { UUIDString } from './halcyon/UUID';
 import { Job } from './mgm/Job';
 import { Region } from './mgm/Region';
-import { Estate } from './halcyon/estate';
+import { Estate } from './halcyon/Estate';
 import { Group } from './halcyon/Group';
 
 var conf = require('../settings.js');
