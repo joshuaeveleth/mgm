@@ -38,6 +38,7 @@ export function AuthHandler(userServerURL: string): express.Router {
     res.clearCookie('uuid');
     res.clearCookie('userLevel');
     res.clearCookie('email');
+    res.clearCookie('token');
     res.send(JSON.stringify({
       Success: true
     }));
@@ -47,41 +48,39 @@ export function AuthHandler(userServerURL: string): express.Router {
     let auth = req.body;
     let username: string = auth.username || '';
     let password: string = auth.password || '';
-    ConsoleToken.getToken(userServerURL, username, password).then( (token) => {
-      console.log('received console token: ' + token)
-    }).catch( (err) => {
-      console.log('Error getting console token: ' + err.message);
-    });
+    // check if user exists, mgm should know
+    let candidateUser: User = null;
     UserMgr.instance().getUserByName(username).then((u: User) => {
-      if (u.getCredential().compare(password)) {
-
-        if (u.getGodLevel() === 0) {
-          res.send(JSON.stringify({
-            Success: false,
-            Message: 'Account Suspended'
-          }));
-        } else {
-          res.cookie('name', u.getUsername());
-          res.cookie('uuid', u.getUUID().toString());
-          res.cookie('userLevel', u.getGodLevel());
-          res.cookie('email', u.getEmail());
-
-          res.send(JSON.stringify({
-            Success: true,
-            username: u.getUsername(),
-            accessLevel: u.getGodLevel(),
-            email: u.getEmail()
-          }));
-        }
-
-      } else {
-        //reject
-        res.send(JSON.stringify({
-          Success: false,
-          Message: 'Invalid Credentials'
-        }));
+      candidateUser = u;
+    }). then( () => {
+      if( ! candidateUser.getCredential().compare(password) ){
+        throw new Error('Invalid Credentials');
       }
+    }). then( () => {
+      let godLevel = candidateUser.getGodLevel()
+      if(godLevel < 1){
+        throw new Error('Account Suspended');
+      }
+      if(godLevel < 250){
+        return false;
+      }
+      // we have already checked the credential and user level, this should only succeed
+      return ConsoleToken.getToken(userServerURL, username, password);
+    }).then( (token) => {
+      res.cookie('name', u.getUsername());
+      res.cookie('uuid', u.getUUID().toString());
+      res.cookie('userLevel', u.getGodLevel());
+      res.cookie('email', u.getEmail());
+
+      res.send(JSON.stringify({
+        Success: true,
+        username: u.getUsername(),
+        accessLevel: u.getGodLevel(),
+        email: u.getEmail()
+        token: token
+      }));
     }).catch((err: Error) => {
+      // An error blocked login somewhere, notify the client
       res.send(JSON.stringify({ Success: false, Message: err.message }));
     });
   });

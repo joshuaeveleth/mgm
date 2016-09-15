@@ -20,6 +20,8 @@ export class ConsoleToken {
       switch(result.denied){
         case 'WrongUserLevel':
           return false;
+        case 'InvalidPassword':
+          return false;
         case undefined:
           return result.token || false;
         default:
