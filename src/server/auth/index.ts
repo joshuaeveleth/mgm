@@ -28,9 +28,14 @@ export class Auth {
         username: nameParts[0],
         lastname: nameParts[1]
       }
-    }).then( (u: User) => {
+    }).then((u: User) => {
+      if (!u) throw new Error('Account does not exist');
+
       console.log(u);
-    })
+    }).catch((err: Error) => {
+      // An error blocked login somewhere, notify the client
+      res.send(JSON.stringify({ Success: false, Message: err.message }));
+    });
     /*
     let candidateUser: User = null;
     UserMgr.instance().getUserByName(username).then((u: User) => {
