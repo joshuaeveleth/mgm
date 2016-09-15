@@ -306,6 +306,9 @@ export class MGM {
     config['Mesh'] = {};
     config['Mesh']['AllowMeshUpload'] = 'true';
 
+    config['JWT'] = {};
+    config['JWT']['enabled'] = 'true';
+
     config['SimulatorFeatures'] = {};
     config['SimulatorFeatures']['MapImageServerURI'] = this.conf.halcyon.user_server;
     config['SimulatorFeatures']['SearchServerURI'] = this.conf.halcyon.user_server;
