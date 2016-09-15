@@ -19,11 +19,11 @@ let mgmDb = Sql.connectMGM(conf.mgm.db);
 let halcyonDB = Sql.connectHalcyon(conf.halcyon.db);
 
 //initialize singletons
-new Auth();
+new Auth(halcyonDB);
 
 
 
-/*let app = express();
+let app = express();
 
 app.use(bodyParser.urlencoded({
   extended: false
@@ -31,11 +31,11 @@ app.use(bodyParser.urlencoded({
 
 //static file hosting optionally here
 
-app.post('/auth', bodyParser.json(), (req, res) => {
+app.post('/auth/login', bodyParser.json(), (req, res) => { Auth.instance().handleLogin(req, res) });
 
-})*/
-
-
+let server = app.listen(3000, () => {
+  console.log('mgm initialized');
+});
 /*
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
