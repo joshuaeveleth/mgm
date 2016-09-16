@@ -1,16 +1,19 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-
 import { Router, Route, browserHistory } from 'react-router';
+
 import { createStore } from 'redux'
 
-import { Authenticated } from "./components/Authenticated";
+import { Authenticated } from "./components/authenticated";
+import { Account } from "./components/authenticated/Account";
+import { Regions } from "./components/authenticated/Regions";
+import { Grid } from "./components/authenticated/Grid";
+import { Users } from "./components/authenticated/Users";
+import { PendingUsers } from "./components/authenticated/PendingUsers";
 
-import { Account } from "./components/Account";
-import { Regions } from "./components/Regions";
-import { Grid } from "./components/Grid";
-import { Users } from "./components/Users";
-import { PendingUsers } from "./components/PendingUsers";
+import { Unauthenticated } from "./components/unauthenticated";
+import { Register } from "./components/unauthenticated/Register";
+
 
 import { mgmState } from "./redux/reducers";
 let store = createStore(mgmState);
@@ -38,7 +41,11 @@ export class Application extends React.Component<{}, {}> {
         } else {
             // show splash, login, registration tree
             return (
-                <h1>You are not logged in</h1>
+                <Router history={browserHistory}>
+                    <Route path="/" component={Unauthenticated}>
+                        <Route path="/register" component={Register}/>
+                    </Route>
+                </Router>
             )
         }
     }
