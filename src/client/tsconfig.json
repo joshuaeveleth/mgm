@@ -18,6 +18,8 @@
         "./components/authenticated/Users.tsx",
         "./components/unauthenticated/index.tsx",
         "./components/unauthenticated/Register.tsx",
+        "./components/unauthenticated/Login.tsx",
+        "./components/unauthenticated/Password.tsx",
         "./index.tsx",
         "./redux/actions.ts",
         "./redux/reducers.ts"

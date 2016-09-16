@@ -12,6 +12,7 @@
     "mysql": "registry:dt/mysql#0.0.0+20160316155526",
     "node": "registry:dt/node#6.0.0+20160915134512",
     "react": "registry:dt/react#0.14.0+20160829191040",
+    "react-bootstrap": "registry:dt/react-bootstrap#0.0.0+20160806072414",
     "react-dom": "registry:dt/react-dom#0.14.0+20160412154040",
     "redux": "registry:dt/redux#3.5.2+20160703092728",
     "redux-actions": "registry:dt/redux-actions#0.8.0+20160521154116",
