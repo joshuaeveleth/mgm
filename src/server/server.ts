@@ -19,7 +19,7 @@ let mgmDb = Sql.connectMGM(conf.mgm.db);
 let halcyonDB = Sql.connectHalcyon(conf.halcyon.db);
 
 //initialize singletons
-new Auth(halcyonDB);
+new Auth(halcyonDB, conf.mgm.tokenKey, conf.halcyon.user_server);
 
 
 
