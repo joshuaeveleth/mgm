@@ -9,7 +9,12 @@
     },
     "files": [
         "../../typings/index.d.ts",
-        "./components/Hello.tsx",
+        "./components/Authenticated.tsx",
+        "./components/Account.tsx",
+        "./components/Grid.tsx",
+        "./components/PendingUsers.tsx",
+        "./components/Regions.tsx",
+        "./components/Users.tsx",
         "./index.tsx"
     ]
 }
