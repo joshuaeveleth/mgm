@@ -6,6 +6,7 @@
     "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160322035842",
     "lodash": "registry:dt/lodash#4.14.0+20160830145422",
     "log4js": "registry:dt/log4js#0.0.0+20160608042355",
+    "md5": "registry:dt/md5#2.1.0+20160521153251",
     "mime": "registry:dt/mime#0.0.0+20160316155526",
     "multer": "registry:dt/multer#0.0.0+20160317120654",
     "mysql": "registry:dt/mysql#0.0.0+20160316155526",
