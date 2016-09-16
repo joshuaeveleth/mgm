@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "node dist/server.js",
-    "build-client": "node_modules/.bin/webpack && cp src/client/index.html dist/public",
+    "build-client": "node_modules/.bin/webpack && cp src/client/index.html dist/public && cp -a src/static/* dist/public",
     "build-server": "node_modules/.bin/tsc --project src/server/tsconfig.json"
   }
 }
