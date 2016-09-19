@@ -2,7 +2,10 @@
 import { action, LOGIN_ACTION, LOGOUT_ACTION } from './actions';
 
 const initialState = {
-  authenticated: false
+  auth: {
+    loggedIn: false,
+    errorMsg: ''
+  }
 }
 
 export function mgmState(state = initialState, action: action) {

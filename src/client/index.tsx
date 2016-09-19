@@ -25,7 +25,7 @@ let store = createStore(mgmState);
 export class Application extends React.Component<{}, {}> {
     render() {
         let state = store.getState();
-        if (state.authenticated) {
+        if (state.auth.loggerIn) {
             // show authenticated tree
             return (
                 <Router history={browserHistory}>
@@ -46,13 +46,22 @@ export class Application extends React.Component<{}, {}> {
                     <Route path="/" component={Unauthenticated}>
                         <IndexRoute component={Splash}/>
                         <Route path="/register" component={Register}/>
-                        <Route path="/login" component={Login}/>
+                        <Route path="/login" component={wrapComponent(Login,{ store: store})}/>
                         <Route path="/password" component={Password}/>
                     </Route>
                 </Router>
             )
         }
     }
+}
+
+// thin wrapper to handle passing props to Route components
+let wrapComponent = function(component: React.ComponentClass<{}>, props: {}){
+    return React.createClass({
+        render: () => {
+            return React.createElement(component, props);
+        }
+    });
 }
 
 ReactDOM.render(<Application />, document.getElementById("app"));
