@@ -1,5 +1,18 @@
 
-import { action, LOGIN_ACTION, LOGOUT_ACTION } from './actions';
+import { 
+  action, 
+  LOGIN_ACTION, 
+  LOGOUT_ACTION, 
+  AUTH_SET_ERROR_MESSAGE, 
+  AUTH_CLEAR_ERROR_MESSAGE 
+} from './actions';
+
+export interface mgmState {
+  auth: {
+    loggedIn: boolean
+    errorMsg: string
+  }
+} 
 
 const initialState = {
   auth: {
@@ -8,15 +21,31 @@ const initialState = {
   }
 }
 
-export function mgmState(state = initialState, action: action) {
+export function mgmApp(state = initialState, action: action) {
   switch (action.type) {
     case LOGIN_ACTION:
       return (<any>Object).assign({}, state, {
-        authenticated: true
+        auth: {
+          loggedIn: true
+        }
       })
     case LOGOUT_ACTION:
       return (<any>Object).assign({}, state, {
-        authenticated: false
+        auth: {
+          loggedIn: false
+        }
+      })
+    case AUTH_CLEAR_ERROR_MESSAGE:
+      return (<any>Object).assign({}, state, {
+        auth: {
+          errorMsg: ''
+        }
+      })
+    case AUTH_SET_ERROR_MESSAGE:
+    return (<any>Object).assign({}, state, {
+        auth: {
+          errorMsg: action.message
+        }
       })
     default:
       return state;

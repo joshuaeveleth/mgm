@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
 import { Authenticated } from "./components/authenticated";
 import { Account } from "./components/authenticated/Account";
@@ -19,49 +20,43 @@ import { Password } from "./components/unauthenticated/Password";
 import { Splash } from "./components/Splash";
 
 
-import { mgmState } from "./redux/reducers";
-let store = createStore(mgmState);
+import { mgmApp, mgmState } from "./redux/reducers";
+let store = createStore<mgmState>(mgmApp);
 
 export class Application extends React.Component<{}, {}> {
     render() {
         let state = store.getState();
-        if (state.auth.loggerIn) {
+        if (state.auth.loggedIn) {
             // show authenticated tree
             return (
-                <Router history={browserHistory}>
-                    <Route path="/" component={Authenticated}>
-                        <IndexRoute component={Splash}/>
-                        <Route path="/account" component={Account}/>
-                        <Route path="/regions" component={Regions}/>
-                        <Route path="/grid" component={Grid}/>
-                        <Route path="/users" component={Users}/>
-                        <Route path="/pending" component={PendingUsers}/>
-                    </Route>
-                </Router>
+                <Provider store={store}>
+                    <Router history={browserHistory}>
+                        <Route path="/" component={Authenticated}>
+                            <IndexRoute component={Splash}/>
+                            <Route path="/account" component={Account}/>
+                            <Route path="/regions" component={Regions}/>
+                            <Route path="/grid" component={Grid}/>
+                            <Route path="/users" component={Users}/>
+                            <Route path="/pending" component={PendingUsers}/>
+                        </Route>
+                    </Router>
+                </Provider>
             )
         } else {
             // show splash, login, registration tree
             return (
-                <Router history={browserHistory}>
-                    <Route path="/" component={Unauthenticated}>
-                        <IndexRoute component={Splash}/>
-                        <Route path="/register" component={Register}/>
-                        <Route path="/login" component={wrapComponent(Login,{ store: store})}/>
-                        <Route path="/password" component={Password}/>
-                    </Route>
-                </Router>
+                <Provider store={store}>
+                    <Router history={browserHistory}>
+                        <Route path="/" component={Unauthenticated}>
+                            <IndexRoute component={Login}/>
+                            <Route path="/register" component={Register}/>
+                            <Route path="/password" component={Password}/>
+                        </Route>
+                    </Router>
+                </Provider>
             )
         }
     }
-}
-
-// thin wrapper to handle passing props to Route components
-let wrapComponent = function(component: React.ComponentClass<{}>, props: {}){
-    return React.createClass({
-        render: () => {
-            return React.createElement(component, props);
-        }
-    });
 }
 
 ReactDOM.render(<Application />, document.getElementById("app"));
