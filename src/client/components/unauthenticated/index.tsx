@@ -2,7 +2,7 @@ import * as React from "react";
 import { Store } from 'redux'
 import { mgmState } from '../../redux/reducers';
 
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { Link } from '../Link';
 
 import { Register } from "./Register";
@@ -40,13 +40,13 @@ export class Unauthenticated extends React.Component<unauthenticatedProps, {}> {
             <Navbar>
                 <Navbar.Header>
                     <Navbar.Toggle />
-                    <Link className="navbar-brand" href="/" store={this.props.store}>MGM</Link>
+                    <Navbar.Brand><Link href="/" store={this.props.store}>MGM</Link></Navbar.Brand>
                 </Navbar.Header>
                 <Navbar.Collapse>
-                    <ul className="nav navbar-nav">
-                        <li><Link href="/password" activeStyle={{ color: 'red' }} store={this.props.store}>Recover Password</Link></li>
-                        <li><Link href="/register" activeStyle={{ color: 'red' }} store={this.props.store}>Register</Link></li>
-                    </ul>
+                    <Nav>
+                        <NavItem><Link href="/password" activeStyle={{ color: 'red' }} store={this.props.store}>Recover Password</Link></NavItem>
+                        <NavItem><Link href="/register" activeStyle={{ color: 'red' }} store={this.props.store}>Register</Link></NavItem>
+                    </Nav>
                 </Navbar.Collapse>
             </Navbar>
         )
@@ -73,6 +73,5 @@ export class Unauthenticated extends React.Component<unauthenticatedProps, {}> {
                     </div>
                 )
         }
-
     }
 }
