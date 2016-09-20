@@ -9,12 +9,36 @@ interface loginProps {
 }
 
 export class Login extends React.Component<loginProps, {}> {
+
+    state: {
+        msg: string,
+        username: string,
+        password: string
+    }
+
+
+    constructor(props: loginProps) {
+        super(props);
+        this.state = {
+            msg: '',
+            username: '',
+            password: ''
+        };
+    }
+
+    componentWillMount() {
+
+    }
+    componentWillUnmount() {
+
+    }
+
     render() {
-        //let msg = this.context.store.getState().auth.errorMsg;
+        let msg = this.props.store.getState().auth.errorMsg;
         return (
             <div>
                 <h1>Login View</h1>
-                <p>err message goes here</p>
+                <p>{msg}</p>
                 <Splash />
             </div>
         )

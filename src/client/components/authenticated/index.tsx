@@ -1,9 +1,15 @@
 import * as React from "react";
-import { Link } from 'react-router'
+import { Store } from 'redux'
+import { mgmState } from '../../redux/reducers';
 
-export class Authenticated extends React.Component<{}, {}> {
+interface authenticatedProps {
+    store: Store<mgmState>
+}
+
+export class Authenticated extends React.Component<authenticatedProps, {}> {
     render() {
-        return (
+        return <h1>Authenticated View</h1>
+        /*return (
             <div>
                 <h1>React Router Tutorial</h1>
                 <ul role="nav">
@@ -17,6 +23,6 @@ export class Authenticated extends React.Component<{}, {}> {
                 {this.props.children}
 
             </div>
-        )
+        )*/
     }
 }

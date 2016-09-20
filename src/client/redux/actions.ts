@@ -2,6 +2,7 @@
 export interface action {
   type: string
   message?: string
+  url?: string
 }
 
 /** Types */
@@ -9,6 +10,8 @@ export const LOGIN_ACTION = 'LOGIN_ACTION';
 export const LOGOUT_ACTION = 'LOGOUT_ACTION';
 export const AUTH_SET_ERROR_MESSAGE = 'AUTH_SET_ERROR_MESSAGE';
 export const AUTH_CLEAR_ERROR_MESSAGE = 'AUTH_CLEAR_ERROR_MESSAGE';
+
+export const NAVIGATE_TO = 'NAVIGATE_TO';
 
 export function loginAction(){
   return { type: LOGIN_ACTION };
@@ -24,4 +27,8 @@ export function setAuthErrorMessage(msg: string){
 
 export function clearAuthErrorMessage(){
   return { type: AUTH_CLEAR_ERROR_MESSAGE };
+}
+
+export function navigateTo(url: string){
+  return { type: NAVIGATE_TO, url: url}
 }
