@@ -11,6 +11,29 @@ export interface LinkProps {
 }
 
 export class Link extends React.Component<LinkProps, {}> {
+    private sub: Redux.Unsubscribe;
+    state: {
+        username: string
+        password: string
+        errorMsg: string
+    }
+
+    constructor(props: LinkProps){
+        super(props);
+        this.sub = this.props.store.subscribe(() => {
+            console.log('state changed...');
+            this.setState({
+                route: this.props.store.getState().url
+            })
+        });
+        this.state = {
+            username: '', password: '', errorMsg: ''
+        };
+    }
+
+    componentWillUnmount() {
+        this.sub();
+    }
 
     handleClick() {
         this.props.store.dispatch(navigateTo(this.props.href));

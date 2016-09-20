@@ -8,7 +8,6 @@ import { Link } from '../Link';
 import { Register } from "./Register";
 import { Password } from "./Password";
 import { Login } from "./Login";
-import { Splash } from "../Splash";
 
 interface unauthenticatedProps {
     store: Store<mgmState>
@@ -72,7 +71,6 @@ export class Unauthenticated extends React.Component<unauthenticatedProps, {}> {
                     <div>
                         {navbar}
                         <Login store={this.props.store}/>
-                        <Splash />
                     </div>
                 )
         }
