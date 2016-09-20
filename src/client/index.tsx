@@ -1,11 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { createStore } from 'redux'
-
-import { Authenticated } from "./components/authenticated";
-
-import { Unauthenticated } from "./components/unauthenticated";
+import { createStore, Store } from 'redux'
 
 import { mgmApp, mgmState } from "./redux/reducers";
 import { navigateTo } from "./redux/actions"
@@ -21,18 +17,6 @@ store.subscribe( () => {
 })
 store.dispatch(navigateTo(window.location.pathname));
 
-export class Application extends React.Component<{}, {}> {
+import { App } from "./components/App";
 
-    render() {
-        let state = store.getState();
-        if (state.auth.loggedIn) {
-            // show authenticated tree
-            return <Authenticated store={store} />
-        } else {
-            // show splash, login, registration tree
-            return <Unauthenticated store={store} />
-        }
-    }
-}
-
-ReactDOM.render(<Application />, document.getElementById("app"));
+ReactDOM.render(<App store={store}/>, document.getElementById("app"));

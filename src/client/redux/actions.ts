@@ -1,8 +1,11 @@
 
+import { User } from "./reducers";
+
 export interface action {
   type: string
   message?: string
   url?: string
+  user?: User
 }
 
 /** Types */
@@ -13,8 +16,11 @@ export const AUTH_CLEAR_ERROR_MESSAGE = 'AUTH_CLEAR_ERROR_MESSAGE';
 
 export const NAVIGATE_TO = 'NAVIGATE_TO';
 
-export function loginAction(){
-  return { type: LOGIN_ACTION };
+export function loginAction(user: User){
+  return { 
+    type: LOGIN_ACTION,
+    user: user
+  };
 }
 
 export function logoutFunction(){

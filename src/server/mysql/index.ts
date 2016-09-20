@@ -33,7 +33,8 @@ export class Sql {
         max: 5,
         min: 0,
         idle: 10000
-      }
+      },
+      logging: false
     });
 
     return {};
@@ -47,7 +48,8 @@ export class Sql {
         max: 5,
         min: 0,
         idle: 10000
-      }
+      },
+      logging: false
     });
 
     return {

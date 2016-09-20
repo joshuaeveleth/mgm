@@ -22,7 +22,6 @@ export class Unauthenticated extends React.Component<unauthenticatedProps, {}> {
     constructor(props: unauthenticatedProps){
         super(props);
         this.urlSub = this.props.store.subscribe(() => {
-            console.log('state changed...');
             this.setState({
                 route: this.props.store.getState().url
             })

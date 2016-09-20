@@ -3,6 +3,7 @@ import * as React from "react";
 import { Splash } from "../Splash";
 import { Store } from 'redux'
 import { mgmState } from '../../redux/reducers';
+import { loginAction } from '../../redux/actions';
 
 import { Form, FormGroup, FormControl, ControlLabel, Button, Alert } from "react-bootstrap"
 
@@ -34,17 +35,43 @@ export class Login extends React.Component<loginProps, {}> {
     onPassword(e: { target: { value: string } }) {
         this.setState({ password: e.target.value })
     }
-    handleLogin(){
+    handleLogin() {
         console.log('login attempt with: ');
-        console.log(this.state);
-        this.setState({
-            msg: 'This is not implemented'
-        })
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/auth/login');
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+        xhr.onload = () => {
+            if (xhr.status !== 200) {
+                console.log('Request failed.  Returned status of ' + xhr.status);
+            } else {
+                let res = JSON.parse(xhr.response);
+                if(res.Success){
+                    console.log('auth succeeded');
+                    this.props.store.dispatch(loginAction({
+                        username: res.username,
+                        godLevel: res.accessLevel,
+                        email: res.email,
+                        token: res.token
+                    }));
+                } else {
+                    console.log('auth failed');
+                    this.setState({
+                        msg: res.Message
+                    })
+                }
+            }
+        };
+        xhr.send('payload='+JSON.stringify({
+            username: this.state.username,
+            password: this.state.password
+        }));
+
     }
 
     render() {
         let errorMsg = <div></div>
-        if(this.state.msg){
+        if (this.state.msg) {
             errorMsg = <Alert bsStyle="danger">{this.state.msg}</Alert>
         }
         return (
@@ -52,11 +79,11 @@ export class Login extends React.Component<loginProps, {}> {
                 <h1>Login View</h1>
                 <Form inline={true}>
                     <FormGroup>
-                        <ControlLabel>Username:</ControlLabel>
+                        <ControlLabel>Username: </ControlLabel>
                         <FormControl placeholder="username" onChange={this.onUsername.bind(this) }/>
-                        <ControlLabel>Password:</ControlLabel>
+                        <ControlLabel>Password: </ControlLabel>
                         <FormControl type="password" placeholder="password" onChange={this.onPassword.bind(this) }/>
-                        <Button onClick={this.handleLogin.bind(this)}>Login</Button>
+                        <Button onClick={this.handleLogin.bind(this) }>Login</Button>
                         {errorMsg}
                     </FormGroup>
                 </Form>

@@ -21,7 +21,6 @@ export class Link extends React.Component<LinkProps, {}> {
     constructor(props: LinkProps){
         super(props);
         this.sub = this.props.store.subscribe(() => {
-            console.log('state changed...');
             this.setState({
                 route: this.props.store.getState().url
             })
