@@ -5,33 +5,23 @@ import { navigateTo } from "../redux/actions"
 
 export interface LinkProps {
     href: string,
-    activeStyle?: {},
+    route: string,
     className?: string,
     store: Store<mgmState>
 }
 
 export class Link extends React.Component<LinkProps, {}> {
-    private sub: Redux.Unsubscribe;
     state: {
         username: string
         password: string
         errorMsg: string
     }
 
-    constructor(props: LinkProps){
+    constructor(props: LinkProps) {
         super(props);
-        this.sub = this.props.store.subscribe(() => {
-            this.setState({
-                route: this.props.store.getState().url
-            })
-        });
         this.state = {
             username: '', password: '', errorMsg: ''
         };
-    }
-
-    componentWillUnmount() {
-        this.sub();
     }
 
     handleClick() {
@@ -41,8 +31,7 @@ export class Link extends React.Component<LinkProps, {}> {
     render() {
         return (
             <div
-                className={this.props.className}
-                
+                className={this.props.className ? this.props.className : ''}
                 onClick={this.handleClick.bind(this) }>
                 {this.props.children}
             </div>

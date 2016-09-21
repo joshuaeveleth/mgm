@@ -13,32 +13,13 @@ import { Users } from "./Users";
 import { PendingUsers } from "./PendingUsers";
 
 interface authenticatedProps {
-    store: Store<mgmState>
+    store: Store<mgmState>,
+    route: string
 }
 
 export class Authenticated extends React.Component<authenticatedProps, {}> {
-    private urlSub: Redux.Unsubscribe;
-    state: {
-        route: string
-    }
 
-    constructor(props: authenticatedProps){
-        super(props);
-        this.urlSub = this.props.store.subscribe(() => {
-            this.setState({
-                route: this.props.store.getState().url
-            })
-        });
-        this.state = {
-            route: this.props.store.getState().url
-        };
-    }
-
-    componentWillUnmount() {
-        this.urlSub();
-    }
-
-    handleLogout(){
+    handleLogout() {
         this.props.store.dispatch(logoutAction());
     }
 
@@ -51,17 +32,17 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
-                        <NavItem><Link href="/account" activeStyle={{ color: 'red' }} store={this.props.store}>Account</Link></NavItem>
-                        <NavItem><Link href="/regions" activeStyle={{ color: 'red' }} store={this.props.store}>Regions</Link></NavItem>
-                        <NavItem><Link href="/grid" activeStyle={{ color: 'red' }} store={this.props.store}>Grid</Link></NavItem>
-                        <NavItem><Link href="/users" activeStyle={{ color: 'red' }} store={this.props.store}>Users</Link></NavItem>
-                        <NavItem><Link href="/pending" activeStyle={{ color: 'red' }} store={this.props.store}>Pending Users</Link></NavItem>
-                        <NavItem><Button onClick={this.handleLogout.bind(this)}>Log Out</Button></NavItem>
+                        <NavItem active={this.props.route === "/account" || this.props.route === "/"}><Link href="/account" route={this.props.route} store={this.props.store}>Account</Link></NavItem>
+                        <NavItem active={this.props.route === "/regions"}><Link href="/regions" route={this.props.route} store={this.props.store}>Regions</Link></NavItem>
+                        <NavItem active={this.props.route === "/grid"}><Link href="/grid" route={this.props.route} store={this.props.store}>Grid</Link></NavItem>
+                        <NavItem active={this.props.route === "/users"}><Link href="/users" route={this.props.route} store={this.props.store}>Users</Link></NavItem>
+                        <NavItem active={this.props.route === "/pending"}><Link href="/pending" route={this.props.route} store={this.props.store}>Pending Users</Link></NavItem>
+                        <NavItem><Button onClick={this.handleLogout.bind(this) }>Log Out</Button></NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
         )
-        switch (this.state.route) {
+        switch (this.props.route) {
             case '/regions':
                 return (
                     <div>

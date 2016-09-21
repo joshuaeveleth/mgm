@@ -35,9 +35,8 @@ export class Login extends React.Component<loginProps, {}> {
     onPassword(e: { target: { value: string } }) {
         this.setState({ password: e.target.value })
     }
-    handleLogin() {
-        console.log('login attempt with: ');
-
+    handleLogin(e: React.FormEvent) {
+        e.preventDefault();
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '/auth/login');
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
@@ -77,13 +76,13 @@ export class Login extends React.Component<loginProps, {}> {
         return (
             <div>
                 <h1>Login View</h1>
-                <Form inline={true}>
+                <Form inline={true} onSubmit={this.handleLogin.bind(this)}>
                     <FormGroup>
                         <ControlLabel>Username: </ControlLabel>
                         <FormControl placeholder="username" onChange={this.onUsername.bind(this) }/>
                         <ControlLabel>Password: </ControlLabel>
                         <FormControl type="password" placeholder="password" onChange={this.onPassword.bind(this) }/>
-                        <Button onClick={this.handleLogin.bind(this) }>Login</Button>
+                        <Button type="submit">Login</Button>
                         {errorMsg}
                     </FormGroup>
                 </Form>

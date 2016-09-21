@@ -31,6 +31,7 @@ const initialState = {
 export function mgmApp(state = initialState, action: action) {
   switch (action.type) {
     case NAVIGATE_TO:
+      if(action.url === state.url) return state;
       return (<any>Object).assign({}, state, {
         url: action.url
       })

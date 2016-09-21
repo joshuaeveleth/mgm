@@ -10,47 +10,29 @@ import { Password } from "./Password";
 import { Login } from "./Login";
 
 interface unauthenticatedProps {
-    store: Store<mgmState>
+    store: Store<mgmState>,
+    route: string
 }
 
 export class Unauthenticated extends React.Component<unauthenticatedProps, {}> {
-    private urlSub: Redux.Unsubscribe;
-    state: {
-        route: string
-    }
-
-    constructor(props: unauthenticatedProps){
-        super(props);
-        this.urlSub = this.props.store.subscribe(() => {
-            this.setState({
-                route: this.props.store.getState().url
-            })
-        });
-        this.state = {
-            route: this.props.store.getState().url
-        };
-    }
-
-    componentWillUnmount() {
-        this.urlSub();
-    }
 
     render() {
         let navbar = (
             <Navbar>
                 <Navbar.Header>
                     <Navbar.Toggle />
-                    <Navbar.Brand><Link href="/" store={this.props.store}>MGM</Link></Navbar.Brand>
+                    <Navbar.Brand><Link href="/" route={this.props.route} store={this.props.store}>MGM</Link></Navbar.Brand>
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
-                        <NavItem><Link href="/password" activeStyle={{ color: 'red' }} store={this.props.store}>Recover Password</Link></NavItem>
-                        <NavItem><Link href="/register" activeStyle={{ color: 'red' }} store={this.props.store}>Register</Link></NavItem>
+                        <NavItem active={this.props.route === "/login" || this.props.route === "/"}><Link href="/login" route={this.props.route} store={this.props.store}>Log In</Link></NavItem>
+                        <NavItem active={this.props.route === "/password"}><Link href="/password" route={this.props.route} store={this.props.store}>Recover Password</Link></NavItem>
+                        <NavItem active={this.props.route === "/register"}><Link href="/register" route={this.props.route} store={this.props.store}>Register</Link></NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
         )
-        switch (this.state.route) {
+        switch (this.props.route) {
             case '/password':
                 return (
                     <div>
