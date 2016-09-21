@@ -44,7 +44,8 @@ export function mgmApp(state = initialState, action: action) {
     case LOGOUT_ACTION:
       return (<any>Object).assign({}, state, {
         auth: {
-          loggedIn: false
+          loggedIn: false,
+          user: null
         }
       })
     default:

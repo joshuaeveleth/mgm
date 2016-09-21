@@ -9,7 +9,7 @@ import { mgmApp, mgmState } from "./redux/reducers";
 import { navigateTo,loginAction } from "./redux/actions"
 let store = createStore<mgmState>(mgmApp);
 
-// set up url tracking for routing
+// Update url to match internal state
 let url = window.location.pathname;
 store.subscribe(() => {
     if (store.getState().url !== url) {
@@ -18,14 +18,24 @@ store.subscribe(() => {
     }
 })
 store.dispatch(navigateTo(window.location.pathname));
+//watch for url changes that arent frome state, such as user back button
+window.addEventListener('popstate', ()=>{
+    if(url !== window.location.pathname){
+        url = window.location.pathname;
+        store.dispatch(navigateTo(window.location.pathname));
+    }
+})
 
 // set up for local storage of authentication components
 let user: User = localStorage.getItem("user");
 if(user) store.dispatch(loginAction(user));
 store.subscribe(() => {
-    if (store.getState().auth.user !== user) {
-        user = store.getState().auth.user;
-        localStorage.setItem("user", JSON.stringify(user));
+    let storeUser = store.getState().auth.user;
+    if (storeUser !== user) {
+        if(storeUser)
+            localStorage.setItem("user", JSON.stringify(user));
+        else
+            localStorage.removeItem("user");
         console.log('localStorage set')
     }
 })

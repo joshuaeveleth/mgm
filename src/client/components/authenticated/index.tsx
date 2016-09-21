@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Store } from 'redux'
 import { mgmState } from '../../redux/reducers';
+import { logoutAction } from '../../redux/actions';
 
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 import { Link } from '../Link';
 
 import { Account } from "./Account";
@@ -37,20 +38,25 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
         this.urlSub();
     }
 
+    handleLogout(){
+        this.props.store.dispatch(logoutAction());
+    }
+
     render() {
         let navbar = (
             <Navbar>
                 <Navbar.Header>
                     <Navbar.Toggle />
-                    <Navbar.Brand><Link href="/" store={this.props.store}>MGM</Link></Navbar.Brand>
-                    
+                    <Navbar.Brand>MGM</Navbar.Brand>
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
+                        <NavItem><Link href="/account" activeStyle={{ color: 'red' }} store={this.props.store}>Account</Link></NavItem>
                         <NavItem><Link href="/regions" activeStyle={{ color: 'red' }} store={this.props.store}>Regions</Link></NavItem>
                         <NavItem><Link href="/grid" activeStyle={{ color: 'red' }} store={this.props.store}>Grid</Link></NavItem>
                         <NavItem><Link href="/users" activeStyle={{ color: 'red' }} store={this.props.store}>Users</Link></NavItem>
                         <NavItem><Link href="/pending" activeStyle={{ color: 'red' }} store={this.props.store}>Pending Users</Link></NavItem>
+                        <NavItem><Button onClick={this.handleLogout.bind(this)}>Log Out</Button></NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

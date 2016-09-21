@@ -23,7 +23,7 @@ export function loginAction(user: User){
   };
 }
 
-export function logoutFunction(){
+export function logoutAction(){
   return { type: LOGOUT_ACTION };
 }
 
