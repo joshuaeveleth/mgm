@@ -6,13 +6,12 @@ import * as express from 'express';
 import * as log4js from 'log4js';
 import * as io from 'socket.io';
 import * as jwt from 'jsonwebtoken'
-import * as io_jwt from 'socketio-jwt'
 import * as bodyParser from 'body-parser'
 
 var conf = require('../settings.js');
 
 import { Sql } from './mysql';
-import { Auth } from './auth';
+import { Auth, Detail } from './auth';
 
 //connect to the databases
 let mgmDb = Sql.connectMGM(conf.mgm.db);
@@ -40,9 +39,24 @@ let server = app.listen(3000, () => {
 // websocket connectivity
 let sio = io(server);
 
-sio.sockets.on('connection', io_jwt.authorize({
-  secret: conf.mgm.tokenKey,
-  timeout: 3000 // 3 seconds to authorize  
-})).on('authenticated', (sock: SocketIO.Socket) => {
-  console.log('client socket authenticated');
-});
+sio.sockets.on('connection', (sock: SocketIO.Socket) => {
+  let timer = setTimeout(() => {
+    sock.disconnect();
+  }, 3000)
+  sock.on('authenticate', (token: string) => {
+    clearTimeout(timer);
+
+    jwt.verify(token, conf.mgm.tokenKey, {algorithms: ["HS256"]}, (err: Error, decoded: Detail) => {
+      if(err){
+        sock.emit('unauthorized', 'Could not decode token');
+        sock.disconnect();
+      } else {
+        sock.emit('authenticated');
+
+        //call client handler to wire up events
+
+        
+      }
+    })
+  })
+})

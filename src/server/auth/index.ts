@@ -5,6 +5,12 @@ import { HalcyonToken } from './HalcyonToken';
 
 import * as jwt from 'jsonwebtoken';
 
+export interface Detail {
+  uuid: string
+  godLevel: number
+  consoleToken: string
+}
+
 export class Auth {
   private static _instance: Auth = null;
 
@@ -57,18 +63,19 @@ export class Auth {
       }
       return HalcyonToken.GetConsoleToken(this.userServerURI, username, password);
     }).then((token: string) => {
+      let detail: Detail = {
+        uuid: candidateUser.UUID,
+        godLevel: candidateUser.godLevel,
+        consoleToken: token
+      }
       return jwt.sign(
-        {
-          uuid: candidateUser.UUID,
-          godLevel: candidateUser.godLevel,
-          consoleToken: token
-        },
+        detail,
         this.tokenKey,
         {
           expiresIn: '1d'
         }
       );
-    }). then( (token) => {
+    }).then((token) => {
       res.send(JSON.stringify({
         Success: true,
         username: candidateUser.username + ' ' + candidateUser.lastname,

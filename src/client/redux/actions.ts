@@ -16,7 +16,7 @@ export interface NavigateTo extends Action {
 }
 
 
-export function loginAction(user: User): Action{
+export function createLoginAction(user: User): Action{
   let act: LoginAction = {
     type: types.LOGIN_ACTION,
     user: user
@@ -24,11 +24,11 @@ export function loginAction(user: User): Action{
   return act;
 }
 
-export function logoutAction(): Action{
+export function createLogoutAction(): Action{
   return { type: types.LOGOUT_ACTION };
 }
 
-export function setAuthErrorMessage(msg: string): Action{
+export function createSetAuthErrorMessageAction(msg: string): Action{
   let act: SetAuthMessage = {
     type: types.AUTH_SET_ERROR_MESSAGE,
     message: msg
@@ -36,11 +36,11 @@ export function setAuthErrorMessage(msg: string): Action{
   return act;
 }
 
-export function clearAuthErrorMessage(): Action{
+export function createClearAuthErrorMessageAction(): Action{
   return { type: types.AUTH_CLEAR_ERROR_MESSAGE };
 }
 
-export function navigateTo(url: string): Action{
+export function createNavigateToAction(url: string): Action{
   let act: NavigateTo = {
     type: types.NAVIGATE_TO,
     url: url

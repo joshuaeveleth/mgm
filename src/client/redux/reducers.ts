@@ -19,6 +19,7 @@ function reduceAuth(state = { loggedIn: false }, action: Action) {
   switch (action.type) {
     case types.LOGIN_ACTION:
       let act = <LoginAction>action;
+      console.log(act);
       return (<any>Object).assign({}, state, {
         loggedIn: true,
         user: act.user

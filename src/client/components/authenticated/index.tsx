@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Store } from 'redux'
 import { mgmState } from '../../redux/model';
-import { logoutAction } from '../../redux/actions';
+import { createLogoutAction } from '../../redux/actions';
 
 import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 import { Link } from '../Link';
@@ -20,7 +20,7 @@ interface authenticatedProps {
 export class Authenticated extends React.Component<authenticatedProps, {}> {
 
     handleLogout() {
-        this.props.store.dispatch(logoutAction());
+        this.props.store.dispatch(createLogoutAction());
     }
 
     render() {
@@ -39,7 +39,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         <NavItem active={this.props.route === "/pending"}><Link href="/pending" route={this.props.route} store={this.props.store}>Pending Users</Link></NavItem>
                     </Nav>
                     <Nav pullRight>
-                        <NavItem><Button bsSize="small" onClick={this.handleLogout.bind(this) }>Log Out</Button></NavItem>
+                        <NavItem><Button bsSize="xsmall" onClick={this.handleLogout.bind(this) }>Log Out</Button></NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
@@ -77,7 +77,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 return (
                     <div>
                         {navbar}
-                        <Account />
+                        <Account store={this.props.store}/>
                     </div>
                 )
         }

@@ -3,7 +3,7 @@ import * as React from "react";
 import { Splash } from "../Splash";
 import { Store } from 'redux'
 import { mgmState } from '../../redux/model';
-import { loginAction } from '../../redux/actions';
+import { createLoginAction } from '../../redux/actions';
 
 import { Form, FormGroup, FormControl, ControlLabel, Button, Alert } from "react-bootstrap"
 
@@ -27,7 +27,6 @@ export class Login extends React.Component<loginProps, {}> {
             username: '',
             password: ''
         };
-        console.log(this.state);
     }
 
     onUsername(e: { target: { value: string } }) {
@@ -48,7 +47,7 @@ export class Login extends React.Component<loginProps, {}> {
                 let res = JSON.parse(xhr.response);
                 if(res.Success){
                     console.log('auth succeeded');
-                    this.props.store.dispatch(loginAction({
+                    this.props.store.dispatch(createLoginAction({
                         username: res.username,
                         godLevel: res.accessLevel,
                         email: res.email,

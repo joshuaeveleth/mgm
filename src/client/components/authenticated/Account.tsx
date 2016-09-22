@@ -1,13 +1,20 @@
 import * as React from "react";
+import { Store } from 'redux'
+import { mgmState } from '../../redux/model';
 
-export class Account extends React.Component<{}, {}> {
+interface authenticatedProps {
+    store: Store<mgmState>
+}
+
+export class Account extends React.Component<authenticatedProps, {}> {
     render() {
+        let user = this.props.store.getState().auth.user;
         return (
             <div>
                 <h1>Account View</h1>
-                <p>Avatar Name:</p>
-                <p>Avatar User Level:</p>
-                <p>User Email:</p>
+                <p>Avatar Name: {user.username}</p>
+                <p>Avatar User Level: {user.godLevel}</p>
+                <p>User Email: {user.email}</p>
             </div>
         )
     }

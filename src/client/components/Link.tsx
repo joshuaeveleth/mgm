@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Store } from 'redux'
 import { mgmState } from '../redux/model'
-import { navigateTo } from "../redux/actions"
+import { createNavigateToAction } from "../redux/actions"
 
 export interface LinkProps {
     href: string,
@@ -25,7 +25,7 @@ export class Link extends React.Component<LinkProps, {}> {
     }
 
     handleClick() {
-        this.props.store.dispatch(navigateTo(this.props.href));
+        this.props.store.dispatch(createNavigateToAction(this.props.href));
     }
 
     render() {

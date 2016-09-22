@@ -3,28 +3,41 @@ import { Action, Dispatch, Middleware, Store} from 'redux';
 import * as io from "socket.io-client";
 import * as Promise from "bluebird";
 
-import { setAuthErrorMessage, logoutAction, LoginAction } from '../redux/actions';
+import { createSetAuthErrorMessageAction, createLogoutAction, LoginAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import * as types from '../redux/types';
 
 let sock: SocketIOClient.Socket = null;
 
-function connectSocket(token: string): Promise<void> {
+interface SockJwtError {
+  message: string
+  data: {
+    code: string
+    message: string
+    type: string
+  }
+}
+
+function connectSocket(jwt: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    console.log('attempting socket connection');
     sock = io.connect({
       reconnection: false
     });
     sock.on('connect_error', () => {
-      return reject(new Error('Cannot connect to MGM socket server'));
+      reject(new Error('Cannot connect to MGM socket server'));
     });
     sock.on('connect', () => {
       sock
-        .emit('authenticate', { token: token })
+        .emit('authenticate', { token: jwt })
         .on('authenticated', () => {
           //we are token-authenticated and ready to roll
           console.log('client authenticated');
           resolve();
+        })
+        .on('unauthorized', (error: SockJwtError) => {
+          if (error.data.code == "invalid_token") {
+            reject(new Error('Token expired, please log in again'));
+          }
         })
     })
   });
@@ -41,14 +54,17 @@ function closeSocket() {
  * this middleware intercepts the requests and proxies them to the server, then dispatching based on the result.
  */
 export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmState>) => (action: Action) => {
+  console.log(action);
   switch (action.type) {
     case types.LOGIN_ACTION:
       let act = <LoginAction>action;
       connectSocket(act.user.token).then(() => {
+        console.log('connection succeeded, proceeding with login')
         next(action);
       }).catch((e: Error) => {
-        store.dispatch(setAuthErrorMessage(e.message));
-        store.dispatch(logoutAction());
+        console.log(e);
+        store.dispatch(createSetAuthErrorMessageAction(e.message));
+        store.dispatch(createLogoutAction());
       })
       break;
     case types.LOGOUT_ACTION:
