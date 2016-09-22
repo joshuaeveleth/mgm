@@ -1,6 +1,6 @@
 
 /// <reference path="../../typings/index.d.ts" />
-/// <reference path="../definitions/socketio-jwt.d.ts" />
+
 
 import * as express from 'express';
 import * as log4js from 'log4js';
@@ -55,7 +55,7 @@ sio.sockets.on('connection', (sock: SocketIO.Socket) => {
 
         //call client handler to wire up events
 
-        
+
       }
     })
   })

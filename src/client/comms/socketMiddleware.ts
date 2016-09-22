@@ -28,7 +28,7 @@ function connectSocket(jwt: string): Promise<void> {
     });
     sock.on('connect', () => {
       sock
-        .emit('authenticate', { token: jwt })
+        .emit('authenticate', jwt)
         .on('authenticated', () => {
           //we are token-authenticated and ready to roll
           console.log('client authenticated');
