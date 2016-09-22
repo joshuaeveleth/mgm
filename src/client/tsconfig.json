@@ -24,6 +24,7 @@
         "./components/unauthenticated/Password.tsx",
         "./index.tsx",
         "./redux/actions.ts",
-        "./redux/reducers.ts"
+        "./redux/reducers.ts",
+        "./comms/socketMiddleware.ts"
     ]
 }

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Splash } from "../Splash";
 import { Store } from 'redux'
-import { mgmState } from '../../redux/reducers';
+import { mgmState } from '../../redux/model';
 import { loginAction } from '../../redux/actions';
 
 import { Form, FormGroup, FormControl, ControlLabel, Button, Alert } from "react-bootstrap"
@@ -23,10 +23,11 @@ export class Login extends React.Component<loginProps, {}> {
     constructor(props: loginProps) {
         super(props);
         this.state = {
-            msg: '',
+            msg: this.props.store.getState().auth.errorMsg || '',
             username: '',
             password: ''
         };
+        console.log(this.state);
     }
 
     onUsername(e: { target: { value: string } }) {

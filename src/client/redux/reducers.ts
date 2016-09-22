@@ -1,25 +1,12 @@
+import { Action, combineReducers } from 'redux';
 
 import {
-  action,
-  NAVIGATE_TO,
-  LOGIN_ACTION,
-  LOGOUT_ACTION,
+  NavigateTo,
+  LoginAction,
+  SetAuthMessage
 } from './actions';
-
-export interface User {
-  username: string,
-  godLevel: number,
-  email: string,
-  token: string
-}
-
-export interface mgmState {
-  auth: {
-    loggedIn: boolean
-    user: User
-  }
-  url: string
-}
+import * as types from './types';
+import { User, mgmState } from './model';
 
 const initialState = {
   auth: {
@@ -28,28 +15,42 @@ const initialState = {
   url: window.location.href
 }
 
-export function mgmApp(state = initialState, action: action) {
+function reduceAuth(state = { loggedIn: false }, action: Action) {
   switch (action.type) {
-    case NAVIGATE_TO:
-      if(action.url === state.url) return state;
+    case types.LOGIN_ACTION:
+      let act = <LoginAction>action;
       return (<any>Object).assign({}, state, {
-        url: action.url
+        loggedIn: true,
+        user: act.user
       })
-    case LOGIN_ACTION:
+    case types.LOGOUT_ACTION:
       return (<any>Object).assign({}, state, {
-        auth: {
-          loggedIn: true,
-          user: action.user
-        }
+        loggedIn: false,
+        user: null
       })
-    case LOGOUT_ACTION:
+    case types.AUTH_SET_ERROR_MESSAGE:
+      let aca = <SetAuthMessage>action;
       return (<any>Object).assign({}, state, {
-        auth: {
-          loggedIn: false,
-          user: null
-        }
+        errorMsg: aca.message
       })
+    default: return state;
+  }
+}
+
+function url(state = "/", action: Action) {
+  switch (action.type) {
+    case types.NAVIGATE_TO:
+      let act = <NavigateTo>action;
+      if (act.url === state) return state;
+      return act.url
     default:
       return state;
   }
 }
+
+const rootReducer = combineReducers<mgmState>({
+  "auth": reduceAuth,
+  "url": url
+});
+
+export default rootReducer;

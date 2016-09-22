@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Store } from 'redux'
-import { mgmState } from '../../redux/reducers';
+import { mgmState } from '../../redux/model';
 import { logoutAction } from '../../redux/actions';
 
 import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
@@ -37,7 +37,9 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         <NavItem active={this.props.route === "/grid"}><Link href="/grid" route={this.props.route} store={this.props.store}>Grid</Link></NavItem>
                         <NavItem active={this.props.route === "/users"}><Link href="/users" route={this.props.route} store={this.props.store}>Users</Link></NavItem>
                         <NavItem active={this.props.route === "/pending"}><Link href="/pending" route={this.props.route} store={this.props.store}>Pending Users</Link></NavItem>
-                        <NavItem><Button onClick={this.handleLogout.bind(this) }>Log Out</Button></NavItem>
+                    </Nav>
+                    <Nav pullRight>
+                        <NavItem><Button bsSize="small" onClick={this.handleLogout.bind(this) }>Log Out</Button></NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

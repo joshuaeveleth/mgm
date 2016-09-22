@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Store } from 'redux'
-import { mgmState } from '../../redux/reducers';
+import { mgmState } from '../../redux/model';
 
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { Link } from '../Link';

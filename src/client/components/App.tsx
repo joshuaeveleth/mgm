@@ -4,7 +4,7 @@ import { Store } from 'redux'
 import { Authenticated } from "./authenticated";
 import { Unauthenticated } from "./unauthenticated";
 
-import { mgmState } from '../redux/reducers';
+import { mgmState } from '../redux/model';
 
 interface appProps {
     store: Store<mgmState>

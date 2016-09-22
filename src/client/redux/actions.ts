@@ -1,40 +1,49 @@
+import { Action } from 'redux';
+import { User } from "./model";
 
-import { User } from "./reducers";
+import * as types from "./types";
 
-export interface action {
-  type: string
-  message?: string
-  url?: string
-  user?: User
+export interface LoginAction extends Action {
+  user: User
 }
 
-/** Types */
-export const LOGIN_ACTION = 'LOGIN_ACTION';
-export const LOGOUT_ACTION = 'LOGOUT_ACTION';
-export const AUTH_SET_ERROR_MESSAGE = 'AUTH_SET_ERROR_MESSAGE';
-export const AUTH_CLEAR_ERROR_MESSAGE = 'AUTH_CLEAR_ERROR_MESSAGE';
+export interface SetAuthMessage extends Action {
+  message: string
+}
 
-export const NAVIGATE_TO = 'NAVIGATE_TO';
+export interface NavigateTo extends Action {
+  url: string
+}
 
-export function loginAction(user: User){
-  return { 
-    type: LOGIN_ACTION,
+
+export function loginAction(user: User): Action{
+  let act: LoginAction = {
+    type: types.LOGIN_ACTION,
     user: user
-  };
+  }
+  return act;
 }
 
-export function logoutAction(){
-  return { type: LOGOUT_ACTION };
+export function logoutAction(): Action{
+  return { type: types.LOGOUT_ACTION };
 }
 
-export function setAuthErrorMessage(msg: string){
-  return { type: AUTH_SET_ERROR_MESSAGE, message: msg };
+export function setAuthErrorMessage(msg: string): Action{
+  let act: SetAuthMessage = {
+    type: types.AUTH_SET_ERROR_MESSAGE,
+    message: msg
+  }
+  return act;
 }
 
-export function clearAuthErrorMessage(){
-  return { type: AUTH_CLEAR_ERROR_MESSAGE };
+export function clearAuthErrorMessage(): Action{
+  return { type: types.AUTH_CLEAR_ERROR_MESSAGE };
 }
 
-export function navigateTo(url: string){
-  return { type: NAVIGATE_TO, url: url}
+export function navigateTo(url: string): Action{
+  let act: NavigateTo = {
+    type: types.NAVIGATE_TO,
+    url: url
+  }
+  return act;
 }

@@ -1,13 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { createStore, Store } from 'redux'
+import { createStore, applyMiddleware, Store } from 'redux'
 
-import { User } from "./redux/reducers";
+import { User, mgmState } from "./redux/model";
 
-import { mgmApp, mgmState } from "./redux/reducers";
+import reducer from "./redux/reducers";
 import { navigateTo,loginAction } from "./redux/actions"
-let store = createStore<mgmState>(mgmApp);
+import { socketMiddleWare } from "./comms/socketMiddleware";
+let store = createStore<mgmState>(reducer, applyMiddleware(socketMiddleWare));
 
 // Update url to match internal state
 let url = window.location.pathname;
@@ -32,11 +33,12 @@ if(user) store.dispatch(loginAction(user));
 store.subscribe(() => {
     let storeUser = store.getState().auth.user;
     if (storeUser !== user) {
-        if(storeUser)
+        user = storeUser;
+        if(storeUser){
             localStorage.setItem("user", JSON.stringify(user));
-        else
+        } else{
             localStorage.removeItem("user");
-        console.log('localStorage set')
+        }
     }
 })
 
