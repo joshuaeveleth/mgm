@@ -5,6 +5,9 @@ import * as Sequelize from 'sequelize';
 
 //HALCYON definitions
 import { users, User } from './models/halcyon/users';
+import { hosts } from './models/mgm/hosts';
+
+import { Host } from '../../common/messages';
 
 export { User } from './models/halcyon/users';
 
@@ -16,7 +19,7 @@ export interface Config {
 }
 
 export interface MGMDB {
-
+  hosts: Sequelize.Model<{},Host>
 }
 
 export interface HALCYONDB {
@@ -37,7 +40,9 @@ export class Sql {
       logging: false
     });
 
-    return {};
+    return {
+      hosts: seq.import('hosts', hosts)
+    };
   }
 
   static connectHalcyon(conf: Config): HALCYONDB {

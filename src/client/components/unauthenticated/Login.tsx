@@ -43,9 +43,12 @@ export class Login extends React.Component<loginProps, {}> {
         xhr.onload = () => {
             if (xhr.status !== 200) {
                 console.log('Request failed.  Returned status of ' + xhr.status);
+                this.setState({
+                    msg: "Login failed, cannot contact MGM"
+                })
             } else {
                 let res = JSON.parse(xhr.response);
-                if(res.Success){
+                if (res.Success) {
                     console.log('auth succeeded');
                     this.props.store.dispatch(createLoginAction({
                         username: res.username,
@@ -61,7 +64,7 @@ export class Login extends React.Component<loginProps, {}> {
                 }
             }
         };
-        xhr.send('payload='+JSON.stringify({
+        xhr.send('payload=' + JSON.stringify({
             username: this.state.username,
             password: this.state.password
         }));
@@ -76,7 +79,7 @@ export class Login extends React.Component<loginProps, {}> {
         return (
             <div>
                 <h1>Login View</h1>
-                <Form inline={true} onSubmit={this.handleLogin.bind(this)}>
+                <Form inline={true} onSubmit={this.handleLogin.bind(this) }>
                     <FormGroup>
                         <ControlLabel>Username: </ControlLabel>
                         <FormControl placeholder="username" onChange={this.onUsername.bind(this) }/>

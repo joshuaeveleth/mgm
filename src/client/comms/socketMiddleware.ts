@@ -7,6 +7,8 @@ import { createSetAuthErrorMessageAction, createLogoutAction, LoginAction } from
 import { mgmState } from '../redux/model';
 import * as types from '../redux/types';
 
+import { Host } from '../../common/messages'
+
 let sock: SocketIOClient.Socket = null;
 
 interface SockJwtError {
@@ -16,6 +18,12 @@ interface SockJwtError {
     message: string
     type: string
   }
+}
+
+function handleSocket(){
+  sock.on('host', (h: Host) => {
+    console.log(h);
+  })
 }
 
 function connectSocket(jwt: string): Promise<void> {
@@ -33,6 +41,7 @@ function connectSocket(jwt: string): Promise<void> {
           //we are token-authenticated and ready to roll
           console.log('client authenticated');
           resolve();
+          handleSocket();
         })
         .on('unauthorized', (error: SockJwtError) => {
           if (error.data.code == "invalid_token") {
@@ -54,7 +63,6 @@ function closeSocket() {
  * this middleware intercepts the requests and proxies them to the server, then dispatching based on the result.
  */
 export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmState>) => (action: Action) => {
-  console.log(action);
   switch (action.type) {
     case types.LOGIN_ACTION:
       let act = <LoginAction>action;
@@ -72,6 +80,7 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
       next(action);
       break;
     default:
+      console.log('socket middleware ignored action: ' + action.type);
       next(action);
   }
 }

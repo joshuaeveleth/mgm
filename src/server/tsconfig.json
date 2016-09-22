@@ -14,11 +14,13 @@
   ],
   "files": [
     "./server.ts",
+    "./client.ts",
     "./auth/index.ts",
     "./auth/Credential.ts",
     "./auth/HalcyonToken.ts",
     "./mysql/index.ts",
-    "./mysql/models/halcyon/users.ts"
+    "./mysql/models/halcyon/users.ts",
+    "./mysql/models/mgm/hosts.ts"
   ],
   "atom": {
     "rewriteTsconfig": true

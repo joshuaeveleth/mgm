@@ -7,8 +7,11 @@ import { User, mgmState } from "./redux/model";
 
 import reducer from "./redux/reducers";
 import { createNavigateToAction, createLoginAction } from "./redux/actions"
+
+//create the redux store, using our websocket middleware for MGM async
 import { socketMiddleWare } from "./comms/socketMiddleware";
 let store = createStore<mgmState>(reducer, applyMiddleware(socketMiddleWare));
+
 
 // Update url to match internal state
 let url = window.location.pathname;
@@ -27,6 +30,7 @@ window.addEventListener('popstate', () => {
     }
 })
 
+
 // set up for local storage of authentication components
 let user: User = null;
 if (localStorage.getItem("user")) {
@@ -35,7 +39,6 @@ if (localStorage.getItem("user")) {
 }
 store.subscribe(() => {
     let storeUser = store.getState().auth.user;
-    console.log(store.getState());
     if (storeUser !== user) {
         if (storeUser) {
             user = storeUser;
@@ -46,6 +49,8 @@ store.subscribe(() => {
         }
     }
 })
+
+
 
 import { App } from "./components/App";
 

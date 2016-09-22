@@ -1,6 +1,6 @@
-/* jshint indent: 2 */
+import * as Sequelize from 'sequelize';
 
-module.exports = function(sequelize, DataTypes) {
+export function hosts(sequelize, DataTypes) {
   return sequelize.define('hosts', {
     id: {
       type: DataTypes.INTEGER(11),
@@ -35,6 +35,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'hosts'
-  });
+      tableName: 'hosts',
+      timestamps: false
+    });
 };
