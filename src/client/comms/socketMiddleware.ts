@@ -3,14 +3,14 @@ import { Action, Dispatch, Middleware, Store} from 'redux';
 import * as io from "socket.io-client";
 import * as Promise from "bluebird";
 
-import { setAuthErrorMessage, logoutAction } from '../redux/actions';
+import { setAuthErrorMessage, logoutAction, LoginAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import * as types from '../redux/types';
 
 let sock: SocketIOClient.Socket = null;
 
-function connectSocket(): Promise<void> {
-  return new Promise<void>( (resolve, reject) => {
+function connectSocket(token: string): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
     console.log('attempting socket connection');
     sock = io.connect({
       reconnection: false
@@ -18,6 +18,15 @@ function connectSocket(): Promise<void> {
     sock.on('connect_error', () => {
       return reject(new Error('Cannot connect to MGM socket server'));
     });
+    sock.on('connect', () => {
+      sock
+        .emit('authenticate', { token: token })
+        .on('authenticated', () => {
+          //we are token-authenticated and ready to roll
+          console.log('client authenticated');
+          resolve();
+        })
+    })
   });
 }
 
@@ -34,15 +43,18 @@ function closeSocket() {
 export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmState>) => (action: Action) => {
   switch (action.type) {
     case types.LOGIN_ACTION:
-      connectSocket().then(() => {
+      let act = <LoginAction>action;
+      connectSocket(act.user.token).then(() => {
         next(action);
-      }).catch( (e:Error) => {
+      }).catch((e: Error) => {
         store.dispatch(setAuthErrorMessage(e.message));
         store.dispatch(logoutAction());
       })
+      break;
     case types.LOGOUT_ACTION:
       closeSocket();
       next(action);
+      break;
     default:
       next(action);
   }

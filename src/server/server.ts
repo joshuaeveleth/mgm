@@ -40,42 +40,9 @@ let server = app.listen(3000, () => {
 // websocket connectivity
 let sio = io(server);
 
-sio.on('connection', (sock: SocketIO.Socket) => {
-  console.log('client socket connected')
-})
-/*
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
-import * as path from "path";
-
-import { Sql } from './mysql/sql';
-import { MGM } from './mgm/MGM';
-import { User } from './halcyon/User';
-import { Host } from './mgm/Host';
-import { UUIDString } from './halcyon/UUID';
-import { Job } from './mgm/Job';
-import { Region } from './mgm/Region';
-import { Estate } from './halcyon/Estate';
-import { Group } from './halcyon/Group';
-
-var conf = require('../settings.js');
-
-let mgm = new MGM(conf);
-
-let app = express();
-
-var cookieParser = require('cookie-parser')
-app.use(cookieParser('super-secret-cookie-session-key!!!1!'));
-
-app.use(bodyParser.json({ limit: '1gb' }));       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true,
-  limit: '1gb'
-}));
-
-app.use('/', mgm.getRouter());
-
-app.listen(3000, function() {
-  console.log('MGM listening on port 3000!');
+sio.sockets.on('connection', io_jwt.authorize({
+  secret: conf.mgm.tokenKey,
+  timeout: 3000 // 3 seconds to authorize  
+})).on('authenticated', (sock: SocketIO.Socket) => {
+  console.log('client socket authenticated');
 });
-*/
