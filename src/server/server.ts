@@ -36,6 +36,13 @@ app.post('/auth/login', bodyParser.json(), (req, res) => { Auth.instance().handl
 let server = app.listen(3000, () => {
   console.log('mgm initialized');
 });
+
+// websocket connectivity
+let sio = io(server);
+
+sio.on('connection', (sock: SocketIO.Socket) => {
+  console.log('client socket connected')
+})
 /*
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
