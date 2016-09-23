@@ -1,7 +1,8 @@
 import { Action } from 'redux';
-import { User } from "./model";
 
-import * as types from "./types";
+import { User, Actions } from "./types";
+
+import { Host, Region } from '../../common/messages'
 
 export interface LoginAction extends Action {
   user: User
@@ -15,35 +16,59 @@ export interface NavigateTo extends Action {
   url: string
 }
 
+export interface UpsertRegion extends Action {
+  region: Region
+}
 
-export function createLoginAction(user: User): Action{
+export interface UpsertHost extends Action {
+  host: Host
+}
+
+
+export function createLoginAction(user: User): Action {
   let act: LoginAction = {
-    type: types.LOGIN_ACTION,
+    type: Actions.LOGIN,
     user: user
   }
   return act;
 }
 
-export function createLogoutAction(): Action{
-  return { type: types.LOGOUT_ACTION };
+export function createLogoutAction(): Action {
+  return { type: Actions.LOGOUT };
 }
 
-export function createSetAuthErrorMessageAction(msg: string): Action{
+export function createSetAuthErrorMessageAction(msg: string): Action {
   let act: SetAuthMessage = {
-    type: types.AUTH_SET_ERROR_MESSAGE,
+    type: Actions.AUTH_SET_ERROR_MESSAGE,
     message: msg
   }
   return act;
 }
 
-export function createClearAuthErrorMessageAction(): Action{
-  return { type: types.AUTH_CLEAR_ERROR_MESSAGE };
+export function createClearAuthErrorMessageAction(): Action {
+  return { type: Actions.AUTH_CLEAR_ERROR_MESSAGE };
 }
 
-export function createNavigateToAction(url: string): Action{
+export function createNavigateToAction(url: string): Action {
   let act: NavigateTo = {
-    type: types.NAVIGATE_TO,
+    type: Actions.NAVIGATE_TO,
     url: url
+  }
+  return act;
+}
+
+export function createUpsertRegionAction(r: Region): Action {
+  let act: UpsertRegion = {
+    type: Actions.UPSERT_REGION,
+    region: r
+  }
+  return act;
+}
+
+export function createUpsertHostAction(h: Host): Action {
+  let act: UpsertHost = {
+    type: Actions.UPSERT_HOST,
+    host: h
   }
   return act;
 }

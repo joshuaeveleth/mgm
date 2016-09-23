@@ -78,7 +78,6 @@ export class Login extends React.Component<loginProps, {}> {
         }
         return (
             <div>
-                <h1>Login View</h1>
                 <Form inline={true} onSubmit={this.handleLogin.bind(this) }>
                     <FormGroup>
                         <ControlLabel>Username: </ControlLabel>

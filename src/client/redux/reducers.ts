@@ -1,12 +1,16 @@
 import { Action, combineReducers } from 'redux';
 
+import { Host, Region } from '../../common/messages'
+
 import {
   NavigateTo,
   LoginAction,
-  SetAuthMessage
+  SetAuthMessage,
+  UpsertHost,
+  UpsertRegion
 } from './actions';
-import * as types from './types';
-import { User, mgmState } from './model';
+import { User, Actions} from './types';
+import { mgmState } from './model';
 
 const initialState = {
   auth: {
@@ -15,21 +19,20 @@ const initialState = {
   url: window.location.href
 }
 
-function reduceAuth(state = { loggedIn: false }, action: Action) {
+function auth(state = { loggedIn: false }, action: Action) {
   switch (action.type) {
-    case types.LOGIN_ACTION:
+    case Actions.LOGIN:
       let act = <LoginAction>action;
-      console.log(act);
       return (<any>Object).assign({}, state, {
         loggedIn: true,
         user: act.user
       })
-    case types.LOGOUT_ACTION:
+    case Actions.LOGOUT:
       return (<any>Object).assign({}, state, {
         loggedIn: false,
         user: null
       })
-    case types.AUTH_SET_ERROR_MESSAGE:
+    case Actions.AUTH_SET_ERROR_MESSAGE:
       let aca = <SetAuthMessage>action;
       return (<any>Object).assign({}, state, {
         errorMsg: aca.message
@@ -40,7 +43,7 @@ function reduceAuth(state = { loggedIn: false }, action: Action) {
 
 function url(state = "/", action: Action) {
   switch (action.type) {
-    case types.NAVIGATE_TO:
+    case Actions.NAVIGATE_TO:
       let act = <NavigateTo>action;
       if (act.url === state) return state;
       return act.url
@@ -49,9 +52,38 @@ function url(state = "/", action: Action) {
   }
 }
 
+function hosts(state: { [key: number]: Host } = {}, action: Action) {
+  switch (action.type) {
+    case Actions.UPSERT_HOST:
+      let act = <UpsertHost>action;
+      return (<any>Object).assign({}, state, {
+        [act.host.id]: (<any>Object).assign({}, state[act.host.id], act.host)
+      });
+    default:
+      return state;
+  }
+}
+
+function regions(state: { [key: string]: Region } = {}, action: Action) {
+  switch (action.type) {
+    case Actions.UPSERT_REGION:
+      let act = <UpsertRegion>action;
+      if(! act.region){
+        console.log(act);
+      }
+      return (<any>Object).assign({}, state, {
+        [act.region.uuid]: (<any>Object).assign({}, state[act.region.uuid], act.region)
+      });
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers<mgmState>({
-  "auth": reduceAuth,
-  "url": url
+  "auth": auth,
+  "url": url,
+  "hosts": hosts,
+  "regions": regions
 });
 
 export default rootReducer;

@@ -20,7 +20,8 @@
     "./auth/HalcyonToken.ts",
     "./mysql/index.ts",
     "./mysql/models/halcyon/users.ts",
-    "./mysql/models/mgm/hosts.ts"
+    "./mysql/models/mgm/hosts.ts",
+    "./mysql/models/mgm/regions.ts"
   ],
   "atom": {
     "rewriteTsconfig": true

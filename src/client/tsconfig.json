@@ -16,7 +16,6 @@
         "./components/authenticated/Regions.tsx",
         "./components/App.tsx",
         "./components/Splash.tsx",
-        "./components/Link.tsx",
         "./components/authenticated/Users.tsx",
         "./components/unauthenticated/index.tsx",
         "./components/unauthenticated/Register.tsx",

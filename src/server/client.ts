@@ -1,6 +1,6 @@
 
 import * as io from 'socket.io';
-import { Host } from '../common/messages';
+import { Host, Region } from '../common/messages';
 import { Detail } from './auth';
 import { MGMDB, HALCYONDB } from './mysql';
 
@@ -9,7 +9,22 @@ function handleUser(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB){
   
 
   // send regions
-
+  mgmDB.regions.findAll().then( (regions: Region[]) => {
+    regions.map( (r: Region) => {
+      let msg : Region = {
+        uuid: r.uuid,
+        name: r.name,
+        httpPort: r.httpPort,
+        locX: r.locX,
+        locY: r.locY,
+        slaveAddress: r.slaveAddress,
+        externalAddress: r.externalAddress
+      }
+      sock.emit('region', msg);
+    })
+  }).catch( (e: Error) => {
+    console.log(e);
+  })
 }
 
 function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB){

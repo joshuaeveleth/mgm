@@ -3,11 +3,11 @@ import { Action, Dispatch, Middleware, Store} from 'redux';
 import * as io from "socket.io-client";
 import * as Promise from "bluebird";
 
-import { createSetAuthErrorMessageAction, createLogoutAction, LoginAction } from '../redux/actions';
+import { createSetAuthErrorMessageAction, createLogoutAction, LoginAction, createUpsertHostAction, createUpsertRegionAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
-import * as types from '../redux/types';
+import { Actions } from '../redux/types';
 
-import { Host } from '../../common/messages'
+import { Host, Region } from '../../common/messages'
 
 let sock: SocketIOClient.Socket = null;
 
@@ -20,13 +20,17 @@ interface SockJwtError {
   }
 }
 
-function handleSocket(){
+function handleSocket(store: Store<mgmState>) {
   sock.on('host', (h: Host) => {
-    console.log(h);
+    store.dispatch(createUpsertHostAction(h));
+  })
+
+  sock.on('region', (r: Region) => {
+    store.dispatch(createUpsertRegionAction(r));
   })
 }
 
-function connectSocket(jwt: string): Promise<void> {
+function connectSocket(store: Store<mgmState>, jwt: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     sock = io.connect({
       reconnection: false
@@ -41,7 +45,7 @@ function connectSocket(jwt: string): Promise<void> {
           //we are token-authenticated and ready to roll
           console.log('client authenticated');
           resolve();
-          handleSocket();
+          handleSocket(store);
         })
         .on('unauthorized', (error: SockJwtError) => {
           if (error.data.code == "invalid_token") {
@@ -64,9 +68,9 @@ function closeSocket() {
  */
 export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmState>) => (action: Action) => {
   switch (action.type) {
-    case types.LOGIN_ACTION:
+    case Actions.LOGIN:
       let act = <LoginAction>action;
-      connectSocket(act.user.token).then(() => {
+      connectSocket(store, act.user.token).then(() => {
         console.log('connection succeeded, proceeding with login')
         next(action);
       }).catch((e: Error) => {
@@ -75,8 +79,13 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
         store.dispatch(createLogoutAction());
       })
       break;
-    case types.LOGOUT_ACTION:
+    case Actions.LOGOUT:
       closeSocket();
+      next(action);
+      break;
+    
+    case Actions.UPSERT_HOST:
+    case Actions.UPSERT_REGION:
       next(action);
       break;
     default:

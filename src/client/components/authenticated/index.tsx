@@ -1,10 +1,9 @@
 import * as React from "react";
 import { Store } from 'redux'
 import { mgmState } from '../../redux/model';
-import { createLogoutAction } from '../../redux/actions';
+import { createLogoutAction, createNavigateToAction } from '../../redux/actions';
 
 import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
-import { Link } from '../Link';
 
 import { Account } from "./Account";
 import { Regions } from "./Regions";
@@ -23,6 +22,10 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
         this.props.store.dispatch(createLogoutAction());
     }
 
+    handleNav(href: string) {
+        this.props.store.dispatch(createNavigateToAction(href));
+    }
+
     render() {
         let navbar = (
             <Navbar>
@@ -32,17 +35,37 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
-                        <NavItem active={this.props.route === "/account" || this.props.route === "/"}><Link href="/account" route={this.props.route} store={this.props.store}>Account</Link></NavItem>
-                        <NavItem active={this.props.route === "/regions"}><Link href="/regions" route={this.props.route} store={this.props.store}>Regions</Link></NavItem>
-                        <NavItem active={this.props.route === "/grid"}><Link href="/grid" route={this.props.route} store={this.props.store}>Grid</Link></NavItem>
-                        <NavItem active={this.props.route === "/users"}><Link href="/users" route={this.props.route} store={this.props.store}>Users</Link></NavItem>
-                        <NavItem active={this.props.route === "/pending"}><Link href="/pending" route={this.props.route} store={this.props.store}>Pending Users</Link></NavItem>
-                    </Nav>
+                        <NavItem
+                            active={this.props.route === "/account" || this.props.route === "/"}
+                            onClick={this.handleNav.bind(this, "/account") }>
+                            Account
+                        </NavItem>
+                        <NavItem
+                            active={this.props.route === "/regions"}
+                            onClick={this.handleNav.bind(this, "/regions") }>
+                            Regions
+                        </NavItem>
+                        <NavItem
+                            active={this.props.route === "/grid"}
+                            onClick={this.handleNav.bind(this, "/grid") }>
+                            Grid
+                        </NavItem>
+                        <NavItem
+                            active={this.props.route === "/users"}
+                            onClick={this.handleNav.bind(this, "/users") }>
+                            Users
+                        </NavItem >
+                        <NavItem
+                            active={this.props.route === "/pending"}
+                            onClick={this.handleNav.bind(this, "/pending") }>
+                            Pending Users
+                        </NavItem >
+                    </Nav >
                     <Nav pullRight>
                         <NavItem><Button bsSize="xsmall" onClick={this.handleLogout.bind(this) }>Log Out</Button></NavItem>
                     </Nav>
-                </Navbar.Collapse>
-            </Navbar>
+                </Navbar.Collapse >
+            </Navbar >
         )
         switch (this.props.route) {
             case '/regions':

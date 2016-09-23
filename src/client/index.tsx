@@ -3,7 +3,8 @@ import * as ReactDOM from "react-dom";
 
 import { createStore, applyMiddleware, Store } from 'redux'
 
-import { User, mgmState } from "./redux/model";
+import { mgmState } from "./redux/model";
+import { User } from "./redux/types";
 
 import reducer from "./redux/reducers";
 import { createNavigateToAction, createLoginAction } from "./redux/actions"

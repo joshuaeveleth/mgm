@@ -1,10 +1,6 @@
 
-export interface User {
-  username: string,
-  godLevel: number,
-  email: string,
-  token: string
-}
+import { Host, Region } from '../../common/messages'
+import { User } from './types';
 
 export interface mgmState {
   auth: {
@@ -13,4 +9,6 @@ export interface mgmState {
     errorMsg: string
   }
   url: string
+  hosts: Host[]
+  regions: Region[]
 }

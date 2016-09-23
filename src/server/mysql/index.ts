@@ -6,8 +6,9 @@ import * as Sequelize from 'sequelize';
 //HALCYON definitions
 import { users, User } from './models/halcyon/users';
 import { hosts } from './models/mgm/hosts';
+import { regions } from './models/mgm/regions';
 
-import { Host } from '../../common/messages';
+import { Host, Region } from '../../common/messages';
 
 export { User } from './models/halcyon/users';
 
@@ -20,6 +21,7 @@ export interface Config {
 
 export interface MGMDB {
   hosts: Sequelize.Model<{},Host>
+  regions: Sequelize.Model<{},Region>
 }
 
 export interface HALCYONDB {
@@ -41,7 +43,8 @@ export class Sql {
     });
 
     return {
-      hosts: seq.import('hosts', hosts)
+      hosts: seq.import('hosts', hosts),
+      regions: seq.import('regions', regions)
     };
   }
 

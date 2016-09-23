@@ -1,6 +1,6 @@
-/* jshint indent: 2 */
+import * as Sequelize from 'sequelize';
 
-module.exports = function(sequelize, DataTypes) {
+export function regions(sequelize, DataTypes) {
   return sequelize.define('regions', {
     uuid: {
       type: DataTypes.CHAR(36),
@@ -60,6 +60,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'regions'
-  });
+      tableName: 'regions',
+      timestamps: false
+    });
 };
