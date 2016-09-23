@@ -9,6 +9,6 @@ export interface mgmState {
     errorMsg: string
   }
   url: string
-  hosts: Host[]
-  regions: Region[]
+  hosts:  { [key: number]: Host }
+  regions:  { [key: string]: Region }
 }

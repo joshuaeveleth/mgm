@@ -72,7 +72,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 return (
                     <div>
                         {navbar}
-                        <Regions />
+                        <Regions store={this.props.store}/>
                     </div>
                 )
             case '/grid':
