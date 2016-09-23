@@ -84,6 +84,7 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
       next(action);
       break;
     
+    case Actions.NAVIGATE_TO:
     case Actions.UPSERT_HOST:
     case Actions.UPSERT_REGION:
       next(action);

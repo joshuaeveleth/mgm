@@ -3,12 +3,15 @@ import { Store } from 'redux'
 import { mgmState } from '../../redux/model';
 
 import { Region } from '../../../common/messages';
+import { RegionView } from './RegionView';
+
+import { Grid, Row, Col } from 'react-bootstrap';
 
 interface regionProps {
     store: Store<mgmState>
 }
 
-export class Regions extends React.Component<regionProps, {}> {
+export class RegionList extends React.Component<regionProps, {}> {
     state: {
         regions: Region[]
     }
@@ -41,16 +44,19 @@ export class Regions extends React.Component<regionProps, {}> {
 
     render() {
         let regions = this.state.regions.map((r: Region) => {
-            return <li key={r.uuid}>{r.uuid}</li>
+            return <RegionView key={r.uuid} region={r}/>
         })
 
         return (
-            <div>
-                <h1>Regions View</h1>
-                <ul>
-                    {regions}
-                </ul>
-            </div>
+            <Grid>
+                <Row>
+                    <Col md={3}>Name</Col>
+                    <Col md={3}>Position</Col>
+                    <Col md={3}>Estate</Col>
+                    <Col md={3}>Host</Col>
+                </Row>
+                {regions}
+            </Grid>
         )
     }
 }

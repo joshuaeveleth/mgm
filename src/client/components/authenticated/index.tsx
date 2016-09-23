@@ -6,7 +6,7 @@ import { createLogoutAction, createNavigateToAction } from '../../redux/actions'
 import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 
 import { Account } from "./Account";
-import { Regions } from "./Regions";
+import { RegionList } from "./RegionList";
 import { Grid } from "./Grid";
 import { Users } from "./Users";
 import { PendingUsers } from "./PendingUsers";
@@ -72,7 +72,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 return (
                     <div>
                         {navbar}
-                        <Regions store={this.props.store}/>
+                        <RegionList store={this.props.store}/>
                     </div>
                 )
             case '/grid':
