@@ -51,7 +51,8 @@ export class Login extends React.Component<loginProps, {}> {
                 if (res.Success) {
                     console.log('auth succeeded');
                     this.props.store.dispatch(createLoginAction({
-                        username: res.username,
+                        uuid: res.uuid,
+                        name: res.username,
                         godLevel: res.accessLevel,
                         email: res.email,
                         token: res.token

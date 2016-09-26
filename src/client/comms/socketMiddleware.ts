@@ -3,11 +3,16 @@ import { Action, Dispatch, Middleware, Store} from 'redux';
 import * as io from "socket.io-client";
 import * as Promise from "bluebird";
 
-import { createSetAuthErrorMessageAction, createLogoutAction, LoginAction, createUpsertHostAction, createUpsertRegionAction } from '../redux/actions';
+import { createSetAuthErrorMessageAction,
+  createLogoutAction,
+  LoginAction,
+  createUpsertHostAction,
+  createUpsertRegionAction,
+  createUpsertUserAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
-import { Host, Region } from '../../common/messages'
+import { Host, Region, User } from '../../common/messages'
 
 let sock: SocketIOClient.Socket = null;
 
@@ -27,6 +32,10 @@ function handleSocket(store: Store<mgmState>) {
 
   sock.on('region', (r: Region) => {
     store.dispatch(createUpsertRegionAction(r));
+  })
+
+  sock.on('user', (u: User) => {
+    store.dispatch(createUpsertUserAction(u));
   })
 }
 
@@ -87,6 +96,7 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
     case Actions.NAVIGATE_TO:
     case Actions.UPSERT_HOST:
     case Actions.UPSERT_REGION:
+    case Actions.UPSERT_USER:
       next(action);
       break;
     default:

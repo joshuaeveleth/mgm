@@ -8,7 +8,7 @@ import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 import { Account } from "./Account";
 import { RegionList } from "./RegionList";
 import { Grid } from "./Grid";
-import { Users } from "./Users";
+import { UserList } from "./UserList";
 import { PendingUsers } from "./PendingUsers";
 
 interface authenticatedProps {
@@ -86,7 +86,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 return (
                     <div>
                         {navbar}
-                        <Users />
+                        <UserList store={this.props.store} />
                     </div>
                 )
             case '/pending':

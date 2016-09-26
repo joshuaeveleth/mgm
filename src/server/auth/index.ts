@@ -78,6 +78,7 @@ export class Auth {
     }).then((token) => {
       res.send(JSON.stringify({
         Success: true,
+        uuid: candidateUser.UUID,
         username: candidateUser.username + ' ' + candidateUser.lastname,
         accessLevel: candidateUser.godLevel,
         email: candidateUser.email,

@@ -12,7 +12,7 @@ export class Account extends React.Component<authenticatedProps, {}> {
         return (
             <div>
                 <h1>Your Account</h1>
-                <p>Avatar Name: {user.username}</p>
+                <p>Avatar Name: {user.name}</p>
                 <p>Avatar User Level: {user.godLevel}</p>
                 <p>User Email: {user.email}</p>
             </div>

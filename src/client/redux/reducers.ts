@@ -7,9 +7,11 @@ import {
   LoginAction,
   SetAuthMessage,
   UpsertHost,
-  UpsertRegion
+  UpsertRegion,
+  UpsertUser
 } from './actions';
-import { User, Actions} from './types';
+import { Actions} from './types';
+import { User } from '../../common/messages';
 import { mgmState } from './model';
 
 const initialState = {
@@ -79,11 +81,27 @@ function regions(state: { [key: string]: Region } = {}, action: Action) {
   }
 }
 
+function users(state: { [key: string]: User } = {}, action: Action) {
+  switch (action.type) {
+    case Actions.UPSERT_USER:
+      let act = <UpsertUser>action;
+      if(! act.user){
+        console.log(act);
+      }
+      return (<any>Object).assign({}, state, {
+        [act.user.uuid]: (<any>Object).assign({}, state[act.user.uuid], act.user)
+      });
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers<mgmState>({
   "auth": auth,
   "url": url,
   "hosts": hosts,
-  "regions": regions
+  "regions": regions,
+  "users": users
 });
 
 export default rootReducer;

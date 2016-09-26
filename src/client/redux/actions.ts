@@ -1,11 +1,12 @@
 import { Action } from 'redux';
 
-import { User, Actions } from "./types";
+import { Actions } from "./types";
+import { LoginUser } from './model';
 
-import { Host, Region } from '../../common/messages'
+import { Host, Region, User } from '../../common/messages'
 
 export interface LoginAction extends Action {
-  user: User
+  user: LoginUser
 }
 
 export interface SetAuthMessage extends Action {
@@ -24,8 +25,12 @@ export interface UpsertHost extends Action {
   host: Host
 }
 
+export interface UpsertUser extends Action {
+  user: User
+}
 
-export function createLoginAction(user: User): Action {
+
+export function createLoginAction(user: LoginUser): Action {
   let act: LoginAction = {
     type: Actions.LOGIN,
     user: user
@@ -69,6 +74,14 @@ export function createUpsertHostAction(h: Host): Action {
   let act: UpsertHost = {
     type: Actions.UPSERT_HOST,
     host: h
+  }
+  return act;
+}
+
+export function createUpsertUserAction(u: User): Action {
+  let act: UpsertUser = {
+    type: Actions.UPSERT_USER,
+    user: u
   }
   return act;
 }

@@ -10,7 +10,7 @@ export interface User {
 export interface PendingUser {
   name: string
   email: string
-  template: string
+  gender: string
   registered: Date
   summary: string
 }

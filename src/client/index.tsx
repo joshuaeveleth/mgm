@@ -3,8 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import { createStore, applyMiddleware, Store } from 'redux'
 
-import { mgmState } from "./redux/model";
-import { User } from "./redux/types";
+import { LoginUser, mgmState } from "./redux/model";
 
 import reducer from "./redux/reducers";
 import { createNavigateToAction, createLoginAction } from "./redux/actions"
@@ -33,17 +32,17 @@ window.addEventListener('popstate', () => {
 
 
 // set up for local storage of authentication components
-let user: User = null;
+let user: LoginUser = null;
 if (localStorage.getItem("user")) {
     user = JSON.parse(localStorage.getItem("user"));
     store.dispatch(createLoginAction(user));
 }
 store.subscribe(() => {
-    let storeUser = store.getState().auth.user;
-    if (storeUser !== user) {
-        if (storeUser) {
-            user = storeUser;
-            localStorage.setItem("user", JSON.stringify(storeUser));
+    let auth = store.getState().auth;
+    if (auth.user !== user) {
+        if (auth.user) {
+            user = auth.user;
+            localStorage.setItem("user", JSON.stringify(auth.user));
         } else {
             localStorage.removeItem("user");
             user = null;
