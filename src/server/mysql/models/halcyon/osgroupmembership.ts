@@ -1,6 +1,6 @@
-/* jshint indent: 2 */
+import * as Sequelize from 'sequelize';
 
-module.exports = function(sequelize, DataTypes) {
+export function osGroupMembership(sequelize, DataTypes) {
   return sequelize.define('osgroupmembership', {
     GroupID: {
       type: DataTypes.STRING,
@@ -29,6 +29,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'osgroupmembership'
+    tableName: 'osgroupmembership',
+    timestamps: false
   });
 };

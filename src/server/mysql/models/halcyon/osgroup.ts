@@ -1,6 +1,6 @@
-/* jshint indent: 2 */
+import * as Sequelize from 'sequelize';
 
-module.exports = function(sequelize, DataTypes) {
+export function osGroup(sequelize, DataTypes) {
   return sequelize.define('osgroup', {
     GroupID: {
       type: DataTypes.STRING,
@@ -49,6 +49,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'osgroup'
+    tableName: 'osgroup',
+    timestamps: false
   });
 };

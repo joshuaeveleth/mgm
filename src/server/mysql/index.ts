@@ -9,7 +9,11 @@ import { users as pendingUsers } from './models/mgm/users';
 import { hosts } from './models/mgm/hosts';
 import { regions } from './models/mgm/regions';
 
-import { Host, Region, PendingUser } from '../../common/messages';
+import { osGroup } from './models/halcyon/osgroup';
+import { osRole } from './models/halcyon/osrole';
+import { osGroupMembership } from './models/halcyon/osgroupmembership';
+
+import { Host, Region, PendingUser, Group, Role, Membership } from '../../common/messages';
 
 export { User } from './models/halcyon/users';
 
@@ -28,6 +32,9 @@ export interface MGMDB {
 
 export interface HALCYONDB {
   users: Sequelize.Model<{},User>
+  groups: Sequelize.Model<{}, Group>
+  roles: Sequelize.Model<{}, Role>
+  members: Sequelize.Model<{}, Membership>
 }
 
 export class Sql {
@@ -64,7 +71,10 @@ export class Sql {
     });
 
     return {
-      users: seq.import('users', users)
+      users: seq.import('users', users),
+      groups: seq.import('osgroup', osGroup),
+      roles: seq.import('osrole', osRole),
+      members: seq.import('osgroupmembership', osGroupMembership)
     };
   }
 }

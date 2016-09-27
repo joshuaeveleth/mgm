@@ -13,7 +13,7 @@ import { createSetAuthErrorMessageAction,
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
-import { Host, Region, User, PendingUser } from '../../common/messages'
+import { Host, Region, User, PendingUser, Group, Role, Membership } from '../../common/messages'
 
 let sock: SocketIOClient.Socket = null;
 
@@ -42,6 +42,16 @@ function handleSocket(store: Store<mgmState>) {
   sock.on('pendingUser', (u: PendingUser) => {
     store.dispatch(createInsertPendingUserAction(u));
   });
+
+  sock.on('group', (group: Group) => {
+    console.log(group);
+  })
+  sock.on('role', (role: Role) => {
+    console.log(role);
+  })
+  sock.on('member', (member: Membership) => {
+    console.log(member);
+  })
 }
 
 function connectSocket(store: Store<mgmState>, jwt: string): Promise<void> {

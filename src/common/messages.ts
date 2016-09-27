@@ -40,5 +40,26 @@ export interface Host {
   port: number
   name: string
   slots: number
-  
+}
+
+export interface Group {
+  GroupID: string
+  Name: string
+  FounderID: string
+  OwnerRoleID: string
+}
+
+export interface Role {
+  GroupID: string
+  RoleID: string
+  Name: string
+  Description: string
+  Title: string
+  Powers: number
+}
+
+export interface Membership {
+  GroupID: string
+  AgentID: string
+  SelectedRoleID: string
 }
