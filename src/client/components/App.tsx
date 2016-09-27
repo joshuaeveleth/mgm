@@ -12,43 +12,29 @@ interface appProps {
 
 export class App extends React.Component<appProps, {}> {
     private sub: Redux.Unsubscribe;
-    state: {
-        authenticated: boolean,
-        route: string
-    }
+    state: mgmState;
 
     constructor(props: appProps) {
         super(props);
         this.sub = this.props.store.subscribe(() => {
-            let store = this.props.store.getState();
-            if (this.state.authenticated !== store.auth.loggedIn) {
-                this.setState({
-                    authenticated: this.props.store.getState().auth.loggedIn
-                })
-            }
-            if (this.state.route !== store.url) {
-                this.setState({
-                    route: store.url
-                })
+            if(this.state != this.props.store.getState()){
+                this.setState(this.props.store.getState());
             }
         });
-        this.state = {
-            authenticated: this.props.store.getState().auth.loggedIn,
-            route: this.props.store.getState().url
-        };
+        this.state = this.props.store.getState();
     }
 
-    componentWillUnmount() {
-        this.sub();
+    updateState(){
+        let state = this.props.store.getState();
     }
 
     render() {
-        if (this.state.authenticated) {
+        if (this.state.auth.loggedIn) {
             // show authenticated tree
-            return <Authenticated route={this.state.route} store={this.props.store} />
+            return <Authenticated route={this.state.url} store={this.props.store} />
         } else {
             // show splash, login, registration tree
-            return <Unauthenticated route={this.state.route} store={this.props.store} />
+            return <Unauthenticated route={this.state.url} store={this.props.store} />
         }
     }
 }

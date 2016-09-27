@@ -3,7 +3,7 @@ import { Action } from 'redux';
 import { Actions } from "./types";
 import { LoginUser } from './model';
 
-import { Host, Region, User } from '../../common/messages'
+import { Host, Region, User, PendingUser } from '../../common/messages'
 
 export interface LoginAction extends Action {
   user: LoginUser
@@ -27,6 +27,10 @@ export interface UpsertHost extends Action {
 
 export interface UpsertUser extends Action {
   user: User
+}
+
+export interface InsertPendingUser extends Action {
+  user: PendingUser
 }
 
 
@@ -81,6 +85,14 @@ export function createUpsertHostAction(h: Host): Action {
 export function createUpsertUserAction(u: User): Action {
   let act: UpsertUser = {
     type: Actions.UPSERT_USER,
+    user: u
+  }
+  return act;
+}
+
+export function createInsertPendingUserAction(u: PendingUser): Action {
+  let act: InsertPendingUser = {
+    type: Actions.INSERT_PENDING_USER,
     user: u
   }
   return act;

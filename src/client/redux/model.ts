@@ -1,5 +1,5 @@
 
-import { Host, Region, User } from '../../common/messages'
+import { Host, Region, User, PendingUser } from '../../common/messages'
 
 export interface mgmState {
   auth: {
@@ -11,7 +11,8 @@ export interface mgmState {
   url: string
   hosts:  { [key: number]: Host }
   regions:  { [key: string]: Region }
-  users:  { [key: string]: User }
+  users:  { [key: string]: User },
+  pendingUsers: { [key: string]: PendingUser },
 }
 
 export interface LoginUser {

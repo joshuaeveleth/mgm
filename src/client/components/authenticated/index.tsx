@@ -9,7 +9,7 @@ import { Account } from "./Account";
 import { RegionList } from "./RegionList";
 import { Grid } from "./Grid";
 import { UserList } from "./UserList";
-import { PendingUsers } from "./PendingUsers";
+import { PendingUserList } from "./PendingUserList";
 
 interface authenticatedProps {
     store: Store<mgmState>,
@@ -93,7 +93,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 return (
                     <div>
                         {navbar}
-                        <PendingUsers />
+                        <PendingUserList store={this.props.store}/>
                     </div>
                 )
             default:

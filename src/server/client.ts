@@ -35,7 +35,7 @@ function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB){
 
   //send users
   halDB.users.findAll().then( (users: DBUser[]) => {
-    //send users
+    //send users, mapped to hide extra data from sim
     users.map( (u: DBUser) => {
       let user: User = {
         uuid: u.UUID,
@@ -47,9 +47,20 @@ function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB){
     })
   })
 
-  //send pending
+  //send pending, blanking the password
   mgmDB.pendingUsers.findAll().then( (users: PendingUser[]) => {
-    // send pending users here
+    users.map( (u: PendingUser) => {
+      let user: PendingUser = {
+        name: u.name,
+        gender: u.gender,
+        email: u.email,
+        registered: u.registered,
+        summary: u.summary,
+        password: ''
+      }
+      sock.emit('pendingUser', user);
+      //sock.emit('pendingUser', (<any>Object).assign({}, u, { password: 'xxx' }));
+    })
   })
 }
 

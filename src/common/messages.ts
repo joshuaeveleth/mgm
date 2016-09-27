@@ -13,6 +13,7 @@ export interface PendingUser {
   gender: string
   registered: Date
   summary: string
+  password: string
 }
 
 export interface Region {

@@ -8,11 +8,12 @@ import { createSetAuthErrorMessageAction,
   LoginAction,
   createUpsertHostAction,
   createUpsertRegionAction,
-  createUpsertUserAction } from '../redux/actions';
+  createUpsertUserAction,
+  createInsertPendingUserAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
-import { Host, Region, User } from '../../common/messages'
+import { Host, Region, User, PendingUser } from '../../common/messages'
 
 let sock: SocketIOClient.Socket = null;
 
@@ -37,6 +38,10 @@ function handleSocket(store: Store<mgmState>) {
   sock.on('user', (u: User) => {
     store.dispatch(createUpsertUserAction(u));
   })
+
+  sock.on('pendingUser', (u: PendingUser) => {
+    store.dispatch(createInsertPendingUserAction(u));
+  });
 }
 
 function connectSocket(store: Store<mgmState>, jwt: string): Promise<void> {
@@ -57,9 +62,7 @@ function connectSocket(store: Store<mgmState>, jwt: string): Promise<void> {
           handleSocket(store);
         })
         .on('unauthorized', (error: SockJwtError) => {
-          if (error.data.code == "invalid_token") {
-            reject(new Error('Token expired, please log in again'));
-          }
+          reject(new Error('Token expired, please log in again'));
         })
     })
   });
@@ -92,11 +95,13 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
       closeSocket();
       next(action);
       break;
-    
+
+    case Actions.AUTH_SET_ERROR_MESSAGE:
     case Actions.NAVIGATE_TO:
     case Actions.UPSERT_HOST:
     case Actions.UPSERT_REGION:
     case Actions.UPSERT_USER:
+    case Actions.INSERT_PENDING_USER:
       next(action);
       break;
     default:

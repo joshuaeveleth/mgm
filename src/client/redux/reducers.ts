@@ -1,6 +1,7 @@
 import { Action, combineReducers } from 'redux';
 
-import { Host, Region } from '../../common/messages'
+import { Host, Region, User } from '../../common/messages'
+import { mgmState } from './model';
 
 import {
   NavigateTo,
@@ -8,11 +9,10 @@ import {
   SetAuthMessage,
   UpsertHost,
   UpsertRegion,
-  UpsertUser
+  UpsertUser,
+  InsertPendingUser,
 } from './actions';
 import { Actions} from './types';
-import { User } from '../../common/messages';
-import { mgmState } from './model';
 
 const initialState = {
   auth: {
@@ -70,9 +70,6 @@ function regions(state: { [key: string]: Region } = {}, action: Action) {
   switch (action.type) {
     case Actions.UPSERT_REGION:
       let act = <UpsertRegion>action;
-      if(! act.region){
-        console.log(act);
-      }
       return (<any>Object).assign({}, state, {
         [act.region.uuid]: (<any>Object).assign({}, state[act.region.uuid], act.region)
       });
@@ -85,11 +82,20 @@ function users(state: { [key: string]: User } = {}, action: Action) {
   switch (action.type) {
     case Actions.UPSERT_USER:
       let act = <UpsertUser>action;
-      if(! act.user){
-        console.log(act);
-      }
       return (<any>Object).assign({}, state, {
         [act.user.uuid]: (<any>Object).assign({}, state[act.user.uuid], act.user)
+      });
+    default:
+      return state;
+  }
+}
+
+function pendingUsers(state: { [key: string]: User } = {}, action: Action) {
+  switch (action.type) {
+    case Actions.INSERT_PENDING_USER:
+      let act = <InsertPendingUser>action;
+      return (<any>Object).assign({}, state, {
+        [act.user.name]: (<any>Object).assign({}, state[act.user.name], act.user)
       });
     default:
       return state;
@@ -101,7 +107,8 @@ const rootReducer = combineReducers<mgmState>({
   "url": url,
   "hosts": hosts,
   "regions": regions,
-  "users": users
+  "users": users,
+  "pendingUsers": pendingUsers
 });
 
 export default rootReducer;
