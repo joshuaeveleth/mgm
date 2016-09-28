@@ -46,7 +46,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                             Regions
                         </NavItem>
                         <NavItem
-                            active={this.props.route === "/grid"}
+                            active={this.props.route.substring(0,5) == "/grid"}
                             onClick={this.handleNav.bind(this, "/grid") }>
                             Grid
                         </NavItem>
@@ -75,7 +75,9 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         <RegionList store={this.props.store}/>
                     </div>
                 )
-            case '/grid':
+            case '/grid/estates':
+            case '/grid/groups':
+            case '/grid/hosts':
                 return (
                     <div>
                         {navbar}

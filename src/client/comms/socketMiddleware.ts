@@ -13,7 +13,7 @@ import { createSetAuthErrorMessageAction,
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
-import { Host, Region, User, PendingUser, Group, Role, Membership } from '../../common/messages'
+import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap } from '../../common/messages'
 
 let sock: SocketIOClient.Socket = null;
 
@@ -51,6 +51,16 @@ function handleSocket(store: Store<mgmState>) {
   })
   sock.on('member', (member: Membership) => {
     console.log(member);
+  })
+
+  sock.on('estate', (estate: Estate) => {
+    console.log(estate);
+  })
+  sock.on('manager', (manager: Manager) => {
+    console.log(manager);
+  })
+  sock.on('estateMap', (region: EstateMap) => {
+    console.log(region);
   })
 }
 
@@ -96,9 +106,8 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
         console.log('connection succeeded, proceeding with login')
         next(action);
       }).catch((e: Error) => {
-        console.log(e);
+        // log out, and set error message
         store.dispatch(createSetAuthErrorMessageAction(e.message));
-        store.dispatch(createLogoutAction());
       })
       break;
     case Actions.LOGOUT:

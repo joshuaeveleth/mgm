@@ -26,14 +26,6 @@ export interface Region {
   slaveAddress: string
 }
 
-export interface Estate {
-  name: string
-  id: number
-  owner: string
-  managers: string[]
-  regions: string[]
-}
-
 export interface Host {
   id: number
   address: string
@@ -62,4 +54,21 @@ export interface Membership {
   GroupID: string
   AgentID: string
   SelectedRoleID: string
+}
+
+export interface Estate {
+  EstateID: number
+  EstateName: string
+  EstateOwner: string
+}
+
+export interface Manager {
+  EstateId: number
+  uuid: string
+  ID: number
+}
+
+export interface EstateMap {
+  RegionID: string
+  EstateID: number
 }

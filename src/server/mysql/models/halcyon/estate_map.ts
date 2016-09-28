@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+export function estate_map(sequelize, DataTypes) {
   return sequelize.define('estate_map', {
     RegionID: {
       type: DataTypes.STRING,
@@ -13,6 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'estate_map'
+    tableName: 'estate_map',
+    timestamps: false
   });
 };

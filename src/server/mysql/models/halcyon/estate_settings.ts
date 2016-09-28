@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+export function estate_settings(sequelize, DataTypes) {
   return sequelize.define('estate_settings', {
     EstateID: {
       type: DataTypes.INTEGER(10),
@@ -101,6 +101,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'estate_settings'
+    tableName: 'estate_settings',
+    timestamps: false
   });
 };

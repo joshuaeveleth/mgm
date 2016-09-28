@@ -1,6 +1,6 @@
 
 import * as io from 'socket.io';
-import { Host, Region, PendingUser, User, Group, Role, Membership } from '../common/messages';
+import { Host, Region, PendingUser, User, Group, Role, Membership, Estate, Manager, EstateMap } from '../common/messages';
 import { Detail } from './auth';
 import { MGMDB, HALCYONDB, User as DBUser } from './mysql';
 
@@ -11,7 +11,37 @@ import { MGMDB, HALCYONDB, User as DBUser } from './mysql';
 
 function handleUser(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
   // send estates
-
+  halDB.estates.findAll().then( (estates: Estate[]) => {
+    estates.map( (e: Estate) => {
+      let estate: Estate = {
+        EstateID: e.EstateID,
+        EstateName: e.EstateName,
+        EstateOwner: e.EstateOwner
+      }
+      sock.emit('estate', estate);
+    })
+  }).then( () => {
+    return halDB.managers.findAll()
+  }).then( (managers: Manager[]) => {
+    managers.map( (m: Manager) => {
+      let manager: Manager = {
+        EstateId: m.EstateId,
+        ID: m.ID,
+        uuid: m.uuid
+      }
+      sock.emit('manager', manager);
+    })
+  }).then ( () => {
+    return halDB.estateMap.findAll();
+  }).then( (regs: EstateMap[]) => {
+    regs.map( (r: EstateMap) => {
+      let region : EstateMap = {
+        RegionID: r.RegionID,
+        EstateID: r.EstateID
+      }
+      sock.emit('estateMap', region)
+    })
+  })
 
   // send regions
   mgmDB.regions.findAll().then((regions: Region[]) => {

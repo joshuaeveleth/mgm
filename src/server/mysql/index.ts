@@ -13,7 +13,11 @@ import { osGroup } from './models/halcyon/osgroup';
 import { osRole } from './models/halcyon/osrole';
 import { osGroupMembership } from './models/halcyon/osgroupmembership';
 
-import { Host, Region, PendingUser, Group, Role, Membership } from '../../common/messages';
+import { estate_settings } from './models/halcyon/estate_settings';
+import { estate_map } from './models/halcyon/estate_map';
+import { estate_managers } from './models/halcyon/estate_managers';
+
+import { Host, Region, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap } from '../../common/messages';
 
 export { User } from './models/halcyon/users';
 
@@ -35,6 +39,9 @@ export interface HALCYONDB {
   groups: Sequelize.Model<{}, Group>
   roles: Sequelize.Model<{}, Role>
   members: Sequelize.Model<{}, Membership>
+  estates: Sequelize.Model<{}, Estate>
+  managers: Sequelize.Model<{}, Manager>
+  estateMap: Sequelize.Model<{}, EstateMap>
 }
 
 export class Sql {
@@ -74,7 +81,10 @@ export class Sql {
       users: seq.import('users', users),
       groups: seq.import('osgroup', osGroup),
       roles: seq.import('osrole', osRole),
-      members: seq.import('osgroupmembership', osGroupMembership)
+      members: seq.import('osgroupmembership', osGroupMembership),
+      estates: seq.import('estate_settings', estate_settings),
+      managers: seq.import('estate_managers', estate_managers),
+      estateMap: seq.import('estate_map', estate_map)
     };
   }
 }

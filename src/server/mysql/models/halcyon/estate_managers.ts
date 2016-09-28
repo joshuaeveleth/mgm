@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+export function estate_managers(sequelize, DataTypes) {
   return sequelize.define('estate_managers', {
     EstateId: {
       type: DataTypes.INTEGER(10),
@@ -17,6 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true
     }
   }, {
-    tableName: 'estate_managers'
+    tableName: 'estate_managers',
+    timestamps: false
   });
 };

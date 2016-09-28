@@ -1,7 +1,7 @@
 import { Action, combineReducers } from 'redux';
 
-import { Host, Region, User } from '../../common/messages'
-import { mgmState } from './model';
+import { Host, Region, User, Group, Membership, Role } from '../../common/messages'
+import { mgmState, GroupRecord, EstateRecord } from './model';
 
 import {
   NavigateTo,
@@ -12,7 +12,7 @@ import {
   UpsertUser,
   InsertPendingUser,
 } from './actions';
-import { Actions} from './types';
+import { Actions } from './types';
 
 const initialState = {
   auth: {
@@ -37,6 +37,8 @@ function auth(state = { loggedIn: false }, action: Action) {
     case Actions.AUTH_SET_ERROR_MESSAGE:
       let aca = <SetAuthMessage>action;
       return (<any>Object).assign({}, state, {
+        loggedIn: false,
+        user: null,
         errorMsg: aca.message
       })
     default: return state;
@@ -102,13 +104,35 @@ function pendingUsers(state: { [key: string]: User } = {}, action: Action) {
   }
 }
 
+function groups(state: { [key: string]: GroupRecord } = {}, action: Action) {
+  switch (action.type) {
+    case Actions.ADD_GROUP:
+    case Actions.ADD_MEMBER:
+    case Actions.ADD_ROLE:
+    default:
+      return state
+  }
+}
+
+function estates(state: { [key: number]: EstateRecord } = {}, action: Action) {
+  switch (action.type) {
+    case Actions.ADD_ESTATE:
+    case Actions.ADD_MANAGER:
+    case Actions.ASSIGN_ESTATE:
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers<mgmState>({
   "auth": auth,
   "url": url,
   "hosts": hosts,
   "regions": regions,
   "users": users,
-  "pendingUsers": pendingUsers
+  "pendingUsers": pendingUsers,
+  "groups": groups,
+  "estates": estates
 });
 
 export default rootReducer;
