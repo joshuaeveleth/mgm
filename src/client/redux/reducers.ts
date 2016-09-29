@@ -1,6 +1,6 @@
 import { Action, combineReducers } from 'redux';
 
-import { Host, Region, User, Group, Membership, Role } from '../../common/messages'
+import { Host, Region, User, Group, Membership, Role, Estate, Manager, EstateMap } from '../../common/messages'
 import { mgmState, GroupRecord, EstateRecord } from './model';
 
 import {
@@ -11,6 +11,12 @@ import {
   UpsertRegion,
   UpsertUser,
   InsertPendingUser,
+  GroupAction,
+  MembershipAction,
+  RoleAction,
+  EstateAction,
+  ManagerAction,
+  EstateMapAction
 } from './actions';
 import { Actions } from './types';
 
@@ -107,8 +113,55 @@ function pendingUsers(state: { [key: string]: User } = {}, action: Action) {
 function groups(state: { [key: string]: GroupRecord } = {}, action: Action) {
   switch (action.type) {
     case Actions.ADD_GROUP:
+      let ga = <GroupAction>action;
+      if (state[ga.group.GroupID]) {
+        return (<any>Object).assign({}, state, {
+          [ga.group.GroupID]: (<any>Object).assign({}, state[ga.group.GroupID], {
+            group: ga.group
+          })
+        })
+      } else {
+        let gr: GroupRecord = {
+          group: ga.group,
+          members: [],
+          roles: []
+        }
+        return (<any>Object).assign({}, state, {
+          [ga.group.GroupID]: gr
+        })
+      }
     case Actions.ADD_MEMBER:
+      let ma = <MembershipAction>action;
+      if (state[ma.member.GroupID]) {
+        return (<any>Object).assign({}, state, {
+          members: [...state[ma.member.GroupID].members, ma.member]
+        })
+      } else {
+        let gr: GroupRecord = {
+          group: null,
+          members: [ma.member],
+          roles: []
+        }
+        return (<any>Object).assign({}, state, {
+          [ma.member.GroupID]: gr
+        })
+      }
     case Actions.ADD_ROLE:
+      let ra = <RoleAction>action;
+      if (state[ra.role.GroupID]) {
+        return (<any>Object).assign({}, state, {
+          roles: [...state[ra.role.GroupID].roles, ra.role]
+        })
+      } else {
+        let gr: GroupRecord = {
+          group: null,
+          members: [],
+          roles: [ra.role]
+        }
+        return (<any>Object).assign({}, state, {
+          [ra.role.GroupID]: gr
+        })
+      }
     default:
       return state
   }

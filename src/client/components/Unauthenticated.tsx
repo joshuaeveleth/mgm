@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Store } from 'redux'
-import { mgmState } from '../../redux/model';
-import { createNavigateToAction } from '../../redux/actions';
+import { mgmState } from '../redux/model';
+import { createNavigateToAction } from '../redux/actions';
 
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
-import { Register } from "./Register";
-import { Password } from "./Password";
-import { Login } from "./Login";
+import { Register } from "./unauthenticated/Register";
+import { Password } from "./unauthenticated/Password";
+import { Login } from "./unauthenticated/Login";
 
 interface unauthenticatedProps {
     store: Store<mgmState>,

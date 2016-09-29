@@ -3,7 +3,7 @@ import { Action } from 'redux';
 import { Actions } from "./types";
 import { LoginUser } from './model';
 
-import { Host, Region, User, PendingUser } from '../../common/messages'
+import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap } from '../../common/messages'
 
 export interface LoginAction extends Action {
   user: LoginUser
@@ -31,6 +31,26 @@ export interface UpsertUser extends Action {
 
 export interface InsertPendingUser extends Action {
   user: PendingUser
+}
+
+export interface GroupAction extends Action {
+  group: Group
+}
+export interface RoleAction extends Action {
+  role: Role
+}
+export interface MembershipAction extends Action {
+  member: Membership
+}
+
+export interface EstateAction extends Action {
+  estate: Estate
+}
+export interface ManagerAction extends Action {
+  manager: Manager
+}
+export interface EstateMapAction extends Action {
+  region: EstateMap
 }
 
 
@@ -94,6 +114,50 @@ export function createInsertPendingUserAction(u: PendingUser): Action {
   let act: InsertPendingUser = {
     type: Actions.INSERT_PENDING_USER,
     user: u
+  }
+  return act;
+}
+
+export function createGroupAction(g: Group) {
+  let act: GroupAction = {
+    type: Actions.ADD_GROUP,
+    group: g
+  }
+  return act;
+}
+export function createRoleAction(r: Role) {
+  let act: RoleAction = {
+    type: Actions.ADD_ROLE,
+    role: r
+  }
+  return act;
+}
+export function createMembershipAction(m: Membership) {
+  let act: MembershipAction = {
+    type: Actions.ADD_MEMBER,
+    member: m
+  }
+  return act;
+}
+
+export function createEstateAction(e: Estate) {
+  let act: EstateAction = {
+    type: Actions.ADD_ESTATE,
+    estate: e
+  }
+  return act;
+}
+export function createManagerAction(m: Manager) {
+  let act: ManagerAction = {
+    type: Actions.ADD_MANAGER,
+    manager: m
+  }
+  return act;
+}
+export function createEstateMapAction(r: EstateMap) {
+  let act: EstateMapAction = {
+    type: Actions.ASSIGN_ESTATE,
+    region: r
   }
   return act;
 }

@@ -1,15 +1,15 @@
 import * as React from "react";
 import { Store } from 'redux'
-import { mgmState } from '../../redux/model';
-import { createLogoutAction, createNavigateToAction } from '../../redux/actions';
+import { mgmState } from '../redux/model';
+import { createLogoutAction, createNavigateToAction } from '../redux/actions';
 
 import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 
-import { Account } from "./Account";
-import { RegionList } from "./RegionList";
-import { Grid } from "./Grid";
-import { UserList } from "./UserList";
-import { PendingUserList } from "./PendingUserList";
+import { Account } from "./authenticated/Account";
+import { RegionList } from "./authenticated/RegionList";
+import { Grid } from "./authenticated/Grid";
+import { UserList } from "./authenticated/UserList";
+import { PendingUserList } from "./authenticated/PendingUserList";
 
 interface authenticatedProps {
     store: Store<mgmState>,
@@ -47,7 +47,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         </NavItem>
                         <NavItem
                             active={this.props.route.substring(0,5) == "/grid"}
-                            onClick={this.handleNav.bind(this, "/grid/estates") }>
+                            onClick={this.handleNav.bind(this, "/grid") }>
                             Grid
                         </NavItem>
                         <NavItem
@@ -75,9 +75,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         <RegionList store={this.props.store}/>
                     </div>
                 )
-            case '/grid/estates':
-            case '/grid/groups':
-            case '/grid/hosts':
+            case '/grid':
                 return (
                     <div>
                         {navbar}

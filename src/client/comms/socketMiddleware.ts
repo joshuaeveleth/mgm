@@ -9,7 +9,10 @@ import { createSetAuthErrorMessageAction,
   createUpsertHostAction,
   createUpsertRegionAction,
   createUpsertUserAction,
-  createInsertPendingUserAction } from '../redux/actions';
+  createInsertPendingUserAction,
+  createGroupAction,
+  createMembershipAction,
+  createRoleAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
@@ -43,15 +46,15 @@ function handleSocket(store: Store<mgmState>) {
     store.dispatch(createInsertPendingUserAction(u));
   });
 
-/*
+
   sock.on('group', (group: Group) => {
-    console.log(group);
+    store.dispatch(createGroupAction(group));
   })
   sock.on('role', (role: Role) => {
-    console.log(role);
+    store.dispatch(createRoleAction(role));
   })
   sock.on('member', (member: Membership) => {
-    console.log(member);
+    store.dispatch(createMembershipAction(member));
   })
 
   sock.on('estate', (estate: Estate) => {
@@ -63,7 +66,6 @@ function handleSocket(store: Store<mgmState>) {
   sock.on('estateMap', (region: EstateMap) => {
     console.log(region);
   })
-  */
 }
 
 function connectSocket(store: Store<mgmState>, jwt: string): Promise<void> {

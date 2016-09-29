@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Store } from 'redux'
 
-import { Authenticated } from "./authenticated";
-import { Unauthenticated } from "./unauthenticated";
+import { Authenticated } from "./Authenticated";
+import { Unauthenticated } from "./Unauthenticated";
 
 import { mgmState } from '../redux/model';
 
