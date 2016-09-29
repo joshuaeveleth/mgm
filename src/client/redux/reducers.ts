@@ -170,8 +170,59 @@ function groups(state: { [key: string]: GroupRecord } = {}, action: Action) {
 function estates(state: { [key: number]: EstateRecord } = {}, action: Action) {
   switch (action.type) {
     case Actions.ADD_ESTATE:
+      let ea = <EstateAction>action;
+      if (state[ea.estate.EstateID]) {
+        return (<any>Object).assign({}, state, {
+          [ea.estate.EstateID]: (<any>Object).assign({}, state[ea.estate.EstateID], {
+            estate: ea.estate
+          })
+        })
+      } else {
+        let er: EstateRecord = {
+          estate: ea.estate,
+          managers: [],
+          regions: []
+        }
+        return (<any>Object).assign({}, state, {
+          [ea.estate.EstateID]: er
+        })
+      }
     case Actions.ADD_MANAGER:
+      let ma = <ManagerAction>action;
+      if (state[ma.manager.EstateId]) {
+        return (<any>Object).assign({}, state, {
+          [ma.manager.EstateId]: (<any>Object).assign({}, state[ma.manager.EstateId], {
+            managers: [...state[ma.manager.EstateId].managers, ma.manager.uuid]
+          })
+        })
+      } else {
+        let er: EstateRecord = {
+          estate: null,
+          managers: [ma.manager.uuid],
+          regions: []
+        }
+        return (<any>Object).assign({}, state, {
+          [ma.manager.EstateId]: er
+        })
+      }
     case Actions.ASSIGN_ESTATE:
+      let ra = <EstateMapAction>action;
+      if (state[ra.region.EstateID]) {
+        return (<any>Object).assign({}, state, {
+          [ra.region.EstateID]: (<any>Object).assign({}, state[ra.region.EstateID], {
+            regions: [...state[ra.region.EstateID].regions, ra.region.RegionID]
+          })
+        })
+      } else {
+        let er: EstateRecord = {
+          estate: null,
+          managers: [],
+          regions: [ra.region.RegionID]
+        }
+        return (<any>Object).assign({}, state, {
+          [ra.region.EstateID]: er
+        })
+      }
     default:
       return state
   }

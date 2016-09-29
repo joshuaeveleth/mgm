@@ -12,7 +12,10 @@ import { createSetAuthErrorMessageAction,
   createInsertPendingUserAction,
   createGroupAction,
   createMembershipAction,
-  createRoleAction } from '../redux/actions';
+  createRoleAction,
+  createEstateAction,
+  createManagerAction,
+  createEstateMapAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
@@ -58,13 +61,13 @@ function handleSocket(store: Store<mgmState>) {
   })
 
   sock.on('estate', (estate: Estate) => {
-    console.log(estate);
+    store.dispatch(createEstateAction(estate));
   })
   sock.on('manager', (manager: Manager) => {
-    console.log(manager);
+    store.dispatch(createManagerAction(manager));
   })
   sock.on('estateMap', (region: EstateMap) => {
-    console.log(region);
+    store.dispatch(createEstateMapAction(region));
   })
 }
 
@@ -125,6 +128,12 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
     case Actions.UPSERT_REGION:
     case Actions.UPSERT_USER:
     case Actions.INSERT_PENDING_USER:
+    case Actions.ADD_ROLE:
+    case Actions.ADD_GROUP:
+    case Actions.ADD_MEMBER:
+    case Actions.ADD_ESTATE:
+    case Actions.ADD_MANAGER:
+    case Actions.ASSIGN_ESTATE:
       next(action);
       break;
     default:
