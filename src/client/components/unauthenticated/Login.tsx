@@ -9,6 +9,7 @@ import { Form, FormGroup, FormControl, ControlLabel, Button, Alert } from "react
 
 interface loginProps {
     store: Store<mgmState>
+    errorMsg: string
 }
 
 export class Login extends React.Component<loginProps, {}> {
@@ -19,11 +20,10 @@ export class Login extends React.Component<loginProps, {}> {
         password: string
     }
 
-
     constructor(props: loginProps) {
         super(props);
         this.state = {
-            msg: this.props.store.getState().auth.errorMsg || '',
+            msg: this.props.errorMsg || '',
             username: '',
             password: ''
         };

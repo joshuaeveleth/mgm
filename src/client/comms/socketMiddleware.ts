@@ -43,6 +43,7 @@ function handleSocket(store: Store<mgmState>) {
     store.dispatch(createInsertPendingUserAction(u));
   });
 
+/*
   sock.on('group', (group: Group) => {
     console.log(group);
   })
@@ -62,6 +63,7 @@ function handleSocket(store: Store<mgmState>) {
   sock.on('estateMap', (region: EstateMap) => {
     console.log(region);
   })
+  */
 }
 
 function connectSocket(store: Store<mgmState>, jwt: string): Promise<void> {

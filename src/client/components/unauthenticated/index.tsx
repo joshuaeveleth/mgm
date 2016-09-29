@@ -11,7 +11,8 @@ import { Login } from "./Login";
 
 interface unauthenticatedProps {
     store: Store<mgmState>,
-    route: string
+    route: string,
+    errorMsg: string
 }
 
 export class Unauthenticated extends React.Component<unauthenticatedProps, {}> {
@@ -66,7 +67,7 @@ export class Unauthenticated extends React.Component<unauthenticatedProps, {}> {
                 return (
                     <div>
                         {navbar}
-                        <Login store={this.props.store}/>
+                        <Login store={this.props.store} errorMsg={this.props.errorMsg}/>
                     </div>
                 )
         }

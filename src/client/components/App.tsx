@@ -34,7 +34,7 @@ export class App extends React.Component<appProps, {}> {
             return <Authenticated route={this.state.url} store={this.props.store} />
         } else {
             // show splash, login, registration tree
-            return <Unauthenticated route={this.state.url} store={this.props.store} />
+            return <Unauthenticated route={this.state.url} store={this.props.store} errorMsg={this.state.auth.errorMsg}/>
         }
     }
 }

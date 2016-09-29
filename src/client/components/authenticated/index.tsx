@@ -47,7 +47,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         </NavItem>
                         <NavItem
                             active={this.props.route.substring(0,5) == "/grid"}
-                            onClick={this.handleNav.bind(this, "/grid") }>
+                            onClick={this.handleNav.bind(this, "/grid/estates") }>
                             Grid
                         </NavItem>
                         <NavItem
