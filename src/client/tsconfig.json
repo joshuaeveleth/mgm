@@ -22,8 +22,11 @@
         "./components/authenticated/UserList.tsx",
         "./components/authenticated/UserView.tsx",
         "./components/authenticated/EstateList.tsx",
+        "./components/authenticated/EstateView.tsx",
         "./components/authenticated/GroupList.tsx",
+        "./components/authenticated/GroupView.tsx",
         "./components/authenticated/HostList.tsx",
+        "./components/authenticated/HostView.tsx",
         
         "./components/Unauthenticated.tsx",
         "./components/unauthenticated/Register.tsx",

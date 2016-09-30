@@ -134,7 +134,9 @@ function groups(state: { [key: string]: GroupRecord } = {}, action: Action) {
       let ma = <MembershipAction>action;
       if (state[ma.member.GroupID]) {
         return (<any>Object).assign({}, state, {
-          members: [...state[ma.member.GroupID].members, ma.member]
+          [ma.member.GroupID]: (<any>Object).assign({}, state[ma.member.GroupID], {
+            members: [...state[ma.member.GroupID].members, ma.member]
+          })
         })
       } else {
         let gr: GroupRecord = {
@@ -150,7 +152,9 @@ function groups(state: { [key: string]: GroupRecord } = {}, action: Action) {
       let ra = <RoleAction>action;
       if (state[ra.role.GroupID]) {
         return (<any>Object).assign({}, state, {
-          roles: [...state[ra.role.GroupID].roles, ra.role]
+          [ra.role.GroupID]: (<any>Object).assign({}, state[ra.role.GroupID], {
+            roles: [...state[ra.role.GroupID].roles, ra.role]
+          })
         })
       } else {
         let gr: GroupRecord = {

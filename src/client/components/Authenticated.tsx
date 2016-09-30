@@ -32,8 +32,8 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
         return nextProps.state !== this.props.state || this.state.url !== nextState.url;
     }
 
-    componentWillReceiveProps(newProps: authenticatedProps){
-        if(this.state.url !== newProps.state.url){
+    componentWillReceiveProps(newProps: authenticatedProps) {
+        if (this.state.url !== newProps.state.url) {
             this.setState({
                 url: newProps.state.url
             })
@@ -105,7 +105,9 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                             dispatch={this.props.dispatch}
                             estates={this.props.state.estates}
                             hosts={this.props.state.hosts}
-                            groups={this.props.state.groups}/>
+                            groups={this.props.state.groups}
+                            users={this.props.state.users}
+                            regions={this.props.state.regions} />
                     </div>
                 )
             case '/users':
