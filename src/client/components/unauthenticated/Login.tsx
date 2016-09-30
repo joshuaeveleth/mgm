@@ -1,14 +1,14 @@
 import * as React from "react";
+import { Action } from 'redux'
 
 import { Splash } from "../Splash";
-import { Store } from 'redux'
-import { mgmState } from '../../redux/model';
+
 import { createLoginAction } from '../../redux/actions';
 
 import { Form, FormGroup, FormControl, ControlLabel, Button, Alert } from "react-bootstrap"
 
 interface loginProps {
-    store: Store<mgmState>
+    dispatch: (a: Action) => void,
     errorMsg: string
 }
 
@@ -50,7 +50,7 @@ export class Login extends React.Component<loginProps, {}> {
                 let res = JSON.parse(xhr.response);
                 if (res.Success) {
                     console.log('auth succeeded');
-                    this.props.store.dispatch(createLoginAction({
+                    this.props.dispatch(createLoginAction({
                         uuid: res.uuid,
                         name: res.username,
                         godLevel: res.accessLevel,

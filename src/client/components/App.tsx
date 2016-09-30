@@ -17,24 +17,20 @@ export class App extends React.Component<appProps, {}> {
     constructor(props: appProps) {
         super(props);
         this.sub = this.props.store.subscribe(() => {
-            if(this.state != this.props.store.getState()){
+            if(this.state !== this.props.store.getState()){
                 this.setState(this.props.store.getState());
             }
         });
         this.state = this.props.store.getState();
     }
 
-    updateState(){
-        let state = this.props.store.getState();
-    }
-
     render() {
         if (this.state.auth.loggedIn) {
             // show authenticated tree
-            return <Authenticated route={this.state.url} store={this.props.store} />
+            return <Authenticated state={this.state} dispatch={ this.props.store.dispatch } />
         } else {
             // show splash, login, registration tree
-            return <Unauthenticated route={this.state.url} store={this.props.store} errorMsg={this.state.auth.errorMsg}/>
+            return <Unauthenticated route={this.state.url} dispatch={ this.props.store.dispatch } errorMsg={this.state.auth.errorMsg}/>
         }
     }
 }

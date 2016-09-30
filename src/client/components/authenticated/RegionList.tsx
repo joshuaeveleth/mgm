@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Store } from 'redux'
-import { mgmState } from '../../redux/model';
+import { Action } from 'redux'
 
 import { Region } from '../../../common/messages';
 import { RegionView } from './RegionView';
@@ -8,42 +7,23 @@ import { RegionView } from './RegionView';
 import { Grid, Row, Col } from 'react-bootstrap';
 
 interface regionProps {
-    store: Store<mgmState>
+    dispatch: (a: Action) => void,
+    regions: {[key:string]: Region}
 }
 
 export class RegionList extends React.Component<regionProps, {}> {
-    state: {
-        regions: Region[]
-    }
-    unsub: Redux.Unsubscribe;
-
-    constructor(props: regionProps) {
-        super(props);
-        this.state = {
-            regions: this.pullRegionsFromStore()
-        }
-        this.unsub = this.props.store.subscribe(() => {
-            this.setState({
-                regions: this.pullRegionsFromStore()
-            });
-        });
-    }
 
     pullRegionsFromStore(): Region[] {
         let regions: Region[] = [];
-        let state = this.props.store.getState().regions;
+        let state = this.props.regions;
         for (let uuid in state) {
             regions.push(state[uuid]);
         }
         return regions;
     }
 
-    componentWillUnmount() {
-        this.unsub();
-    }
-
     render() {
-        let regions = this.state.regions.map((r: Region) => {
+        let regions = this.pullRegionsFromStore().map( (r:Region) => {
             return <RegionView key={r.uuid} region={r}/>
         })
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Store } from 'redux'
+import { Action } from 'redux'
 import { mgmState } from '../redux/model';
 import { createLogoutAction, createNavigateToAction } from '../redux/actions';
 
@@ -12,18 +12,40 @@ import { UserList } from "./authenticated/UserList";
 import { PendingUserList } from "./authenticated/PendingUserList";
 
 interface authenticatedProps {
-    store: Store<mgmState>,
-    route: string
+    dispatch: (a: Action) => void,
+    state: mgmState
 }
 
 export class Authenticated extends React.Component<authenticatedProps, {}> {
+    state: {
+        url: string
+    }
+
+    constructor(props: authenticatedProps) {
+        super(props);
+        this.state = {
+            url: props.state.url
+        }
+    }
+
+    shouldComponentUpdate(nextProps: authenticatedProps, nextState: { url: string }) {
+        return nextProps.state !== this.props.state || this.state.url !== nextState.url;
+    }
+
+    componentWillReceiveProps(newProps: authenticatedProps){
+        if(this.state.url !== newProps.state.url){
+            this.setState({
+                url: newProps.state.url
+            })
+        }
+    }
 
     handleLogout() {
-        this.props.store.dispatch(createLogoutAction());
+        this.props.dispatch(createLogoutAction());
     }
 
     handleNav(href: string) {
-        this.props.store.dispatch(createNavigateToAction(href));
+        this.props.dispatch(createNavigateToAction(href));
     }
 
     render() {
@@ -36,27 +58,27 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 <Navbar.Collapse>
                     <Nav>
                         <NavItem
-                            active={this.props.route === "/account" || this.props.route === "/"}
+                            active={this.state.url === "/account" || this.state.url === "/"}
                             onClick={this.handleNav.bind(this, "/account") }>
                             Account
                         </NavItem>
                         <NavItem
-                            active={this.props.route === "/regions"}
+                            active={this.state.url === "/regions"}
                             onClick={this.handleNav.bind(this, "/regions") }>
                             Regions
                         </NavItem>
                         <NavItem
-                            active={this.props.route.substring(0,5) == "/grid"}
+                            active={this.state.url === "/grid"}
                             onClick={this.handleNav.bind(this, "/grid") }>
                             Grid
                         </NavItem>
                         <NavItem
-                            active={this.props.route === "/users"}
+                            active={this.state.url === "/users"}
                             onClick={this.handleNav.bind(this, "/users") }>
                             Users
                         </NavItem >
                         <NavItem
-                            active={this.props.route === "/pending"}
+                            active={this.state.url === "/pending"}
                             onClick={this.handleNav.bind(this, "/pending") }>
                             Pending Users
                         </NavItem >
@@ -67,40 +89,50 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 </Navbar.Collapse >
             </Navbar >
         )
-        switch (this.props.route) {
+        switch (this.state.url) {
             case '/regions':
                 return (
                     <div>
                         {navbar}
-                        <RegionList store={this.props.store}/>
+                        <RegionList dispatch={this.props.dispatch} regions={this.props.state.regions} />
                     </div>
                 )
             case '/grid':
                 return (
                     <div>
                         {navbar}
-                        <Grid />
+                        <Grid
+                            dispatch={this.props.dispatch}
+                            estates={this.props.state.estates}
+                            hosts={this.props.state.hosts}
+                            groups={this.props.state.groups}/>
                     </div>
                 )
             case '/users':
                 return (
                     <div>
                         {navbar}
-                        <UserList store={this.props.store} />
+                        <UserList
+                            dispatch={this.props.dispatch}
+                            users={this.props.state.users} />
                     </div>
                 )
             case '/pending':
                 return (
                     <div>
                         {navbar}
-                        <PendingUserList store={this.props.store}/>
+                        <PendingUserList
+                            dispatch={ this.props.dispatch }
+                            users={this.props.state.pendingUsers }/>
                     </div>
                 )
             default:
                 return (
                     <div>
                         {navbar}
-                        <Account store={this.props.store}/>
+                        <Account
+                            dispatch={this.props.dispatch}
+                            user={this.props.state.auth.user}/>
                     </div>
                 )
         }

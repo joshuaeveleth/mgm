@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Action } from 'redux'
 
 import { Tabs, Tab } from 'react-bootstrap';
 
@@ -6,12 +7,22 @@ import { EstateList } from './EstateList';
 import { GroupList } from './GroupList';
 import { HostList } from './HostList';
 
-export class Grid extends React.Component<{}, {}> {
+import { EstateRecord, GroupRecord } from '../../redux/model'
+import { Host } from '../../../common/messages'
+
+interface gridProps {
+    dispatch: (a: Action) => void,
+    estates: {[key: number]: EstateRecord },
+    hosts: {[key: number]: Host},
+    groups: {[key: string]: GroupRecord}
+}
+
+export class Grid extends React.Component<gridProps, {}> {
     state: {
         tab: number
     }
 
-    constructor(props: {}) {
+    constructor(props: gridProps) {
         super(props);
         this.state = {
             tab: 1
@@ -24,7 +35,7 @@ export class Grid extends React.Component<{}, {}> {
 
     render() {
         return (
-            <Tabs activeKey={this.state.tab} onSelect={this.handleSelect.bind(this) } id="controlled-tab-example">
+            <Tabs activeKey={this.state.tab} onSelect={ this.handleSelect.bind(this) } id="controlled-tab-example">
                 <Tab eventKey={1} title="Estates"><EstateList /></Tab>
                 <Tab eventKey={2} title="Groups"><GroupList /></Tab>
                 <Tab eventKey={3} title="Hosts"><HostList /></Tab>
