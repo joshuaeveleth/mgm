@@ -16,6 +16,9 @@ export class PendingUserView extends React.Component<PUProps, {}> {
     return (
       <Row>
         <Col md={3}>{this.props.user.name}</Col>
+        <Col md={3}>{this.props.user.email}</Col>
+        <Col md={3}>{this.props.user.registered}</Col>
+        <Col md={3}>{this.props.user.summary}</Col>
       </Row>
     )
   }

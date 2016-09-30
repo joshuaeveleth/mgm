@@ -33,7 +33,7 @@ export class PendingUserList extends React.Component<props, {}> {
             <Grid>
                 <Row>
                     <Col md={3}>Name</Col>
-                    <Col md={3}>Position</Col>
+                    <Col md={3}>Email</Col>
                     <Col md={3}>Registered</Col>
                     <Col md={3}>Summary</Col>
                 </Row>
