@@ -101,6 +101,10 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
       sock.emit('user', user);
     })
   })
+
+  sock.on('setMyPassword', (password: string, cb: (success: boolean, message: string)=> void) => {
+    cb(false, 'not implemented');
+  })
 }
 
 function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {

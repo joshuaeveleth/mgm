@@ -15,7 +15,8 @@ import { createSetAuthErrorMessageAction,
   createRoleAction,
   createEstateAction,
   createManagerAction,
-  createEstateMapAction } from '../redux/actions';
+  createEstateMapAction,
+  MyPasswordAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
@@ -105,6 +106,17 @@ function closeSocket() {
   sock = null;
 }
 
+function setMyPassword(action: Action) {
+  let act = <MyPasswordAction>action;
+  sock.emit('setMyPassword', act.password, (success: boolean, message: string) => {
+    if(success){
+      alertify.success('Password Updated Successfully');
+    } else {
+      alertify.error('Could not set password: ' + message);
+    }
+  });
+}
+
 /**
  * This is a redux middleware.  As most actions in MGM affect the server, and then are asynchronously affected in return,
  * this middleware intercepts the requests and proxies them to the server, then dispatching based on the result.
@@ -124,6 +136,9 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
     case Actions.LOGOUT:
       closeSocket();
       next(action);
+      break;
+    case Actions.SET_MY_PASSWORD:
+      setMyPassword(action);
       break;
 
     case Actions.AUTH_SET_ERROR_MESSAGE:

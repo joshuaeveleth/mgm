@@ -2,6 +2,7 @@ import * as React from "react";
 import { Action } from 'redux'
 
 import { LoginUser } from '../../redux/model';
+import { createSetMyPasswordAction } from '../../redux/actions';
 import { Job } from '../../../common/messages';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
@@ -28,21 +29,19 @@ export class Account extends React.Component<props, {}> {
     }
 
     handleNewPassword(password: string) {
-        console.log('change user password to: ' + password);
+        this.props.dispatch(createSetMyPasswordAction(password));
         this.setState({
             showPasswordModal: false
         })
     }
 
     showNewPassword() {
-        console.log('show password modal')
         this.setState({
             showPasswordModal: true
         })
     }
 
     cancelNewPassword() {
-        console.log('hide password modal')
         this.setState({
             showPasswordModal: false
         })

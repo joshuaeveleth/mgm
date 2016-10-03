@@ -9,6 +9,10 @@ export interface LoginAction extends Action {
   user: LoginUser
 }
 
+export interface MyPasswordAction extends Action {
+  password: string
+}
+
 export interface SetAuthMessage extends Action {
   message: string
 }
@@ -158,6 +162,14 @@ export function createEstateMapAction(r: EstateMap) {
   let act: EstateMapAction = {
     type: Actions.ASSIGN_ESTATE,
     region: r
+  }
+  return act;
+}
+
+export function createSetMyPasswordAction(password: string) {
+  let act: MyPasswordAction = {
+    type: Actions.SET_MY_PASSWORD,
+    password: password
   }
   return act;
 }
