@@ -17,7 +17,7 @@ export class App extends React.Component<appProps, {}> {
     constructor(props: appProps) {
         super(props);
         this.sub = this.props.store.subscribe(() => {
-            if(this.state !== this.props.store.getState()){
+            if (this.state !== this.props.store.getState()) {
                 this.setState(this.props.store.getState());
             }
         });
