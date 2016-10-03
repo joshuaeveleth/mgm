@@ -19,7 +19,7 @@ import { createSetAuthErrorMessageAction,
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
-import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap } from '../../common/messages'
+import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../../common/messages'
 
 let sock: SocketIOClient.Socket = null;
 
@@ -33,6 +33,10 @@ interface SockJwtError {
 }
 
 function handleSocket(store: Store<mgmState>) {
+  sock.on('job', (j: Job) => {
+    console.log(j);
+  })
+
   sock.on('host', (h: Host) => {
     store.dispatch(createUpsertHostAction(h));
   })

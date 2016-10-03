@@ -1,6 +1,6 @@
 
 import * as io from 'socket.io';
-import { Host, Region, PendingUser, User, Group, Role, Membership, Estate, Manager, EstateMap } from '../common/messages';
+import { Host, Region, PendingUser, User, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../common/messages';
 import { Detail } from './auth';
 import { MGMDB, HALCYONDB, User as DBUser } from './mysql';
 
@@ -9,7 +9,18 @@ import { MGMDB, HALCYONDB, User as DBUser } from './mysql';
  * MGM Pending Users are copied, as we do not need to send their passwords over the network
  */
 
-function handleUser(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
+function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB: HALCYONDB) {
+  // send tasks
+  mgmDB.jobs.findAll({
+    where: {
+      user: account.uuid
+    }
+  }).then( (jobs: Job[]) => {
+    jobs.map( (j: Job) => {
+      sock.emit('job', j);
+    })
+  })
+
   // send estates
   halDB.estates.findAll().then( (estates: Estate[]) => {
     estates.map( (e: Estate) => {
@@ -51,15 +62,6 @@ function handleUser(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
   }).catch((e: Error) => {
     console.log(e);
   })
-}
-
-function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
-  //send hosts
-  mgmDB.hosts.findAll().then((hosts: Host[]) => {
-    hosts.map((h: Host) => {
-      sock.emit('host', h);
-    })
-  })
 
   //send groups
   halDB.groups.findAll().then((groups: Group[]) => {
@@ -99,6 +101,15 @@ function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
       sock.emit('user', user);
     })
   })
+}
+
+function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
+  //send hosts
+  mgmDB.hosts.findAll().then((hosts: Host[]) => {
+    hosts.map((h: Host) => {
+      sock.emit('host', h);
+    })
+  })
 
   //send pending, blanking the password
   mgmDB.pendingUsers.findAll().then((users: PendingUser[]) => {
@@ -117,8 +128,8 @@ function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
 }
 
 export function handleClient(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB: HALCYONDB) {
+  handleUser(sock, account, mgmDB, halDB);
   if (account.godLevel >= 250) {
     handleAdmin(sock, mgmDB, halDB);
   }
-  handleUser(sock, mgmDB, halDB);
 }

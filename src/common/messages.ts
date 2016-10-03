@@ -72,3 +72,11 @@ export interface EstateMap {
   RegionID: string
   EstateID: number
 }
+
+export interface Job {
+  id: number
+  timestamp: Date
+  type: string
+  user: string
+  data: string
+}

@@ -17,7 +17,9 @@ import { estate_settings } from './models/halcyon/estate_settings';
 import { estate_map } from './models/halcyon/estate_map';
 import { estate_managers } from './models/halcyon/estate_managers';
 
-import { Host, Region, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap } from '../../common/messages';
+import { jobs } from './models/mgm/jobs';
+
+import { Host, Region, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../../common/messages';
 
 export { User } from './models/halcyon/users';
 
@@ -32,6 +34,7 @@ export interface MGMDB {
   hosts: Sequelize.Model<{},Host>
   regions: Sequelize.Model<{},Region>
   pendingUsers: Sequelize.Model<{},PendingUser>
+  jobs: Sequelize.Model<{},Job>
 }
 
 export interface HALCYONDB {
@@ -61,7 +64,8 @@ export class Sql {
     return {
       hosts: seq.import('hosts', hosts),
       regions: seq.import('regions', regions),
-      pendingUsers: seq.import('users', pendingUsers)
+      pendingUsers: seq.import('users', pendingUsers),
+      jobs: seq.import('jobs', jobs)
     };
   }
 

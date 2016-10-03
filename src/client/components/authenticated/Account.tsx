@@ -2,14 +2,17 @@ import * as React from "react";
 import { Action } from 'redux'
 
 import { LoginUser } from '../../redux/model';
+import { Job } from '../../../common/messages';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 
+import { TaskList } from './TaskList';
 import { SetPasswordModal } from './SetPassword';
 
 interface props {
     dispatch: (a: Action) => void,
     user: LoginUser
+    tasks: { [key: number]: Job; }
 }
 
 export class Account extends React.Component<props, {}> {
@@ -69,13 +72,10 @@ export class Account extends React.Component<props, {}> {
                     <Col md={6}>User Email</Col>
                     <Col md={6}>{this.props.user.email}</Col>
                 </Row>
-                <Row>
-                    <hr />
-                </Row>
+                <hr />
                 {passwordReset}
-                <Row>
-                    <span>Task list</span>
-                </Row>
+                <hr />
+                <TaskList dispatch={this.props.dispatch} tasks={this.props.tasks}/>
             </Grid>
         )
     }

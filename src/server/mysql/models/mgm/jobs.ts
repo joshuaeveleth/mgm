@@ -1,6 +1,4 @@
-/* jshint indent: 2 */
-
-module.exports = function(sequelize, DataTypes) {
+export function jobs(sequelize, DataTypes) {
   return sequelize.define('jobs', {
     id: {
       type: DataTypes.INTEGER(11),
@@ -26,6 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'jobs'
+    tableName: 'jobs',
+      timestamps: false
   });
 };

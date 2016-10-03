@@ -1,6 +1,6 @@
 import { Action, combineReducers } from 'redux';
 
-import { Host, Region, User, Group, Membership, Role, Estate, Manager, EstateMap } from '../../common/messages'
+import { Host, Region, User, Group, Membership, Role, Estate, Manager, EstateMap, Job } from '../../common/messages'
 import { mgmState, GroupRecord, EstateRecord } from './model';
 
 import {
@@ -171,6 +171,10 @@ function groups(state: { [key: string]: GroupRecord } = {}, action: Action) {
   }
 }
 
+function tasks(state: { [key: number]: Job; } = {}, action: Action){
+  return state;
+}
+
 function estates(state: { [key: number]: EstateRecord } = {}, action: Action) {
   switch (action.type) {
     case Actions.ADD_ESTATE:
@@ -240,7 +244,8 @@ const rootReducer = combineReducers<mgmState>({
   "users": users,
   "pendingUsers": pendingUsers,
   "groups": groups,
-  "estates": estates
+  "estates": estates,
+  "tasks": tasks
 });
 
 export default rootReducer;

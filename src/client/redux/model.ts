@@ -1,5 +1,5 @@
 
-import { Host, Region, User, PendingUser, Group, Membership, Role, Estate, Manager, EstateMap } from '../../common/messages'
+import { Host, Region, User, PendingUser, Group, Membership, Role, Estate, Manager, EstateMap, Job } from '../../common/messages'
 
 export interface mgmState {
   auth: {
@@ -14,7 +14,8 @@ export interface mgmState {
   users: { [key: string]: User },
   pendingUsers: { [key: string]: PendingUser },
   groups: { [key: string]: GroupRecord },
-  estates: { [key: number]: EstateRecord }
+  estates: { [key: number]: EstateRecord },
+  tasks: { [key: number]: Job}
 }
 
 export interface GroupRecord {
