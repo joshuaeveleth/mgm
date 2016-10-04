@@ -1,4 +1,22 @@
-export function jobs(sequelize, DataTypes) {
+import * as Sequelize from 'sequelize';
+
+export interface JobAttribute {
+  id?: number
+  timestamp?: Date
+  type: string
+  user: string
+  data?: string
+}
+
+export interface JobInstance extends Sequelize.Instance<JobAttribute>, JobAttribute {
+
+}
+
+export interface JobModel extends Sequelize.Model<JobInstance, JobAttribute> {
+  
+}
+
+export function jobs(sequelize, DataTypes): JobModel {
   return sequelize.define('jobs', {
     id: {
       type: DataTypes.INTEGER(11),

@@ -1,8 +1,9 @@
 
 import * as io from 'socket.io';
 import { Host, Region, PendingUser, User, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../common/messages';
+import { JobTypes } from '../common/jobTypes';
 import { Detail } from './auth';
-import { MGMDB, HALCYONDB, UserInstance } from './mysql';
+import { MGMDB, HALCYONDB, UserInstance, JobInstance } from './mysql';
 import { Credential } from './auth/Credential';
 
 /* the functions in this file involve querying the database for initial values, and interacting with the websocket.
@@ -16,15 +17,15 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     where: {
       user: account.uuid
     }
-  }).then( (jobs: Job[]) => {
-    jobs.map( (j: Job) => {
+  }).then((jobs: JobInstance[]) => {
+    jobs.map((j: JobInstance) => {
       sock.emit('job', j);
     })
   })
 
   // send estates
-  halDB.estates.findAll().then( (estates: Estate[]) => {
-    estates.map( (e: Estate) => {
+  halDB.estates.findAll().then((estates: Estate[]) => {
+    estates.map((e: Estate) => {
       let estate: Estate = {
         EstateID: e.EstateID,
         EstateName: e.EstateName,
@@ -32,10 +33,10 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
       }
       sock.emit('estate', estate);
     })
-  }).then( () => {
+  }).then(() => {
     return halDB.managers.findAll()
-  }).then( (managers: Manager[]) => {
-    managers.map( (m: Manager) => {
+  }).then((managers: Manager[]) => {
+    managers.map((m: Manager) => {
       let manager: Manager = {
         EstateId: m.EstateId,
         ID: m.ID,
@@ -43,11 +44,11 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
       }
       sock.emit('manager', manager);
     })
-  }).then ( () => {
+  }).then(() => {
     return halDB.estateMap.findAll();
-  }).then( (regs: EstateMap[]) => {
-    regs.map( (r: EstateMap) => {
-      let region : EstateMap = {
+  }).then((regs: EstateMap[]) => {
+    regs.map((r: EstateMap) => {
+      let region: EstateMap = {
         RegionID: r.RegionID,
         EstateID: r.EstateID
       }
@@ -66,7 +67,7 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
 
   //send groups
   halDB.groups.findAll().then((groups: Group[]) => {
-    groups.map( (g: Group) => {
+    groups.map((g: Group) => {
       let group: Group = {
         GroupID: g.GroupID,
         Name: g.Name,
@@ -76,15 +77,15 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
       sock.emit('group', group);
     })
   })
-  halDB.roles.findAll().then( (roles: Role[]) => {
-    roles.map( (r: Role) => {
+  halDB.roles.findAll().then((roles: Role[]) => {
+    roles.map((r: Role) => {
       sock.emit('role', r);
     })
-  }).catch( (err: Error) => {
+  }).catch((err: Error) => {
     console.log(err);
   })
-  halDB.members.findAll().then( (members: Membership[]) => {
-    members.map( (member: Membership) => {
+  halDB.members.findAll().then((members: Membership[]) => {
+    members.map((member: Membership) => {
       sock.emit('member', member);
     })
   })
@@ -103,23 +104,41 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     })
   })
 
-  sock.on('setMyPassword', (password: string, cb: (success: boolean, message?: string)=> void) => {
+  sock.on('setMyPassword', (password: string, cb: (success: boolean, message?: string) => void) => {
     let hash = Credential.fromPlaintext(password);
-    halDB.users.find({
-      where: {
-        uuid: account.uuid
-      }
-    }).then( (u: UserInstance) => {
-      if(u){
+    let job: JobInstance;
+    mgmDB.jobs.create({
+      type: JobTypes.SetMyPassword,
+      user: account.uuid,
+      timestamp: new Date(),
+      data: 'Pending'
+    }).then((j: JobInstance) => {
+      job = j;
+    }).then(() => {
+      return halDB.users.find({
+        where: {
+          uuid: account.uuid
+        }
+      })
+    }).then((u: UserInstance) => {
+      if (u) {
         return u.updateAttributes({
           passwordHash: hash.hash
         })
       }
       throw new Error('Cannot set password, user does not exist');
-    }).then( () => {
+    }).then(() => {
       cb(true);
-    }).catch( (err: Error) => {
+      job.data = 'Succeeded';
+      job.save().then( () => {
+        sock.emit('job', job);
+      })
+    }).catch((err: Error) => {
       cb(false, err.message);
+      job.data = 'Failed: ' + err.message;
+      job.save().then( () => {
+        sock.emit('job', job);
+      })
     })
   })
 }

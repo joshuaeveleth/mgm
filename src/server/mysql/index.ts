@@ -17,11 +17,12 @@ import { estate_settings } from './models/halcyon/estate_settings';
 import { estate_map } from './models/halcyon/estate_map';
 import { estate_managers } from './models/halcyon/estate_managers';
 
-import { jobs } from './models/mgm/jobs';
+import { jobs, JobInstance, JobAttribute } from './models/mgm/jobs';
 
 import { Host, Region, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../../common/messages';
 
-export { UserInstance, UserAttribute } from './models/halcyon/users';
+export { UserInstance } from './models/halcyon/users';
+export { JobInstance } from './models/mgm/jobs';
 
 export interface Config {
   host: string
@@ -34,7 +35,7 @@ export interface MGMDB {
   hosts: Sequelize.Model<{},Host>
   regions: Sequelize.Model<{},Region>
   pendingUsers: Sequelize.Model<{},PendingUser>
-  jobs: Sequelize.Model<{},Job>
+  jobs: Sequelize.Model<JobInstance,JobAttribute>
 }
 
 export interface HALCYONDB {
