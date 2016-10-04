@@ -9,7 +9,7 @@ export interface mgmState {
     errorMsg: string
   }
   url: string
-  hosts: { [key: number]: Host }
+  hosts: { [key: string]: Host }
   regions: { [key: string]: Region }
   users: { [key: string]: User },
   pendingUsers: { [key: string]: PendingUser },

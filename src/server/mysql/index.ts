@@ -6,7 +6,7 @@ import * as Sequelize from 'sequelize';
 //HALCYON definitions
 import { users, UserInstance, UserAttribute } from './models/halcyon/users';
 import { users as pendingUsers } from './models/mgm/users';
-import { hosts } from './models/mgm/hosts';
+import { hosts, HostInstance, HostAttribute } from './models/mgm/hosts';
 import { regions } from './models/mgm/regions';
 
 import { osGroup } from './models/halcyon/osgroup';
@@ -23,6 +23,7 @@ import { Host, Region, PendingUser, Group, Role, Membership, Estate, Manager, Es
 
 export { UserInstance } from './models/halcyon/users';
 export { JobInstance } from './models/mgm/jobs';
+export { HostInstance } from './models/mgm/hosts';
 
 export interface Config {
   host: string
@@ -32,7 +33,7 @@ export interface Config {
 }
 
 export interface MGMDB {
-  hosts: Sequelize.Model<{},Host>
+  hosts: Sequelize.Model<HostInstance,HostAttribute>
   regions: Sequelize.Model<{},Region>
   pendingUsers: Sequelize.Model<{},PendingUser>
   jobs: Sequelize.Model<JobInstance,JobAttribute>

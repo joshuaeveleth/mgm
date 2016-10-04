@@ -61,6 +61,16 @@ export interface EstateMapAction extends Action {
   region: EstateMap
 }
 
+export interface RequestCreateHostAction extends Action {
+  address: string
+}
+export interface RequestDeleteHostAction extends Action {
+  host: Host
+}
+export interface HostDeletedAction extends Action {
+  address: string
+}
+
 
 export function createLoginAction(user: LoginUser): Action {
   let act: LoginAction = {
@@ -184,4 +194,28 @@ export function createUpsertJobAction(job: Job): Action {
     job: job
   }
   return act
+}
+
+export function createRequestCreateHostAction(address: string): Action {
+  let act: RequestCreateHostAction = {
+    type: Actions.REQUEST_CREATE_HOST,
+    address: address
+  }
+  return act;
+}
+
+export function createRequestDeleteHostAction(host: Host): Action {
+  let act: RequestDeleteHostAction = {
+    type: Actions.REQUEST_DELETE_HOST,
+    host: host
+  }
+  return act;
+}
+
+export function createHostDeletedAction(address: string): Action {
+  let act: HostDeletedAction = {
+    type: Actions.HOST_DELETED,
+    address: address
+  }
+  return act;
 }

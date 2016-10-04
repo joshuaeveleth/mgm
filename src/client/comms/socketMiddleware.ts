@@ -17,11 +17,15 @@ import { createSetAuthErrorMessageAction,
   createManagerAction,
   createEstateMapAction,
   MyPasswordAction,
-  createUpsertJobAction } from '../redux/actions';
+  createUpsertJobAction,
+  RequestCreateHostAction,
+  RequestDeleteHostAction,
+  createHostDeletedAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
 import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../../common/messages'
+import { MessageTypes } from '../../common/MessageTypes';
 
 let sock: SocketIOClient.Socket = null;
 
@@ -35,44 +39,47 @@ interface SockJwtError {
 }
 
 function handleSocket(store: Store<mgmState>) {
-  sock.on('job', (j: Job) => {
+  sock.on(MessageTypes.ADD_JOB, (j: Job) => {
     store.dispatch(createUpsertJobAction(j));
   })
 
-  sock.on('host', (h: Host) => {
+  sock.on(MessageTypes.ADD_HOST, (h: Host) => {
     store.dispatch(createUpsertHostAction(h));
   })
+  sock.on(MessageTypes.HOST_DELETED, (address: string) => {
+    store.dispatch(createHostDeletedAction(address));
+  })
 
-  sock.on('region', (r: Region) => {
+  sock.on(MessageTypes.ADD_REGION, (r: Region) => {
     store.dispatch(createUpsertRegionAction(r));
   })
 
-  sock.on('user', (u: User) => {
+  sock.on(MessageTypes.ADD_USER, (u: User) => {
     store.dispatch(createUpsertUserAction(u));
   })
 
-  sock.on('pendingUser', (u: PendingUser) => {
+  sock.on(MessageTypes.ADD_PENDING_USER, (u: PendingUser) => {
     store.dispatch(createInsertPendingUserAction(u));
   });
 
 
-  sock.on('group', (group: Group) => {
+  sock.on(MessageTypes.ADD_GROUP, (group: Group) => {
     store.dispatch(createGroupAction(group));
   })
-  sock.on('role', (role: Role) => {
+  sock.on(MessageTypes.ADD_ROLE, (role: Role) => {
     store.dispatch(createRoleAction(role));
   })
-  sock.on('member', (member: Membership) => {
+  sock.on(MessageTypes.ADD_MEMBER, (member: Membership) => {
     store.dispatch(createMembershipAction(member));
   })
 
-  sock.on('estate', (estate: Estate) => {
+  sock.on(MessageTypes.ADD_ESTATE, (estate: Estate) => {
     store.dispatch(createEstateAction(estate));
   })
-  sock.on('manager', (manager: Manager) => {
+  sock.on(MessageTypes.ADD_MANAGER, (manager: Manager) => {
     store.dispatch(createManagerAction(manager));
   })
-  sock.on('estateMap', (region: EstateMap) => {
+  sock.on(MessageTypes.ADD_REGION_ESTATE, (region: EstateMap) => {
     store.dispatch(createEstateMapAction(region));
   })
 }
@@ -109,13 +116,35 @@ function closeSocket() {
 
 function setMyPassword(action: Action) {
   let act = <MyPasswordAction>action;
-  sock.emit('setMyPassword', act.password, (success: boolean, message: string) => {
+  sock.emit(MessageTypes.SET_OWN_PASSWORD, act.password, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Password Updated Successfully');
     } else {
       alertify.error('Could not set password: ' + message);
     }
   });
+}
+
+function requestCreateHost(action: Action) {
+  let act= <RequestCreateHostAction>action;
+  sock.emit(MessageTypes.REQUEST_DELETE_HOST, act.address, (success: boolean, message: string) => {
+    if (success) {
+      alertify.success('Host ' + act.address + ' added');
+    } else {
+      alertify.error('Could not add host ' + act.address + '+' + message);
+    }
+  })
+}
+
+function requestDeleteHost(action: Action) {
+  let act= <RequestDeleteHostAction>action;
+  sock.emit(MessageTypes.REQUEST_DELETE_HOST, act.host.address, (success: boolean, message: string) => {
+    if (success) {
+      alertify.success('Host ' + act.host.address + ' removed');
+    } else {
+      alertify.error('Could not remove host ' + act.host.address + '+' + message);
+    }
+  })
 }
 
 /**
@@ -141,11 +170,18 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
     case Actions.SET_MY_PASSWORD:
       setMyPassword(action);
       break;
+    case Actions.REQUEST_CREATE_HOST:
+      requestCreateHost(action);
+      break;
+    case Actions.REQUEST_DELETE_HOST:
+      requestDeleteHost(action);
+      break;
 
     // messages that we ignore, either because we don't care, or they come from us
     case Actions.AUTH_SET_ERROR_MESSAGE:
     case Actions.NAVIGATE_TO:
     case Actions.UPSERT_HOST:
+    case Actions.HOST_DELETED:
     case Actions.UPSERT_REGION:
     case Actions.UPSERT_USER:
     case Actions.INSERT_PENDING_USER:

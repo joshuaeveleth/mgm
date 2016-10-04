@@ -23,6 +23,7 @@
         "./components/authenticated/GroupView.tsx",
         "./components/authenticated/HostList.tsx",
         "./components/authenticated/HostView.tsx",
+        "./components/authenticated/HostAdd.tsx",
         "./components/authenticated/PendingUserList.tsx",
         "./components/authenticated/PendingUserView.tsx",
         "./components/authenticated/RegionList.tsx",

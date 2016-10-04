@@ -22,8 +22,8 @@ export class TaskList extends React.Component<props, {}> {
       <Grid>
         <Row>
           <Col md={1}>Task</Col>
-          <Col md={1}>Timestamp</Col>
-          <Col md={3}>Description</Col>
+          <Col md={2}>Timestamp</Col>
+          <Col md={2}>Description</Col>
           <Col md={7}>Status</Col>
         </Row>
         {jobs}

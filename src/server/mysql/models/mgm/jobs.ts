@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize';
 
 export interface JobAttribute {
   id?: number
-  timestamp?: Date
+  timestamp?: string
   type: string
   user: string
   data?: string

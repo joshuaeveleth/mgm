@@ -23,15 +23,15 @@ export class TaskView extends React.Component<{ job: Job }, {}> {
 
     timestamptoDate(timestamp: string): string{
         let date = new Date(timestamp);
-        return monthNames[date.getMonth()]+' '+date.getDate();
+        return monthNames[date.getMonth()]+' '+date.getDate()+' ' + date.getHours() +':'+ date.getMinutes();
     }
 
     render() {
         return (
             <Row>
                 <Col md={1}>{this.props.job.id}</Col>
-                <Col md={1}>{this.timestamptoDate(this.props.job.timestamp)}</Col>
-                <Col md={3}>{this.props.job.type}</Col>
+                <Col md={2}>{this.timestamptoDate(this.props.job.timestamp)}</Col>
+                <Col md={2}>{this.props.job.type}</Col>
                 <Col md={7}>{this.props.job.data}</Col>
             </Row>
         )

@@ -1,9 +1,10 @@
 
 import * as io from 'socket.io';
 import { Host, Region, PendingUser, User, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../common/messages';
+import { MessageTypes } from '../common/MessageTypes';
 import { JobTypes } from '../common/jobTypes';
 import { Detail } from './auth';
-import { MGMDB, HALCYONDB, UserInstance, JobInstance } from './mysql';
+import { MGMDB, HALCYONDB, UserInstance, JobInstance, HostInstance } from './mysql';
 import { Credential } from './auth/Credential';
 
 /* the functions in this file involve querying the database for initial values, and interacting with the websocket.
@@ -26,7 +27,7 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
         user: j.user,
         data: j.data
       }
-      sock.emit('job', job);
+      sock.emit(MessageTypes.ADD_JOB, job);
     })
   })
 
@@ -38,7 +39,7 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
         EstateName: e.EstateName,
         EstateOwner: e.EstateOwner
       }
-      sock.emit('estate', estate);
+      sock.emit(MessageTypes.ADD_ESTATE, estate);
     })
   }).then(() => {
     return halDB.managers.findAll()
@@ -49,7 +50,7 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
         ID: m.ID,
         uuid: m.uuid
       }
-      sock.emit('manager', manager);
+      sock.emit(MessageTypes.ADD_MANAGER, manager);
     })
   }).then(() => {
     return halDB.estateMap.findAll();
@@ -59,14 +60,14 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
         RegionID: r.RegionID,
         EstateID: r.EstateID
       }
-      sock.emit('estateMap', region)
+      sock.emit(MessageTypes.ADD_REGION_ESTATE, region)
     })
   })
 
   // send regions
   mgmDB.regions.findAll().then((regions: Region[]) => {
     regions.map((r: Region) => {
-      sock.emit('region', r);
+      sock.emit(MessageTypes.ADD_REGION, r);
     })
   }).catch((e: Error) => {
     console.log(e);
@@ -81,19 +82,19 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
         FounderID: g.FounderID,
         OwnerRoleID: g.OwnerRoleID
       }
-      sock.emit('group', group);
+      sock.emit(MessageTypes.ADD_GROUP, group);
     })
   })
   halDB.roles.findAll().then((roles: Role[]) => {
     roles.map((r: Role) => {
-      sock.emit('role', r);
+      sock.emit(MessageTypes.ADD_ROLE, r);
     })
   }).catch((err: Error) => {
     console.log(err);
   })
   halDB.members.findAll().then((members: Membership[]) => {
     members.map((member: Membership) => {
-      sock.emit('member', member);
+      sock.emit(MessageTypes.ADD_MEMBER, member);
     })
   })
 
@@ -107,17 +108,18 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
         email: u.email,
         godLevel: u.godLevel
       }
-      sock.emit('user', user);
+      sock.emit(MessageTypes.ADD_USER, user);
     })
   })
 
-  sock.on('setMyPassword', (password: string, cb: (success: boolean, message?: string) => void) => {
+  sock.on(MessageTypes.SET_OWN_PASSWORD, (password: string, cb: (success: boolean, message?: string) => void) => {
     let hash = Credential.fromPlaintext(password);
     let job: JobInstance;
+    console.log('user ' + account.uuid + ' is changing own password');
     mgmDB.jobs.create({
       type: JobTypes.SetMyPassword,
       user: account.uuid,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       data: 'Pending'
     }).then((j: JobInstance) => {
       job = j;
@@ -137,24 +139,24 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     }).then(() => {
       cb(true);
       job.data = 'Succeeded';
-      job.save().then( () => {
-        sock.emit('job', job);
+      job.save().then(() => {
+        sock.emit(MessageTypes.ADD_JOB, job);
       })
     }).catch((err: Error) => {
       cb(false, err.message);
       job.data = 'Failed: ' + err.message;
-      job.save().then( () => {
-        sock.emit('job', job);
+      job.save().then(() => {
+        sock.emit(MessageTypes.ADD_JOB, job);
       })
     })
   })
 }
 
-function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
+function handleAdmin(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB: HALCYONDB) {
   //send hosts
-  mgmDB.hosts.findAll().then((hosts: Host[]) => {
-    hosts.map((h: Host) => {
-      sock.emit('host', h);
+  mgmDB.hosts.findAll().then((hosts: HostInstance[]) => {
+    hosts.map((h: HostInstance) => {
+      sock.emit(MessageTypes.ADD_HOST, h);
     })
   })
 
@@ -169,14 +171,41 @@ function handleAdmin(sock: SocketIO.Socket, mgmDB: MGMDB, halDB: HALCYONDB) {
         summary: u.summary,
         password: ''
       }
-      sock.emit('pendingUser', user);
+      sock.emit(MessageTypes.ADD_PENDING_USER, user);
     })
   })
+
+  sock.on(MessageTypes.REQUEST_CREATE_HOST, (address: string, cb: (success: boolean, message?: string) => void) => {
+    console.log('user ' + account.uuid + ' is adding host ' + address);
+    mgmDB.hosts.create({
+      address: address,
+      status: ''
+    }).then((host: HostInstance) => {
+      cb(true);
+      sock.emit(MessageTypes.ADD_HOST, host);
+    }).catch((err: Error) => {
+      cb(false, err.message);
+    })
+  })
+
+  sock.on(MessageTypes.REQUEST_DELETE_HOST, (address: string, cb: (success: boolean, message?: string) => void) => {
+    console.log('user ' + account.uuid + ' is removing host ' + address);
+    mgmDB.hosts.destroy({
+      where: {
+        address: address
+      }
+    }).then( () => {
+      cb(true);
+      sock.emit(MessageTypes.HOST_DELETED, address);
+    }).catch( (err: Error) => {
+      cb(false, err.message);
+    })
+  });
 }
 
 export function handleClient(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB: HALCYONDB) {
   handleUser(sock, account, mgmDB, halDB);
   if (account.godLevel >= 250) {
-    handleAdmin(sock, mgmDB, halDB);
+    handleAdmin(sock, account, mgmDB, halDB);
   }
 }

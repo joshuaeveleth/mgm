@@ -15,8 +15,8 @@ interface gridProps {
     estates: { [key: number]: EstateRecord },
     hosts: { [key: number]: Host },
     groups: { [key: string]: GroupRecord }
-    users: { [key: string]: User}
-    regions: {[ key: string]: Region }
+    users: { [key: string]: User }
+    regions: { [key: string]: Region }
 }
 
 export class Grid extends React.Component<gridProps, {}> {
@@ -49,6 +49,7 @@ export class Grid extends React.Component<gridProps, {}> {
                         groups={this.props.groups} /></Tab>
                 <Tab eventKey={3} title="Hosts">
                     <HostList
+                        dispatch={this.props.dispatch}
                         hosts={this.props.hosts}
                         regions={this.props.regions} /></Tab>
             </Tabs>

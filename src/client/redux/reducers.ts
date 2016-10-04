@@ -17,7 +17,8 @@ import {
   EstateAction,
   ManagerAction,
   EstateMapAction,
-  JobAction
+  JobAction,
+  HostDeletedAction
 } from './actions';
 import { Actions } from './types';
 
@@ -63,13 +64,18 @@ function url(state = "/", action: Action) {
   }
 }
 
-function hosts(state: { [key: number]: Host } = {}, action: Action) {
+function hosts(state: { [key: string]: Host } = {}, action: Action) {
   switch (action.type) {
     case Actions.UPSERT_HOST:
       let act = <UpsertHost>action;
       return (<any>Object).assign({}, state, {
-        [act.host.id]: (<any>Object).assign({}, state[act.host.id], act.host)
+        [act.host.address]: (<any>Object).assign({}, state[act.host.address], act.host)
       });
+    case Actions.HOST_DELETED:
+      let rmvr = <HostDeletedAction>action;
+      let newState = (<any>Object).assign({}, state, {});
+      delete newState[rmvr.address];
+      return newState;
     default:
       return state;
   }
@@ -176,7 +182,6 @@ function jobs(state: { [key: number]: Job; } = {}, action: Action) {
   switch (action.type) {
     case Actions.UPSERT_JOB:
       let j = <JobAction>action;
-      console.log(j.job);
       return (<any>Object).assign({}, state, {
         [j.job.id]: j.job
       });

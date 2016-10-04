@@ -1,6 +1,22 @@
 import * as Sequelize from 'sequelize';
 
-export function hosts(sequelize, DataTypes) {
+export interface HostAttribute {
+  id?: number
+  address: string
+  name?: string
+  port?: number
+  status: string
+}
+
+export interface HostInstance extends Sequelize.Instance<HostAttribute>, HostAttribute {
+
+}
+
+export interface HostModel extends Sequelize.Model<HostInstance, HostAttribute> {
+  
+}
+
+export function hosts(sequelize, DataTypes): HostModel {
   return sequelize.define('hosts', {
     id: {
       type: DataTypes.INTEGER(11),
