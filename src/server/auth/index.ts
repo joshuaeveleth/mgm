@@ -1,5 +1,5 @@
 
-import { HALCYONDB, User } from '../mysql';
+import { HALCYONDB, UserInstance } from '../mysql';
 import { Credential } from './Credential';
 import { HalcyonToken } from './HalcyonToken';
 
@@ -37,14 +37,14 @@ export class Auth {
     let username: string = auth.username || '';
     let password: string = auth.password || '';
     let nameParts = username.split(' ');
-    let candidateUser: User = null;
+    let candidateUser: UserInstance = null;
     //check if user exists
     this.db.users.findOne({
       where: {
         username: nameParts[0],
         lastname: nameParts[1]
       }
-    }).then((u: User) => {
+    }).then((u: UserInstance) => {
       if (!u) throw new Error('Account does not exist');
       candidateUser = u;
     }).then(() => {

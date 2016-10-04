@@ -1,7 +1,7 @@
 
 import * as Sequelize from 'sequelize';
 
-export interface User {
+export interface UserAttribute {
   UUID: string
   username: string
   lastname: string
@@ -40,7 +40,15 @@ export interface User {
   languagesText: string
 }
 
-export function users(sequelize, DataTypes) {
+export interface UserInstance extends Sequelize.Instance<UserAttribute>, UserAttribute {
+
+}
+
+export interface UserModel extends Sequelize.Model<UserInstance, UserAttribute> {
+  
+}
+
+export function users(sequelize, DataTypes): UserModel {
   return sequelize.define('users', {
     UUID: {
       type: DataTypes.STRING,

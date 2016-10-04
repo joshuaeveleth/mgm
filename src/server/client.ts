@@ -2,7 +2,8 @@
 import * as io from 'socket.io';
 import { Host, Region, PendingUser, User, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../common/messages';
 import { Detail } from './auth';
-import { MGMDB, HALCYONDB, User as DBUser } from './mysql';
+import { MGMDB, HALCYONDB, UserInstance } from './mysql';
+import { Credential } from './auth/Credential';
 
 /* the functions in this file involve querying the database for initial values, and interacting with the websocket.
  * Halcyon objects are copied and simplified before sending, as they contain a lot more information than necessary
@@ -89,9 +90,9 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
   })
 
   //send users
-  halDB.users.findAll().then((users: DBUser[]) => {
+  halDB.users.findAll().then((users: UserInstance[]) => {
     //send users, mapped to hide extra data from sim
-    users.map((u: DBUser) => {
+    users.map((u: UserInstance) => {
       let user: User = {
         uuid: u.UUID,
         name: u.username + ' ' + u.lastname,
@@ -102,8 +103,24 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     })
   })
 
-  sock.on('setMyPassword', (password: string, cb: (success: boolean, message: string)=> void) => {
-    cb(false, 'not implemented');
+  sock.on('setMyPassword', (password: string, cb: (success: boolean, message?: string)=> void) => {
+    let hash = Credential.fromPlaintext(password);
+    halDB.users.find({
+      where: {
+        uuid: account.uuid
+      }
+    }).then( (u: UserInstance) => {
+      if(u){
+        return u.updateAttributes({
+          passwordHash: hash.hash
+        })
+      }
+      throw new Error('Cannot set password, user does not exist');
+    }).then( () => {
+      cb(true);
+    }).catch( (err: Error) => {
+      cb(false, err.message);
+    })
   })
 }
 

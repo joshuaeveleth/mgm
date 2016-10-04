@@ -4,7 +4,7 @@
 import * as Sequelize from 'sequelize';
 
 //HALCYON definitions
-import { users, User } from './models/halcyon/users';
+import { users, UserInstance, UserAttribute } from './models/halcyon/users';
 import { users as pendingUsers } from './models/mgm/users';
 import { hosts } from './models/mgm/hosts';
 import { regions } from './models/mgm/regions';
@@ -21,7 +21,7 @@ import { jobs } from './models/mgm/jobs';
 
 import { Host, Region, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../../common/messages';
 
-export { User } from './models/halcyon/users';
+export { UserInstance, UserAttribute } from './models/halcyon/users';
 
 export interface Config {
   host: string
@@ -38,7 +38,7 @@ export interface MGMDB {
 }
 
 export interface HALCYONDB {
-  users: Sequelize.Model<{},User>
+  users: Sequelize.Model<UserInstance,UserAttribute>
   groups: Sequelize.Model<{}, Group>
   roles: Sequelize.Model<{}, Role>
   members: Sequelize.Model<{}, Membership>
