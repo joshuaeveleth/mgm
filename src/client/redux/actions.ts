@@ -3,7 +3,7 @@ import { Action } from 'redux';
 import { Actions } from "./types";
 import { LoginUser } from './model';
 
-import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap } from '../../common/messages'
+import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../../common/messages'
 
 export interface LoginAction extends Action {
   user: LoginUser
@@ -11,6 +11,10 @@ export interface LoginAction extends Action {
 
 export interface MyPasswordAction extends Action {
   password: string
+}
+
+export interface JobAction extends Action {
+  job: Job
 }
 
 export interface SetAuthMessage extends Action {
@@ -122,21 +126,21 @@ export function createInsertPendingUserAction(u: PendingUser): Action {
   return act;
 }
 
-export function createGroupAction(g: Group) {
+export function createGroupAction(g: Group): Action {
   let act: GroupAction = {
     type: Actions.ADD_GROUP,
     group: g
   }
   return act;
 }
-export function createRoleAction(r: Role) {
+export function createRoleAction(r: Role): Action {
   let act: RoleAction = {
     type: Actions.ADD_ROLE,
     role: r
   }
   return act;
 }
-export function createMembershipAction(m: Membership) {
+export function createMembershipAction(m: Membership): Action {
   let act: MembershipAction = {
     type: Actions.ADD_MEMBER,
     member: m
@@ -144,21 +148,21 @@ export function createMembershipAction(m: Membership) {
   return act;
 }
 
-export function createEstateAction(e: Estate) {
+export function createEstateAction(e: Estate): Action {
   let act: EstateAction = {
     type: Actions.ADD_ESTATE,
     estate: e
   }
   return act;
 }
-export function createManagerAction(m: Manager) {
+export function createManagerAction(m: Manager): Action {
   let act: ManagerAction = {
     type: Actions.ADD_MANAGER,
     manager: m
   }
   return act;
 }
-export function createEstateMapAction(r: EstateMap) {
+export function createEstateMapAction(r: EstateMap): Action {
   let act: EstateMapAction = {
     type: Actions.ASSIGN_ESTATE,
     region: r
@@ -166,10 +170,18 @@ export function createEstateMapAction(r: EstateMap) {
   return act;
 }
 
-export function createSetMyPasswordAction(password: string) {
+export function createSetMyPasswordAction(password: string): Action {
   let act: MyPasswordAction = {
     type: Actions.SET_MY_PASSWORD,
     password: password
   }
   return act;
+}
+
+export function createUpsertJobAction(job: Job): Action {
+  let act: JobAction = {
+    type: Actions.UPSERT_JOB,
+    job: job
+  }
+  return act
 }

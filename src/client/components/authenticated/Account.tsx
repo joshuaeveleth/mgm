@@ -13,7 +13,7 @@ import { SetPasswordModal } from './SetPassword';
 interface props {
     dispatch: (a: Action) => void,
     user: LoginUser
-    tasks: { [key: number]: Job; }
+    jobs: { [key: number]: Job; }
 }
 
 export class Account extends React.Component<props, {}> {
@@ -74,7 +74,7 @@ export class Account extends React.Component<props, {}> {
                 <hr />
                 {passwordReset}
                 <hr />
-                <TaskList dispatch={this.props.dispatch} tasks={this.props.tasks}/>
+                <TaskList dispatch={this.props.dispatch} jobs={this.props.jobs}/>
             </Grid>
         )
     }

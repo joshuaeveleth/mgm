@@ -135,7 +135,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         <Account
                             dispatch={this.props.dispatch}
                             user={this.props.state.auth.user}
-                            tasks={this.props.state.tasks} />
+                            jobs={this.props.state.jobs} />
                     </div>
                 )
         }

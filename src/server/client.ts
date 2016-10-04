@@ -19,7 +19,14 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     }
   }).then((jobs: JobInstance[]) => {
     jobs.map((j: JobInstance) => {
-      sock.emit('job', j);
+      let job: Job = {
+        id: j.id,
+        timestamp: j.timestamp,
+        type: j.type,
+        user: j.user,
+        data: j.data
+      }
+      sock.emit('job', job);
     })
   })
 

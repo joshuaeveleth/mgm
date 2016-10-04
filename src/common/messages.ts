@@ -75,7 +75,7 @@ export interface EstateMap {
 
 export interface Job {
   id: number
-  timestamp: Date
+  timestamp: string
   type: string
   user: string
   data: string

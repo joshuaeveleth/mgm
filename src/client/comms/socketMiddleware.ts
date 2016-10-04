@@ -16,7 +16,8 @@ import { createSetAuthErrorMessageAction,
   createEstateAction,
   createManagerAction,
   createEstateMapAction,
-  MyPasswordAction } from '../redux/actions';
+  MyPasswordAction,
+  createUpsertJobAction } from '../redux/actions';
 import { mgmState } from '../redux/model';
 import { Actions } from '../redux/types';
 
@@ -35,7 +36,7 @@ interface SockJwtError {
 
 function handleSocket(store: Store<mgmState>) {
   sock.on('job', (j: Job) => {
-    console.log(j);
+    store.dispatch(createUpsertJobAction(j));
   })
 
   sock.on('host', (h: Host) => {
@@ -109,7 +110,7 @@ function closeSocket() {
 function setMyPassword(action: Action) {
   let act = <MyPasswordAction>action;
   sock.emit('setMyPassword', act.password, (success: boolean, message: string) => {
-    if(success){
+    if (success) {
       alertify.success('Password Updated Successfully');
     } else {
       alertify.error('Could not set password: ' + message);
@@ -141,6 +142,7 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
       setMyPassword(action);
       break;
 
+    // messages that we ignore, either because we don't care, or they come from us
     case Actions.AUTH_SET_ERROR_MESSAGE:
     case Actions.NAVIGATE_TO:
     case Actions.UPSERT_HOST:
@@ -153,6 +155,7 @@ export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmS
     case Actions.ADD_ESTATE:
     case Actions.ADD_MANAGER:
     case Actions.ASSIGN_ESTATE:
+    case Actions.UPSERT_JOB:
       next(action);
       break;
     default:

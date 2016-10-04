@@ -15,7 +15,7 @@ export interface mgmState {
   pendingUsers: { [key: string]: PendingUser },
   groups: { [key: string]: GroupRecord },
   estates: { [key: number]: EstateRecord },
-  tasks: { [key: number]: Job}
+  jobs: { [key: number]: Job}
 }
 
 export interface GroupRecord {

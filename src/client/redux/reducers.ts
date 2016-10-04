@@ -16,7 +16,8 @@ import {
   RoleAction,
   EstateAction,
   ManagerAction,
-  EstateMapAction
+  EstateMapAction,
+  JobAction
 } from './actions';
 import { Actions } from './types';
 
@@ -171,8 +172,17 @@ function groups(state: { [key: string]: GroupRecord } = {}, action: Action) {
   }
 }
 
-function tasks(state: { [key: number]: Job; } = {}, action: Action){
-  return state;
+function jobs(state: { [key: number]: Job; } = {}, action: Action) {
+  switch (action.type) {
+    case Actions.UPSERT_JOB:
+      let j = <JobAction>action;
+      console.log(j.job);
+      return (<any>Object).assign({}, state, {
+        [j.job.id]: j.job
+      });
+    default:
+      return state;
+  }
 }
 
 function estates(state: { [key: number]: EstateRecord } = {}, action: Action) {
@@ -245,7 +255,7 @@ const rootReducer = combineReducers<mgmState>({
   "pendingUsers": pendingUsers,
   "groups": groups,
   "estates": estates,
-  "tasks": tasks
+  "jobs": jobs
 });
 
 export default rootReducer;
