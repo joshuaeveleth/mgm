@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Action } from 'redux';
+import { Map } from 'immutable';
 
 import { createRequestDeleteHostAction } from '../../redux/actions'
 
@@ -10,14 +11,14 @@ import { Grid, Row, Col, Button } from 'react-bootstrap';
 interface props {
   dispatch: (a: Action) => void,
   host: Host
-  regions: { [key: string]: Region }
+  regions: Map<string,Region>
 }
 
 export class HostView extends React.Component<props, {}> {
 
   onRemoveHost() {
     for (let id in this.props.regions) {
-      if (this.props.regions[id].slaveAddress === this.props.host.address)
+      if (this.props.regions.get(id).slaveAddress === this.props.host.address)
         return alertify.error('Cannot remove host ' + this.props.host.address + ', there are regions present');
     }
     alertify.confirm('Are you sure you want to remove host ' + this.props.host.address + '?', () => {
@@ -27,10 +28,10 @@ export class HostView extends React.Component<props, {}> {
 
   render() {
     let regionCount = 0;
-    for (let id in this.props.regions) {
-      if (this.props.regions[id].slaveAddress === this.props.host.address)
+    this.props.regions.toList().map( (r: Region) => {
+      if(r.slaveAddress === this.props.host.address)
         regionCount++;
-    }
+    })
     return (
       <Row>
         <Col md={3}>{this.props.host.name}</Col>

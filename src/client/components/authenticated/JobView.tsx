@@ -19,7 +19,7 @@ const monthNames: string[] = [
     'Dec'
 ]
 
-export class TaskView extends React.Component<{ job: Job }, {}> {
+export class JobView extends React.Component<{ job: Job }, {}> {
 
     timestamptoDate(timestamp: string): string{
         let date = new Date(timestamp);

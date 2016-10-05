@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Action } from 'redux'
+import { Action } from 'redux';
+import { Map } from 'immutable';
 
 import { PendingUser } from '../../../common/messages';
 import { PendingUserView } from './PendingUserView';
@@ -8,24 +9,12 @@ import { Grid, Row, Col } from 'react-bootstrap';
 
 interface props {
     dispatch: (a: Action) => void,
-    users: {[key: string]: PendingUser}
+    users: Map<string,PendingUser>
 }
 
 export class PendingUserList extends React.Component<props, {}> {
-
-
-    pullUsersFromStore(): PendingUser[] {
-        let users: PendingUser[] = [];
-        let state = this.props.users;
-        for (let uuid in state) {
-            users.push(state[uuid]);
-        }
-        return users;
-    }
-
-
     render() {
-        let users = this.pullUsersFromStore().map((u: PendingUser) => {
+        let users = this.props.users.toList().map((u: PendingUser) => {
             return <PendingUserView key={u.name} user={u}/>
         })
 

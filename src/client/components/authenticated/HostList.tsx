@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Action } from 'redux';
+import { Map } from 'immutable';
 
 import { createRequestCreateHostAction } from '../../redux/actions';
 
@@ -11,8 +12,8 @@ import { HostAddModal } from './HostAdd';
 
 interface props {
     dispatch: (a: Action) => void,
-    hosts: { [key: number]: Host }
-    regions: { [key: string]: Region }
+    hosts: Map<number,Host>
+    regions: Map<string,Region>
 }
 
 export class HostList extends React.Component<props, {}> {
@@ -45,8 +46,7 @@ export class HostList extends React.Component<props, {}> {
 
 
     render() {
-        let hosts = Object.keys(this.props.hosts).map((idx: any) => {
-            let h: Host = this.props.hosts[idx];
+        let hosts = this.props.hosts.toList().map((h: Host) => {
             return <HostView key={h.id} host={h} regions={this.props.regions} dispatch={this.props.dispatch} />
         });
         let addHost = <span />

@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Action } from 'redux'
+import { Action } from 'redux';
+import { Map } from 'immutable';
 
 import { Tabs, Tab } from 'react-bootstrap';
 
@@ -12,11 +13,11 @@ import { Host, User, Region } from '../../../common/messages'
 
 interface gridProps {
     dispatch: (a: Action) => void,
-    estates: { [key: number]: EstateRecord },
-    hosts: { [key: number]: Host },
-    groups: { [key: string]: GroupRecord }
-    users: { [key: string]: User }
-    regions: { [key: string]: Region }
+    estates: Map<number, EstateRecord>
+    hosts: Map<number, Host>
+    groups: Map<string, GroupRecord>
+    users: Map<string, User>
+    regions: Map<string, Region>
 }
 
 export class Grid extends React.Component<gridProps, {}> {

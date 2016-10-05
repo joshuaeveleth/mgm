@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Action } from "redux";
+import { Map } from 'immutable';
 
 import { GroupRecord } from '../../redux/model';
 import { GroupView } from './GroupView'
@@ -8,22 +9,15 @@ import { Grid, Row, Col } from 'react-bootstrap';
 
 interface props {
     dispatch: (a: Action) => void
-    groups: { [key: string]: GroupRecord }
+    groups: Map<string, GroupRecord>
 }
 
 export class GroupList extends React.Component<props, {}> {
 
-    pullGroupsFromProps(): GroupRecord[] {
-        let groups: GroupRecord[] = [];
-        for (let id in this.props.groups) {
-            if (this.props.groups[id].group)
-                groups.push(this.props.groups[id]);
-        }
-        return groups;
-    }
     render() {
-        let groups = this.pullGroupsFromProps().map((g: GroupRecord) => {
-            return <GroupView key={g.group.GroupID} group={g} />
+        let groups = this.props.groups.toList().map((g: GroupRecord) => {
+            if (g.group)
+                return <GroupView key={g.group.GroupID} group={g} />
         })
         return (
             <Grid>

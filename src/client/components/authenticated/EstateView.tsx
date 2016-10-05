@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Map } from 'immutable';
 
 import { EstateRecord } from '../../redux/model';
 import { User } from '../../../common/messages';
@@ -7,15 +8,15 @@ import { Grid, Row, Col } from 'react-bootstrap';
 
 interface props {
   estate: EstateRecord
-  users: {[key:string]: User}
+  users: Map<string,User>
 }
 
 export class EstateView extends React.Component<props, {}> {
 
   render() {
     let estateOwner = '';
-    if(this.props.estate.estate.EstateOwner && this.props.users[this.props.estate.estate.EstateOwner])
-      estateOwner = this.props.users[this.props.estate.estate.EstateOwner].name;
+    if(this.props.estate.estate.EstateOwner && this.props.users.get(this.props.estate.estate.EstateOwner))
+      estateOwner = this.props.users.get(this.props.estate.estate.EstateOwner).name;
     return (
       <Row>
         <Col md={3}>{this.props.estate.estate.EstateName}</Col>

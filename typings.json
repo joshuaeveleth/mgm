@@ -1,6 +1,7 @@
 {
   "name": "halcyonUtil",
   "globalDependencies": {
+    "alertify": "registry:dt/alertify#0.0.0+20160317120654",
     "bluebird": "registry:dt/bluebird#2.0.0+20160319051630",
     "body-parser": "registry:dt/body-parser#0.0.0+20160619023215",
     "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160322035842",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "express": "registry:npm/express#4.14.0+20160911114220",
+    "immutable": "registry:npm/immutable#3.7.6+20160411060006",
     "jsonwebtoken": "registry:npm/jsonwebtoken#7.1.8+20160811031426",
     "react-redux": "registry:npm/react-redux#4.4.0+20160614222153"
   }

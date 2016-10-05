@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Action } from 'redux'
+import { Action } from 'redux';
+import { Map } from 'immutable';
 
 import { LoginUser } from '../../redux/model';
 import { createSetMyPasswordAction } from '../../redux/actions';
@@ -7,13 +8,13 @@ import { Job } from '../../../common/messages';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 
-import { TaskList } from './TaskList';
+import { JobList } from './JobList';
 import { SetPasswordModal } from './SetPassword';
 
 interface props {
     dispatch: (a: Action) => void,
     user: LoginUser
-    jobs: { [key: number]: Job; }
+    jobs: Map<number,Job>
 }
 
 export class Account extends React.Component<props, {}> {
@@ -74,7 +75,7 @@ export class Account extends React.Component<props, {}> {
                 <hr />
                 {passwordReset}
                 <hr />
-                <TaskList dispatch={this.props.dispatch} jobs={this.props.jobs}/>
+                <JobList dispatch={this.props.dispatch} jobs={this.props.jobs}/>
             </Grid>
         )
     }

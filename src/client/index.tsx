@@ -1,23 +1,24 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { Map } from 'immutable';
 
 import { createStore, applyMiddleware, Store } from 'redux'
 
-import { LoginUser, mgmState } from "./redux/model";
+import { LoginUser } from "./redux/model";
 
 import reducer from "./redux/reducers";
 import { createNavigateToAction, createLoginAction } from "./redux/actions"
 
 //create the redux store, using our websocket middleware for MGM async
 import { socketMiddleWare } from "./comms/socketMiddleware";
-let store = createStore<mgmState>(reducer, applyMiddleware(socketMiddleWare));
+let store = createStore<Map<string, any>>(reducer, applyMiddleware(socketMiddleWare));
 
 
 // Update url to match internal state
 let url = window.location.pathname;
 store.subscribe(() => {
-    if (store.getState().url !== url) {
-        url = store.getState().url;
+    if (store.getState().get('url') !== url) {
+        url = store.getState().get('url');
         window.history.pushState(null, null, url)
     }
 })
@@ -38,7 +39,7 @@ if (localStorage.getItem("user")) {
     store.dispatch(createLoginAction(user));
 }
 store.subscribe(() => {
-    let auth = store.getState().auth;
+    let auth = store.getState().get('auth');
     if (auth.user !== user) {
         if (auth.user) {
             user = auth.user;
