@@ -95,7 +95,10 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 return (
                     <div>
                         {navbar}
-                        <RegionList dispatch={this.props.dispatch} regions={this.props.state.get('regions')} />
+                        <RegionList 
+                            dispatch={this.props.dispatch} 
+                            regions={this.props.state.get('regions')}
+                            estates={this.props.state.get('estates')} />
                     </div>
                 )
             case '/grid':

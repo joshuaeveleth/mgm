@@ -44,10 +44,12 @@ function auth(state = new AUTH_INIT(), action: Action) {
       let act = <LoginAction>action;
       return state
         .set('loggedIn', true)
+        .set('errorMsg', '')
         .set('user', act.user);
     case Actions.LOGOUT:
       return state
         .set('loggedIn', false)
+        .set('errorMsg', '')
         .set('user', null);
     case Actions.AUTH_SET_ERROR_MESSAGE:
       let aca = <SetAuthMessage>action;
@@ -88,6 +90,11 @@ function regions(state = Map<string, Region>(), action: Action) {
     case Actions.UPSERT_REGION:
       let act = <UpsertRegion>action;
       return state.set(act.region.uuid, act.region);
+    case Actions.ASSIGN_ESTATE:
+      let ra = <EstateMapAction>action;
+      let r = state.get(ra.region.RegionID);
+      r.estateID = ra.region.EstateID;
+      return state.set(ra.region.RegionID, r);
     default:
       return state;
   }
@@ -169,7 +176,7 @@ function estates(state = Map<number, EstateRecord>(), action: Action) {
   }
 }
 
-const rootReducer = combineReducers<Map<string,any>>({
+const rootReducer = combineReducers<Map<string, any>>({
   "auth": auth,
   "url": url,
   "hosts": hosts,

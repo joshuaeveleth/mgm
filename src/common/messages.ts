@@ -22,6 +22,7 @@ export interface Region {
   locY: number
   externalAddress: string
   slaveAddress: string
+  estateID?: number
 }
 
 export interface Host {

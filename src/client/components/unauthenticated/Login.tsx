@@ -23,7 +23,7 @@ export class Login extends React.Component<loginProps, {}> {
     constructor(props: loginProps) {
         super(props);
         this.state = {
-            msg: this.props.errorMsg || '',
+            msg: this.props.errorMsg,
             username: '',
             password: ''
         };
