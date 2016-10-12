@@ -3,8 +3,7 @@ import { Action } from 'redux';
 import { Map } from 'immutable';
 
 import { createRequestDeleteHostAction } from '../../redux/actions'
-
-import { Host, Region } from '../../../common/messages';
+import { Host, Region } from '../../redux/model'
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 

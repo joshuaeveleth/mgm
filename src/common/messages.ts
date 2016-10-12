@@ -1,20 +1,19 @@
-export interface User {
+export interface IUser {
   uuid: string
   name: string
   email: string
   godLevel: number
 }
 
-export interface PendingUser {
+export interface IPendingUser {
   name: string
   email: string
   gender: string
   registered: Date
   summary: string
-  password: string
 }
 
-export interface Region {
+export interface IRegion {
   uuid: string
   name: string
   httpPort: number
@@ -25,7 +24,7 @@ export interface Region {
   estateID?: number
 }
 
-export interface Host {
+export interface IHost {
   id: number
   address: string
   port: number
@@ -33,14 +32,14 @@ export interface Host {
   slots: number
 }
 
-export interface Group {
+export interface IGroup {
   GroupID: string
   Name: string
   FounderID: string
   OwnerRoleID: string
 }
 
-export interface Role {
+export interface IRole {
   GroupID: string
   RoleID: string
   Name: string
@@ -49,30 +48,30 @@ export interface Role {
   Powers: number
 }
 
-export interface Membership {
+export interface IMembership {
   GroupID: string
   AgentID: string
   SelectedRoleID: string
 }
 
-export interface Estate {
+export interface IEstate {
   EstateID: number
   EstateName: string
   EstateOwner: string
 }
 
-export interface Manager {
+export interface IManager {
   EstateId: number
   uuid: string
   ID: number
 }
 
-export interface EstateMap {
+export interface IEstateMap {
   RegionID: string
   EstateID: number
 }
 
-export interface Job {
+export interface IJob {
   id: number
   timestamp: string
   type: string

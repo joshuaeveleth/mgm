@@ -9,7 +9,6 @@
     },
     "files": [
         "../../typings/index.d.ts",
-        "../definitions/redux-immutable.d.ts",
         "./components/App.tsx",
         "./components/Splash.tsx",
         "./components/Authenticated.tsx",

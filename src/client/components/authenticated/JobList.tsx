@@ -3,7 +3,7 @@ import { Action } from 'redux';
 import { Map } from 'immutable';
 
 import { JobView } from './JobView';
-import { Job } from '../../../common/messages';
+import { Job } from '../../redux/model';
 
 import { Grid, Row, Col } from 'react-bootstrap'
 

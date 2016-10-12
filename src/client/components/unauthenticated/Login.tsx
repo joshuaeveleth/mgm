@@ -4,6 +4,7 @@ import { Action } from 'redux'
 import { Splash } from "../Splash";
 
 import { createLoginAction } from '../../redux/actions';
+import { User } from '../../redux/model';
 
 import { Form, FormGroup, FormControl, ControlLabel, Button, Alert } from "react-bootstrap"
 
@@ -50,13 +51,12 @@ export class Login extends React.Component<loginProps, {}> {
                 let res = JSON.parse(xhr.response);
                 if (res.Success) {
                     console.log('auth succeeded');
-                    this.props.dispatch(createLoginAction({
-                        uuid: res.uuid,
-                        name: res.username,
-                        godLevel: res.accessLevel,
-                        email: res.email,
-                        token: res.token
-                    }));
+                    let u = new User()
+                        .set('uuid', res.uuid)
+                        .set('name', res.username)
+                        .set('godLevel', res.accessLevel)
+                        .set('email', res.email)
+                    this.props.dispatch(createLoginAction(u,res.token));
                 } else {
                     console.log('auth failed');
                     this.setState({
@@ -79,12 +79,12 @@ export class Login extends React.Component<loginProps, {}> {
         }
         return (
             <div>
-                <Form inline={true} onSubmit={this.handleLogin.bind(this) }>
+                <Form inline={true} onSubmit={this.handleLogin.bind(this)}>
                     <FormGroup>
                         <ControlLabel>Username: </ControlLabel>
-                        <FormControl placeholder="username" onChange={this.onUsername.bind(this) }/>
+                        <FormControl placeholder="username" onChange={this.onUsername.bind(this)} />
                         <ControlLabel>Password: </ControlLabel>
-                        <FormControl type="password" placeholder="password" onChange={this.onPassword.bind(this) }/>
+                        <FormControl type="password" placeholder="password" onChange={this.onPassword.bind(this)} />
                         <Button type="submit">Login</Button>
                         {errorMsg}
                     </FormGroup>

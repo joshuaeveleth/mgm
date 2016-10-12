@@ -2,22 +2,21 @@ import * as React from "react";
 import { Action } from "redux";
 import { Map } from 'immutable';
 
-import { GroupRecord } from '../../redux/model';
+import { Group } from '../../redux/model';
 import { GroupView } from './GroupView'
 
 import { Grid, Row, Col } from 'react-bootstrap';
 
 interface props {
     dispatch: (a: Action) => void
-    groups: Map<string, GroupRecord>
+    groups: Map<string, Group>
 }
 
 export class GroupList extends React.Component<props, {}> {
 
     render() {
-        let groups = this.props.groups.toList().map((g: GroupRecord) => {
-            if (g.group)
-                return <GroupView key={g.group.GroupID} group={g} />
+        let groups = this.props.groups.toList().map((g: Group) => {
+            return <GroupView key={g.GroupID} group={g} />
         })
         return (
             <Grid>

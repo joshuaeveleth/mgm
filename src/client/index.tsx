@@ -4,14 +4,14 @@ import { Map } from 'immutable';
 
 import { createStore, applyMiddleware, Store } from 'redux'
 
-import { LoginUser } from "./redux/model";
+import { Auth, StateModel, User } from "./redux/model";
 
 import reducer from "./redux/reducers";
 import { createNavigateToAction, createLoginAction } from "./redux/actions"
 
 //create the redux store, using our websocket middleware for MGM async
 import { socketMiddleWare } from "./comms/socketMiddleware";
-let store = createStore<Map<string, any>>(reducer, applyMiddleware(socketMiddleWare));
+let store = createStore<StateModel>(reducer, applyMiddleware(socketMiddleWare));
 
 
 // Update url to match internal state
@@ -33,25 +33,26 @@ window.addEventListener('popstate', () => {
 
 
 // set up for local storage of authentication components
-let user: LoginUser = null;
+let user: User = null;
 if (localStorage.getItem("user")) {
-    user = JSON.parse(localStorage.getItem("user"));
-    store.dispatch(createLoginAction(user));
+    user = new User(JSON.parse(localStorage.getItem("user")));
+    let token = localStorage.getItem("token")
+    store.dispatch(createLoginAction(user, token));
 }
 store.subscribe(() => {
-    let auth = store.getState().get('auth');
+    let auth = store.getState().auth;
     if (auth.user !== user) {
         if (auth.user) {
             user = auth.user;
             localStorage.setItem("user", JSON.stringify(auth.user));
+            localStorage.setItem("token", auth.token);
         } else {
             localStorage.removeItem("user");
+            localStorage.removeItem("token");
             user = null;
         }
     }
 })
-
-
 
 import { App } from "./components/App";
 

@@ -1,9 +1,10 @@
-import { Action, Dispatch, Middleware, Store} from 'redux';
+import { Action, Dispatch, Middleware, Store } from 'redux';
 
 import * as io from "socket.io-client";
 import * as Promise from "bluebird";
 
-import { createSetAuthErrorMessageAction,
+import {
+  createSetAuthErrorMessageAction,
   createLogoutAction,
   LoginAction,
   createUpsertHostAction,
@@ -20,11 +21,12 @@ import { createSetAuthErrorMessageAction,
   createUpsertJobAction,
   RequestCreateHostAction,
   RequestDeleteHostAction,
-  createHostDeletedAction } from '../redux/actions';
-import { mgmState } from '../redux/model';
+  createHostDeletedAction
+} from '../redux/actions';
 import { Actions } from '../redux/types';
 
-import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../../common/messages'
+import { IHost, IRegion, IUser, IPendingUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob } from '../../common/messages'
+import { Auth, StateModel, Host, Region, User, PendingUser, Group, Estate, Job } from '../redux/model'
 import { MessageTypes } from '../../common/MessageTypes';
 
 let sock: SocketIOClient.Socket = null;
@@ -38,53 +40,53 @@ interface SockJwtError {
   }
 }
 
-function handleSocket(store: Store<mgmState>) {
-  sock.on(MessageTypes.ADD_JOB, (j: Job) => {
-    store.dispatch(createUpsertJobAction(j));
+function handleSocket(store: Store<StateModel>) {
+  sock.on(MessageTypes.ADD_JOB, (j: IJob) => {
+    store.dispatch(createUpsertJobAction(new Job(j)));
   })
 
-  sock.on(MessageTypes.ADD_HOST, (h: Host) => {
-    store.dispatch(createUpsertHostAction(h));
+  sock.on(MessageTypes.ADD_HOST, (h: IHost) => {
+    store.dispatch(createUpsertHostAction(new Host(h)));
   })
-  sock.on(MessageTypes.HOST_DELETED, (address: string) => {
-    store.dispatch(createHostDeletedAction(address));
-  })
-
-  sock.on(MessageTypes.ADD_REGION, (r: Region) => {
-    store.dispatch(createUpsertRegionAction(r));
+  sock.on(MessageTypes.HOST_DELETED, (id: number) => {
+    store.dispatch(createHostDeletedAction(id));
   })
 
-  sock.on(MessageTypes.ADD_USER, (u: User) => {
-    store.dispatch(createUpsertUserAction(u));
+  sock.on(MessageTypes.ADD_REGION, (r: IRegion) => {
+    store.dispatch(createUpsertRegionAction(new Region(r)));
   })
 
-  sock.on(MessageTypes.ADD_PENDING_USER, (u: PendingUser) => {
-    store.dispatch(createInsertPendingUserAction(u));
+  sock.on(MessageTypes.ADD_USER, (u: IUser) => {
+    store.dispatch(createUpsertUserAction(new User(u)));
+  })
+
+  sock.on(MessageTypes.ADD_PENDING_USER, (u: IPendingUser) => {
+    store.dispatch(createInsertPendingUserAction(new PendingUser(u)));
   });
 
 
-  sock.on(MessageTypes.ADD_GROUP, (group: Group) => {
-    store.dispatch(createGroupAction(group));
+  sock.on(MessageTypes.ADD_GROUP, (group: IGroup) => {
+    store.dispatch(createGroupAction(new Group(group)));
   })
-  sock.on(MessageTypes.ADD_ROLE, (role: Role) => {
+  sock.on(MessageTypes.ADD_ROLE, (role: IRole) => {
     store.dispatch(createRoleAction(role));
   })
-  sock.on(MessageTypes.ADD_MEMBER, (member: Membership) => {
+  sock.on(MessageTypes.ADD_MEMBER, (member: IMembership) => {
     store.dispatch(createMembershipAction(member));
   })
 
-  sock.on(MessageTypes.ADD_ESTATE, (estate: Estate) => {
-    store.dispatch(createEstateAction(estate));
+  sock.on(MessageTypes.ADD_ESTATE, (estate: IEstate) => {
+    store.dispatch(createEstateAction(new Estate(estate)));
   })
-  sock.on(MessageTypes.ADD_MANAGER, (manager: Manager) => {
+  sock.on(MessageTypes.ADD_MANAGER, (manager: IManager) => {
     store.dispatch(createManagerAction(manager));
   })
-  sock.on(MessageTypes.ADD_REGION_ESTATE, (region: EstateMap) => {
+  sock.on(MessageTypes.ADD_REGION_ESTATE, (region: IEstateMap) => {
     store.dispatch(createEstateMapAction(region));
   })
 }
 
-function connectSocket(store: Store<mgmState>, jwt: string): Promise<void> {
+function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     sock = io.connect({
       reconnection: false
@@ -126,7 +128,7 @@ function setMyPassword(action: Action) {
 }
 
 function requestCreateHost(action: Action) {
-  let act= <RequestCreateHostAction>action;
+  let act = <RequestCreateHostAction>action;
   sock.emit(MessageTypes.REQUEST_DELETE_HOST, act.address, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Host ' + act.address + ' added');
@@ -137,7 +139,7 @@ function requestCreateHost(action: Action) {
 }
 
 function requestDeleteHost(action: Action) {
-  let act= <RequestDeleteHostAction>action;
+  let act = <RequestDeleteHostAction>action;
   sock.emit(MessageTypes.REQUEST_DELETE_HOST, act.host.address, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Host ' + act.host.address + ' removed');
@@ -151,11 +153,11 @@ function requestDeleteHost(action: Action) {
  * This is a redux middleware.  As most actions in MGM affect the server, and then are asynchronously affected in return,
  * this middleware intercepts the requests and proxies them to the server, then dispatching based on the result.
  */
-export const socketMiddleWare = (store: Store<mgmState>) => (next: Dispatch<mgmState>) => (action: Action) => {
+export const socketMiddleWare = (store: Store<StateModel>) => (next: Dispatch<StateModel>) => (action: Action) => {
   switch (action.type) {
     case Actions.LOGIN:
       let act = <LoginAction>action;
-      connectSocket(store, act.user.token).then(() => {
+      connectSocket(store, act.token).then(() => {
         console.log('connection succeeded, proceeding with login')
         next(action);
       }).catch((e: Error) => {

@@ -1,12 +1,13 @@
 import { Action } from 'redux';
 
 import { Actions } from "./types";
-import { LoginUser } from './model';
 
-import { Host, Region, User, PendingUser, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../../common/messages'
+import { IRole, IMembership, IManager, IEstateMap } from '../../common/messages';
+import { Auth, Host, Region, User, PendingUser, Group, Estate, Job } from './model'
 
 export interface LoginAction extends Action {
-  user: LoginUser
+  user: User
+  token: string
 }
 
 export interface MyPasswordAction extends Action {
@@ -45,20 +46,20 @@ export interface GroupAction extends Action {
   group: Group
 }
 export interface RoleAction extends Action {
-  role: Role
+  role: IRole
 }
 export interface MembershipAction extends Action {
-  member: Membership
+  member: IMembership
 }
 
 export interface EstateAction extends Action {
   estate: Estate
 }
 export interface ManagerAction extends Action {
-  manager: Manager
+  manager: IManager
 }
 export interface EstateMapAction extends Action {
-  region: EstateMap
+  region: IEstateMap
 }
 
 export interface RequestCreateHostAction extends Action {
@@ -68,14 +69,15 @@ export interface RequestDeleteHostAction extends Action {
   host: Host
 }
 export interface HostDeletedAction extends Action {
-  address: string
+  id: number
 }
 
 
-export function createLoginAction(user: LoginUser): Action {
+export function createLoginAction(user: User, token: string): Action {
   let act: LoginAction = {
     type: Actions.LOGIN,
-    user: user
+    user: user,
+    token: token
   }
   return act;
 }
@@ -143,14 +145,14 @@ export function createGroupAction(g: Group): Action {
   }
   return act;
 }
-export function createRoleAction(r: Role): Action {
+export function createRoleAction(r: IRole): Action {
   let act: RoleAction = {
     type: Actions.ADD_ROLE,
     role: r
   }
   return act;
 }
-export function createMembershipAction(m: Membership): Action {
+export function createMembershipAction(m: IMembership): Action {
   let act: MembershipAction = {
     type: Actions.ADD_MEMBER,
     member: m
@@ -165,14 +167,14 @@ export function createEstateAction(e: Estate): Action {
   }
   return act;
 }
-export function createManagerAction(m: Manager): Action {
+export function createManagerAction(m: IManager): Action {
   let act: ManagerAction = {
     type: Actions.ADD_MANAGER,
     manager: m
   }
   return act;
 }
-export function createEstateMapAction(r: EstateMap): Action {
+export function createEstateMapAction(r: IEstateMap): Action {
   let act: EstateMapAction = {
     type: Actions.ASSIGN_ESTATE,
     region: r
@@ -212,10 +214,10 @@ export function createRequestDeleteHostAction(host: Host): Action {
   return act;
 }
 
-export function createHostDeletedAction(address: string): Action {
+export function createHostDeletedAction(id: number): Action {
   let act: HostDeletedAction = {
     type: Actions.HOST_DELETED,
-    address: address
+    id: id
   }
   return act;
 }

@@ -8,14 +8,13 @@ import { EstateList } from './EstateList';
 import { GroupList } from './GroupList';
 import { HostList } from './HostList';
 
-import { EstateRecord, GroupRecord } from '../../redux/model'
-import { Host, User, Region } from '../../../common/messages'
+import { Estate, Group, Host, User, Region } from '../../redux/model'
 
 interface gridProps {
     dispatch: (a: Action) => void,
-    estates: Map<number, EstateRecord>
+    estates: Map<number, Estate>
     hosts: Map<number, Host>
-    groups: Map<string, GroupRecord>
+    groups: Map<string, Group>
     users: Map<string, User>
     regions: Map<string, Region>
 }

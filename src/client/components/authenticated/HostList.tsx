@@ -3,10 +3,10 @@ import { Action } from 'redux';
 import { Map } from 'immutable';
 
 import { createRequestCreateHostAction } from '../../redux/actions';
+import { Host, Region } from '../../redux/model';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 
-import { Host, Region } from '../../../common/messages';
 import { HostView } from './HostView';
 import { HostAddModal } from './HostAdd';
 

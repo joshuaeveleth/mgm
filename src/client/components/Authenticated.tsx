@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Action } from 'redux'
-import { mgmState } from '../redux/model';
+import { StateModel } from '../redux/model';
 import { createLogoutAction, createNavigateToAction } from '../redux/actions';
 import { Map } from 'immutable';
 
@@ -14,7 +14,7 @@ import { PendingUserList } from "./authenticated/PendingUserList";
 
 interface authenticatedProps {
     dispatch: (a: Action) => void,
-    state: Map<string,any>
+    state: StateModel
 }
 
 export class Authenticated extends React.Component<authenticatedProps, {}> {
@@ -25,7 +25,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
     constructor(props: authenticatedProps) {
         super(props);
         this.state = {
-            url: props.state.get('url')
+            url: props.state.url
         }
     }
 
@@ -34,9 +34,9 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
     }
 
     componentWillReceiveProps(newProps: authenticatedProps) {
-        if (this.state.url !== newProps.state.get('url')) {
+        if (this.state.url !== newProps.state.url ){
             this.setState({
-                url: newProps.state.get('url')
+                url: newProps.state.url
             })
         }
     }
@@ -97,8 +97,8 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         {navbar}
                         <RegionList 
                             dispatch={this.props.dispatch} 
-                            regions={this.props.state.get('regions')}
-                            estates={this.props.state.get('estates')} />
+                            regions={this.props.state.regions}
+                            estates={this.props.state.estates} />
                     </div>
                 )
             case '/grid':
@@ -107,11 +107,11 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         {navbar}
                         <Grid
                             dispatch={this.props.dispatch}
-                            estates={this.props.state.get('estates')}
-                            hosts={this.props.state.get('hosts')}
-                            groups={this.props.state.get('groups')}
-                            users={this.props.state.get('users')}
-                            regions={this.props.state.get('regions')} />
+                            estates={this.props.state.estates}
+                            hosts={this.props.state.hosts}
+                            groups={this.props.state.groups}
+                            users={this.props.state.users}
+                            regions={this.props.state.regions} />
                     </div>
                 )
             case '/users':

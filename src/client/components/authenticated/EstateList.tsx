@@ -2,8 +2,7 @@ import * as React from "react";
 import { Action } from "redux";
 import { Map } from 'immutable';
 
-import { EstateRecord } from '../../redux/model'
-import { User } from '../../../common/messages'
+import { Estate, User } from '../../redux/model'
 
 import { EstateView } from './EstateView';
 
@@ -11,15 +10,15 @@ import { Grid, Row, Col } from 'react-bootstrap'
 
 interface estateListProps {
     dispatch: (a: Action) => void,
-    estates: Map<number,EstateRecord>
+    estates: Map<number,Estate>
     users: Map<string,User>
 }
 
 export class EstateList extends React.Component<estateListProps, {}> {
 
     render() {
-        let estates = this.props.estates.toList().map( (e: EstateRecord) => {
-            return <EstateView key={e.estate.EstateID} users={this.props.users} estate={e}/>
+        let estates = this.props.estates.toList().map( (e: Estate) => {
+            return <EstateView key={e.EstateID} users={this.props.users} estate={e}/>
         })
         return (
             <Grid>

@@ -3,7 +3,7 @@ import { Action } from 'redux';
 import { Map } from 'immutable';
 
 import { UserView } from './UserView';
-import { User } from '../../../common/messages';
+import { User } from '../../redux/model';
 
 import { Grid, Row, Col } from 'react-bootstrap'
 

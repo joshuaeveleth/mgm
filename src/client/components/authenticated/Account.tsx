@@ -2,9 +2,8 @@ import * as React from "react";
 import { Action } from 'redux';
 import { Map } from 'immutable';
 
-import { LoginUser } from '../../redux/model';
+import { User, Job } from '../../redux/model';
 import { createSetMyPasswordAction } from '../../redux/actions';
-import { Job } from '../../../common/messages';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 
@@ -13,7 +12,7 @@ import { SetPasswordModal } from './SetPassword';
 
 interface props {
     dispatch: (a: Action) => void,
-    user: LoginUser
+    user: User
     jobs: Map<number,Job>
 }
 

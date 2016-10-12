@@ -2,24 +2,23 @@ import * as React from "react";
 import { Action } from 'redux';
 import { Map } from 'immutable';
 
-import { Region, Estate } from '../../../common/messages';
 import { RegionView } from './RegionView';
-import { EstateRecord } from '../../redux/model';
+import { Region, Estate } from '../../redux/model';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 
 interface regionProps {
     dispatch: (a: Action) => void,
     regions: Map<string, Region>,
-    estates: Map<number, EstateRecord>
+    estates: Map<number, Estate>
 }
 
 export class RegionList extends React.Component<regionProps, {}> {
 
     render() {
         let regions = this.props.regions.toList().map((r: Region) => {
-            let er = this.props.estates.get(r.estateID);
-            return <RegionView key={r.uuid} region={r} estate={er ? er.estate : null}/>
+            let e = this.props.estates.get(r.estateID);
+            return <RegionView key={r.uuid} region={r} estate={e ? e : null}/>
         })
 
         return (

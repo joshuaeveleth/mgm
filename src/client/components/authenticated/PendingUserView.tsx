@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Store } from 'redux'
-import { mgmState } from '../../redux/model';
-
-import { PendingUser } from '../../../common/messages';
+import { PendingUser } from '../../redux/model';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 
