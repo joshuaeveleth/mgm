@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "express": "registry:npm/express#4.14.0+20160911114220",
-    "immutable": "registry:npm/immutable#3.7.6+20160411060006",
     "jsonwebtoken": "registry:npm/jsonwebtoken#7.1.8+20160811031426",
     "react-redux": "registry:npm/react-redux#4.4.0+20160614222153"
   }
