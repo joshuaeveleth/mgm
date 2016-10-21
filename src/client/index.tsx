@@ -17,8 +17,8 @@ let store = createStore<StateModel>(reducer, applyMiddleware(socketMiddleWare));
 // Update url to match internal state
 let url = window.location.pathname;
 store.subscribe(() => {
-    if (store.getState().get('url') !== url) {
-        url = store.getState().get('url');
+    if (store.getState().url !== url) {
+        url = store.getState().url;
         window.history.pushState(null, null, url)
     }
 })
@@ -44,7 +44,7 @@ store.subscribe(() => {
     if (auth.user !== user) {
         if (auth.user) {
             user = auth.user;
-            localStorage.setItem("user", JSON.stringify(auth.user));
+            localStorage.setItem("user", JSON.stringify(user));
             localStorage.setItem("token", auth.token);
         } else {
             localStorage.removeItem("user");

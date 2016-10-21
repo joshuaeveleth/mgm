@@ -1,6 +1,25 @@
+
 import * as Sequelize from 'sequelize';
 
-export function osGroupMembership(sequelize, DataTypes) {
+export interface MembershipAttribute {
+  GroupID: string
+  AgentID: string
+  SelectedRoleID: string
+  Contribution: number
+  ListInProfile: number
+  AcceptNotices: number
+}
+
+export interface MembershipInstance extends Sequelize.Instance<MembershipAttribute>, MembershipAttribute {
+
+}
+
+export interface MembershipModel extends Sequelize.Model<MembershipInstance, MembershipAttribute> {
+  
+}
+
+
+export function osGroupMembership(sequelize, DataTypes): MembershipModel {
   return sequelize.define('osgroupmembership', {
     GroupID: {
       type: DataTypes.STRING,

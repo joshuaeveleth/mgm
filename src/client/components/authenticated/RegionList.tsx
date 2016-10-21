@@ -10,6 +10,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 interface regionProps {
     dispatch: (a: Action) => void,
     regions: Map<string, Region>,
+    estateMap: Map<string, number>,
     estates: Map<number, Estate>
 }
 
@@ -17,7 +18,8 @@ export class RegionList extends React.Component<regionProps, {}> {
 
     render() {
         let regions = this.props.regions.toList().map((r: Region) => {
-            let e = this.props.estates.get(r.estateID);
+            let estateId: number = this.props.estateMap.get(r.uuid);
+            let e = this.props.estates.get(estateId);
             return <RegionView key={r.uuid} region={r} estate={e ? e : null}/>
         })
 

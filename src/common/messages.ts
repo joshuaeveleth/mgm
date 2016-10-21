@@ -14,14 +14,13 @@ export interface IPendingUser {
 }
 
 export interface IRegion {
-  uuid: string
-  name: string
-  httpPort: number
-  locX: number
-  locY: number
-  externalAddress: string
-  slaveAddress: string
-  estateID?: number
+  readonly uuid: string
+  readonly name: string
+  readonly httpPort: number
+  readonly locX: number
+  readonly locY: number
+  readonly externalAddress: string
+  readonly slaveAddress: string
 }
 
 export interface IHost {

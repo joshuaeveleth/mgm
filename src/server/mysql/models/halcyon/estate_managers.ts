@@ -1,6 +1,20 @@
-/* jshint indent: 2 */
+import * as Sequelize from 'sequelize';
 
-export function estate_managers(sequelize, DataTypes) {
+export interface ManagerAttribute {
+  EstateId: number
+  uuid: string
+  ID: number
+}
+
+export interface ManagerInstance extends Sequelize.Instance<ManagerAttribute>, ManagerAttribute {
+
+}
+
+export interface ManagerModel extends Sequelize.Model<ManagerInstance, ManagerAttribute> {
+
+}
+
+export function estate_managers(sequelize, DataTypes): ManagerModel {
   return sequelize.define('estate_managers', {
     EstateId: {
       type: DataTypes.INTEGER(10),

@@ -30,7 +30,8 @@ function auth(state = new Auth(), action: Action): Auth {
       return state
         .set('loggedIn', true)
         .set('errorMsg', '')
-        .set('user', act.user);
+        .set('user', act.user)
+        .set('token', act.token);
     case Actions.LOGOUT:
       return state
         .set('loggedIn', false)
@@ -75,11 +76,17 @@ function regions(state = Map<string, Region>(), action: Action) {
     case Actions.UPSERT_REGION:
       let act = <UpsertRegion>action;
       let r = state.get(act.region.uuid) || act.region;
-      return state.set(act.region.uuid, act.region.set('estateID', r.estateID));
+      return state.set(act.region.uuid, r);
+    default:
+      return state;
+  }
+}
+
+function estateMap(state = Map<string,number>(), action: Action) {
+  switch (action.type) {
     case Actions.ASSIGN_ESTATE:
       let ra = <EstateMapAction>action;
-      r = state.get(ra.region.RegionID) || new Region();
-      return state.set(ra.region.RegionID, r.set('estateID', ra.region.EstateID));
+      return state.set(ra.region.RegionID, ra.region.EstateID);
     default:
       return state;
   }
@@ -165,6 +172,7 @@ export default function rootReducer(state = new StateModel(), action: Action): S
     .set('url', url(state.url, action))
     .set('hosts', hosts(state.hosts, action))
     .set('regions', regions(state.regions, action))
+    .set('estateMap', estateMap(state.estateMap, action))
     .set('users', users(state.users, action))
     .set('pendingUsers', pendingUsers(state.pendingUsers, action))
     .set('groups', groups(state.groups, action))

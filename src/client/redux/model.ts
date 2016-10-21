@@ -12,7 +12,7 @@ const UserClass = Record({
 })
 
 export class User extends UserClass implements IUser {
-  uuid: string
+  readonly uuid: string
   name: string
   email: string
   godLevel: number
@@ -97,19 +97,17 @@ const RegionClass = Record({
   locX: 0,
   locY: 0,
   externalAddress: '',
-  slaveAddress: '',
-  estateID: 0
+  slaveAddress: ''
 })
 
 export class Region extends RegionClass implements IRegion {
-  uuid: string
-  name: string
-  httpPort: number
-  locX: number
-  locY: number
-  externalAddress: string
-  slaveAddress: string
-  estateID: number
+  readonly uuid: string
+  readonly name: string
+  readonly httpPort: number
+  readonly locX: number
+  readonly locY: number
+  readonly externalAddress: string
+  readonly slaveAddress: string
 
   set(key: string, value: string | number): Region {
     return <Region>super.set(key, value);
@@ -180,6 +178,7 @@ export interface IStateModel {
   url: string
   hosts: Map<number, Host>
   regions: Map<string, Region>
+  estateMap: Map<string,number>
   users: Map<string, User>
   pendingUsers: Map<string, PendingUser>
   groups: Map<string, Group>
@@ -192,6 +191,7 @@ const StateModelClass = Record({
   url: '',
   hosts: Map<number, Host>(),
   regions: Map<string, Region>(),
+  estateMap: Map<string,number>(),
   users: Map<string, User>(),
   pendingUsers: Map<string, PendingUser>(),
   groups: Map<string, Group>(),
@@ -204,6 +204,7 @@ export class StateModel extends StateModelClass implements IStateModel {
   url: string
   hosts: Map<number, Host>
   regions: Map<string, Region>
+  estateMap: Map<string,number>
   users: Map<string, User>
   pendingUsers: Map<string, PendingUser>
   groups: Map<string, Group>

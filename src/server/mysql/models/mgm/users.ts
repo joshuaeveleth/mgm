@@ -1,5 +1,24 @@
 
-export function users(sequelize, DataTypes) {
+import * as Sequelize from 'sequelize';
+
+export interface PendingUserAttribute {
+  name: string
+  email: string
+  gender: string
+  password: string
+  registered: Date
+  summary: string
+}
+
+export interface PendingUserInstance extends Sequelize.Instance<PendingUserAttribute>, PendingUserAttribute {
+
+}
+
+export interface PendingUserModel extends Sequelize.Model<PendingUserInstance, PendingUserAttribute> {
+  
+}
+
+export function users(sequelize, DataTypes): PendingUserModel {
   return sequelize.define('users', {
     name: {
       type: DataTypes.STRING,

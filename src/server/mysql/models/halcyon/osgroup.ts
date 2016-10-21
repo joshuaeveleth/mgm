@@ -1,6 +1,29 @@
 import * as Sequelize from 'sequelize';
 
-export function osGroup(sequelize, DataTypes) {
+export interface GroupAttribute {
+  GroupID: string
+    Name: string
+    Charter: string
+    InsigniaID: string
+    FounderID: string
+    MembershipFee: number
+    OpenEnrollment: string
+    ShowInList: boolean
+    AllowPublish: boolean
+    MaturePublish: boolean
+    OwnerRoleID: string
+}
+
+export interface GroupInstance extends Sequelize.Instance<GroupAttribute>, GroupAttribute {
+
+}
+
+export interface GroupModel extends Sequelize.Model<GroupInstance, GroupAttribute> {
+  
+}
+
+
+export function osGroup(sequelize, DataTypes): GroupModel {
   return sequelize.define('osgroup', {
     GroupID: {
       type: DataTypes.STRING,

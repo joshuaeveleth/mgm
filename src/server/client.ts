@@ -1,10 +1,22 @@
 
 import * as io from 'socket.io';
-import { Host, Region, PendingUser, User, Group, Role, Membership, Estate, Manager, EstateMap, Job } from '../common/messages';
+import { IHost, IRegion, IPendingUser, IUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob } from '../common/messages';
 import { MessageTypes } from '../common/MessageTypes';
 import { JobTypes } from '../common/jobTypes';
 import { Detail } from './auth';
-import { MGMDB, HALCYONDB, UserInstance, JobInstance, HostInstance } from './mysql';
+import { 
+  MGMDB, 
+  HALCYONDB, 
+  UserInstance, 
+  JobInstance, 
+  HostInstance, 
+  EstateInstance, 
+  ManagerInstance, 
+  EstateMapInstance, 
+  GroupInstance,
+  PendingUserInstance,
+  MembershipInstance
+ } from './mysql';
 import { Credential } from './auth/Credential';
 
 /* the functions in this file involve querying the database for initial values, and interacting with the websocket.
@@ -20,7 +32,7 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     }
   }).then((jobs: JobInstance[]) => {
     jobs.map((j: JobInstance) => {
-      let job: Job = {
+      let job: IJob = {
         id: j.id,
         timestamp: j.timestamp,
         type: j.type,
@@ -32,9 +44,9 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
   })
 
   // send estates
-  halDB.estates.findAll().then((estates: Estate[]) => {
-    estates.map((e: Estate) => {
-      let estate: Estate = {
+  halDB.estates.findAll().then((estates: EstateInstance[]) => {
+    estates.map((e: EstateInstance) => {
+      let estate: IEstate = {
         EstateID: e.EstateID,
         EstateName: e.EstateName,
         EstateOwner: e.EstateOwner
@@ -43,9 +55,9 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     })
   }).then(() => {
     return halDB.managers.findAll()
-  }).then((managers: Manager[]) => {
-    managers.map((m: Manager) => {
-      let manager: Manager = {
+  }).then((managers: ManagerInstance[]) => {
+    managers.map((m: ManagerInstance) => {
+      let manager: IManager = {
         EstateId: m.EstateId,
         ID: m.ID,
         uuid: m.uuid
@@ -54,9 +66,9 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     })
   }).then(() => {
     return halDB.estateMap.findAll();
-  }).then((regs: EstateMap[]) => {
-    regs.map((r: EstateMap) => {
-      let region: EstateMap = {
+  }).then((regs: EstateMapInstance[]) => {
+    regs.map((r: EstateMapInstance) => {
+      let region: IEstateMap = {
         RegionID: r.RegionID,
         EstateID: r.EstateID
       }
@@ -65,8 +77,8 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
   })
 
   // send regions
-  mgmDB.regions.findAll().then((regions: Region[]) => {
-    regions.map((r: Region) => {
+  mgmDB.regions.findAll().then((regions: IRegion[]) => {
+    regions.map((r: IRegion) => {
       sock.emit(MessageTypes.ADD_REGION, r);
     })
   }).catch((e: Error) => {
@@ -74,9 +86,9 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
   })
 
   //send groups
-  halDB.groups.findAll().then((groups: Group[]) => {
-    groups.map((g: Group) => {
-      let group: Group = {
+  halDB.groups.findAll().then((groups: GroupInstance[]) => {
+    groups.map((g: GroupInstance) => {
+      let group: IGroup = {
         GroupID: g.GroupID,
         Name: g.Name,
         FounderID: g.FounderID,
@@ -85,16 +97,21 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
       sock.emit(MessageTypes.ADD_GROUP, group);
     })
   })
-  halDB.roles.findAll().then((roles: Role[]) => {
-    roles.map((r: Role) => {
+  halDB.roles.findAll().then((roles: IRole[]) => {
+    roles.map((r: IRole) => {
       sock.emit(MessageTypes.ADD_ROLE, r);
     })
   }).catch((err: Error) => {
     console.log(err);
   })
-  halDB.members.findAll().then((members: Membership[]) => {
-    members.map((member: Membership) => {
-      sock.emit(MessageTypes.ADD_MEMBER, member);
+  halDB.members.findAll().then((members: MembershipInstance[]) => {
+    members.map((member: MembershipInstance) => {
+      let mi: IMembership = {
+        GroupID: member.GroupID,
+        AgentID: member.AgentID,
+        SelectedRoleID: member.SelectedRoleID
+      }
+      sock.emit(MessageTypes.ADD_MEMBER, mi);
     })
   })
 
@@ -102,7 +119,7 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
   halDB.users.findAll().then((users: UserInstance[]) => {
     //send users, mapped to hide extra data from sim
     users.map((u: UserInstance) => {
-      let user: User = {
+      let user: IUser = {
         uuid: u.UUID,
         name: u.username + ' ' + u.lastname,
         email: u.email,
@@ -161,15 +178,14 @@ function handleAdmin(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB
   })
 
   //send pending, blanking the password
-  mgmDB.pendingUsers.findAll().then((users: PendingUser[]) => {
-    users.map((u: PendingUser) => {
-      let user: PendingUser = {
+  mgmDB.pendingUsers.findAll().then((users: PendingUserInstance[]) => {
+    users.map((u: PendingUserInstance) => {
+      let user: IPendingUser = {
         name: u.name,
         gender: u.gender,
         email: u.email,
         registered: u.registered,
-        summary: u.summary,
-        password: ''
+        summary: u.summary
       }
       sock.emit(MessageTypes.ADD_PENDING_USER, user);
     })

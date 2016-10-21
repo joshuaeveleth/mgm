@@ -1,6 +1,21 @@
-/* jshint indent: 2 */
 
-export function estate_map(sequelize, DataTypes) {
+import * as Sequelize from 'sequelize';
+
+export interface EstateMapAttribute {
+  RegionID: string
+  EstateID: number
+}
+
+export interface EstateMapInstance extends Sequelize.Instance<EstateMapAttribute>, EstateMapAttribute {
+
+}
+
+export interface EstateMapModel extends Sequelize.Model<EstateMapInstance, EstateMapAttribute> {
+  
+}
+
+
+export function estate_map(sequelize, DataTypes): EstateMapModel {
   return sequelize.define('estate_map', {
     RegionID: {
       type: DataTypes.STRING,

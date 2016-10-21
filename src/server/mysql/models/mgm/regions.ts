@@ -1,6 +1,31 @@
 import * as Sequelize from 'sequelize';
 
-export function regions(sequelize, DataTypes) {
+export interface RegionAttribute {
+uuid: string
+    name:string
+    size: number
+    httpPort: number
+    consolePort: number
+    consoleUname: string
+    consolePass: string
+    locX: number
+    locY: number
+    externalAddress: string
+    slaveAddress: string
+    isRunning: boolean
+    status: string
+}
+
+export interface RegionInstance extends Sequelize.Instance<RegionAttribute>, RegionAttribute {
+
+}
+
+export interface RegionModel extends Sequelize.Model<RegionInstance, RegionAttribute> {
+  
+}
+
+
+export function regions(sequelize, DataTypes): RegionModel {
   return sequelize.define('regions', {
     uuid: {
       type: DataTypes.CHAR(36),

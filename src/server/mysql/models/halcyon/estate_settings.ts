@@ -1,6 +1,42 @@
-/* jshint indent: 2 */
+import * as Sequelize from 'sequelize';
 
-export function estate_settings(sequelize, DataTypes) {
+export interface EstateAttribute {
+  EstateID: number
+  EstateName: string
+  AbuseEmailToEstateOwner: number
+  DenyAnonymous: number
+  ResetHomeOnTeleport: number
+  FixedSun: number
+  DenyTransacted: number
+  BlockDwell: number
+  DenyIdentified: number
+  AllowVoice: number
+  UseGlobalTime: number
+  PricePerMeter: number
+  TaxFree: number
+  AllowDirectTeleport: number
+  RedirectGridX: number
+  RedirectGridY: number
+  ParentEstateID: number
+  SunPosition: number
+  EstateSkipScripts: number
+  BillableFactor: number
+  PublicAccess: number
+  AbuseEmail: string
+  EstateOwner: string
+  DenyMinors: number
+}
+
+export interface EstateInstance extends Sequelize.Instance<EstateAttribute>, EstateAttribute {
+
+}
+
+export interface EstateModel extends Sequelize.Model<EstateInstance, EstateAttribute> {
+
+}
+
+
+export function estate_settings(sequelize, DataTypes): EstateModel {
   return sequelize.define('estate_settings', {
     EstateID: {
       type: DataTypes.INTEGER(10),
@@ -101,7 +137,7 @@ export function estate_settings(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'estate_settings',
-    timestamps: false
-  });
+      tableName: 'estate_settings',
+      timestamps: false
+    });
 };
