@@ -98,6 +98,7 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     })
   })
   halDB.roles.findAll().then((roles: IRole[]) => {
+    console.log(roles.length)
     roles.map((r: IRole) => {
       sock.emit(MessageTypes.ADD_ROLE, r);
     })

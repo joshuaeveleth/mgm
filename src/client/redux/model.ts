@@ -1,7 +1,7 @@
 
 import { IHost, IRegion, IUser, IPendingUser, IGroup, IMembership, IRole, IEstate, IManager, IEstateMap, IJob } from '../../common/messages'
 
-import { Map, Record } from 'immutable';
+import { Map, Record, Set } from 'immutable';
 
 /** USERS */
 const UserClass = Record({
@@ -133,6 +133,28 @@ export class Group extends GroupClass implements IGroup {
   }
 }
 
+const RoleClass = Record({
+  GroupID: '',
+  RoleID: '',
+  Name: '',
+  Description: '',
+  Title: '',
+  Powers: 0
+})
+
+export class Role extends RoleClass implements IRole {
+  GroupID: string
+  RoleID: string
+  Name: string
+  Description: string
+  Title: string
+  Powers: number
+
+  set(key: string, value: string): Role {
+    return <Role>super.set(key, value);
+  }
+}
+
 /** ESTATE */
 const EstateClass = Record({
   EstateID: 0,
@@ -182,7 +204,10 @@ export interface IStateModel {
   users: Map<string, User>
   pendingUsers: Map<string, PendingUser>
   groups: Map<string, Group>
+  members: Map<string, Set<string>>
+  roles: Map<string, Map<string, Role>>
   estates: Map<number, Estate>
+  managers: Map<number, Set<string>>
   jobs: Map<number, Job>
 }
 
@@ -195,7 +220,10 @@ const StateModelClass = Record({
   users: Map<string, User>(),
   pendingUsers: Map<string, PendingUser>(),
   groups: Map<string, Group>(),
+  members: Map<string, Set<string>>(),
+  roles: Map<string, Map<string, Role>>(),
   estates: Map<number, Estate>(),
+  managers: Map<number, Set<string>>(),
   jobs: Map<number, Job>()
 })
 
@@ -208,7 +236,10 @@ export class StateModel extends StateModelClass implements IStateModel {
   users: Map<string, User>
   pendingUsers: Map<string, PendingUser>
   groups: Map<string, Group>
+  members: Map<string, Set<string>>
+  roles: Map<string, Map<string, Role>>
   estates: Map<number, Estate>
+  managers: Map<number, Set<string>>
   jobs: Map<number, Job>
 
   set(key: string, value: Auth | string | Map<string, any> | Map<number, any>): StateModel {

@@ -26,7 +26,7 @@ import {
 import { Actions } from '../redux/types';
 
 import { IHost, IRegion, IUser, IPendingUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob } from '../../common/messages'
-import { Auth, StateModel, Host, Region, User, PendingUser, Group, Estate, Job } from '../redux/model'
+import { Auth, StateModel, Host, Region, User, PendingUser, Group, Estate, Job, Role } from '../redux/model'
 import { MessageTypes } from '../../common/MessageTypes';
 
 let sock: SocketIOClient.Socket = null;
@@ -69,7 +69,7 @@ function handleSocket(store: Store<StateModel>) {
     store.dispatch(createGroupAction(new Group(group)));
   })
   sock.on(MessageTypes.ADD_ROLE, (role: IRole) => {
-    store.dispatch(createRoleAction(role));
+    store.dispatch(createRoleAction(new Role(role)));
   })
   sock.on(MessageTypes.ADD_MEMBER, (member: IMembership) => {
     store.dispatch(createMembershipAction(member));

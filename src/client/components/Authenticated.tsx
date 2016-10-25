@@ -111,8 +111,12 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                             estates={this.props.state.estates}
                             hosts={this.props.state.hosts}
                             groups={this.props.state.groups}
+                            members={this.props.state.members}
+                            roles={this.props.state.roles}
                             users={this.props.state.users}
-                            regions={this.props.state.regions} />
+                            regions={this.props.state.regions}
+                            estateMap={this.props.state.estateMap}
+                            managers={this.props.state.managers} />
                     </div>
                 )
             case '/users':

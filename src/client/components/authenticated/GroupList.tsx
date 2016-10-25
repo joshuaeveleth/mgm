@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Action } from "redux";
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 
-import { Group } from '../../redux/model';
+import { Group, Role } from '../../redux/model';
 import { GroupView } from './GroupView'
 
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -10,13 +10,19 @@ import { Grid, Row, Col } from 'react-bootstrap';
 interface props {
     dispatch: (a: Action) => void
     groups: Map<string, Group>
+    members: Map<string, Set<string>>
+    roles: Map<string, Map<string, Role>>
 }
 
 export class GroupList extends React.Component<props, {}> {
 
     render() {
         let groups = this.props.groups.toList().map((g: Group) => {
-            return <GroupView key={g.GroupID} group={g} />
+            return <GroupView 
+            key={g.GroupID} 
+            members={this.props.members.get(g.GroupID)} 
+            roles={this.props.roles.get(g.GroupID)}
+            group={g} />
         })
         return (
             <Grid>

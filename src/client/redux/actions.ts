@@ -2,8 +2,8 @@ import { Action } from 'redux';
 
 import { Actions } from "./types";
 
-import { IRole, IMembership, IManager, IEstateMap } from '../../common/messages';
-import { Auth, Host, Region, User, PendingUser, Group, Estate, Job } from './model'
+import { IMembership, IManager, IEstateMap } from '../../common/messages';
+import { Auth, Host, Region, User, PendingUser, Group, Estate, Job, Role } from './model'
 
 export interface LoginAction extends Action {
   user: User
@@ -46,7 +46,7 @@ export interface GroupAction extends Action {
   group: Group
 }
 export interface RoleAction extends Action {
-  role: IRole
+  role: Role
 }
 export interface MembershipAction extends Action {
   member: IMembership
@@ -145,7 +145,7 @@ export function createGroupAction(g: Group): Action {
   }
   return act;
 }
-export function createRoleAction(r: IRole): Action {
+export function createRoleAction(r: Role): Action {
   let act: RoleAction = {
     type: Actions.ADD_ROLE,
     role: r

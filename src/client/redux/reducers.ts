@@ -1,8 +1,8 @@
 import { Action } from 'redux';
-import { Record, Map } from 'immutable';
+import { Record, Map, Set } from 'immutable';
 
 import { IMembership, IRole, IManager, IEstateMap } from '../../common/messages'
-import { StateModel, Auth, Host, Region, User, PendingUser, Group, Estate, Job } from './model';
+import { StateModel, Auth, Host, Region, User, PendingUser, Group, Estate, Job, Role } from './model';
 
 import {
   NavigateTo,
@@ -82,7 +82,7 @@ function regions(state = Map<string, Region>(), action: Action) {
   }
 }
 
-function estateMap(state = Map<string,number>(), action: Action) {
+function estateMap(state = Map<string, number>(), action: Action) {
   switch (action.type) {
     case Actions.ASSIGN_ESTATE:
       let ra = <EstateMapAction>action;
@@ -119,16 +119,29 @@ function groups(state = Map<string, Group>(), action: Action) {
       let ga = <GroupAction>action;
       gr = state.get(ga.group.GroupID) || ga.group
       return state.set(ga.group.GroupID, gr);
-    //case Actions.ADD_MEMBER:
-    //  let ma = <MembershipAction>action;
-    //  gr = state.get(ma.member.GroupID) || { group: null, members: [], roles: [] };
-    //  gr.members.push(ma.member);
-    //  return state.set(ma.member.GroupID, gr);
-    //case Actions.ADD_ROLE:
-    //  let ra = <RoleAction>action;
-    //  gr = state.get(ra.role.GroupID) || { group: null, members: [], roles: [] };
-    //  gr.roles.push(ra.role);
-    //  return state.set(ra.role.GroupID, gr);
+    default:
+      return state
+  }
+}
+
+function members(state = Map<string, Set<string>>(), action: Action) {
+  let gr: Group;
+  switch (action.type) {
+    case Actions.ADD_MEMBER:
+      let ma = <MembershipAction>action;
+      let members = state.get(ma.member.GroupID) || Set<string>();
+      return state.set(ma.member.GroupID, members.add(ma.member.AgentID));
+    default:
+      return state
+  }
+}
+
+function roles(state = Map<string, Map<string, Role>>(), action: Action): Map<string, Map<string, Role>> {
+  switch (action.type) {
+    case Actions.ADD_ROLE:
+      let ra = <RoleAction>action;
+      let roles = state.get(ra.role.GroupID) || Map<string, Role>();
+      return state.set(ra.role.GroupID, roles.set(ra.role.RoleID, ra.role))
     default:
       return state
   }
@@ -151,16 +164,17 @@ function estates(state = Map<number, Estate>(), action: Action) {
       let ea = <EstateAction>action;
       er = state.get(ea.estate.EstateID) || ea.estate
       return state.set(ea.estate.EstateID, er);
-    //case Actions.ADD_MANAGER:
-    //  let ma = <ManagerAction>action;
-    //  er = state.get(ma.manager.EstateId) || { estate: null, managers: [], regions: [] }
-    //  er.managers.push(ma.manager.uuid);
-    //  return state.set(ma.manager.EstateId, er);
-    //case Actions.ASSIGN_ESTATE:
-    //  let ra = <EstateMapAction>action;
-    //  er = state.get(ra.region.EstateID) || { estate: null, managers: [], regions: [] }
-    //  er.regions.push(ra.region.RegionID);
-    //  return state.set(ra.region.EstateID, er);
+    default:
+      return state
+  }
+}
+
+function managers(state = Map<number, Set<string>>(), action: Action): Map<number, Set<string>> {
+  switch (action.type) {
+    case Actions.ADD_MANAGER:
+      let ma = <ManagerAction>action;
+      let managers = state.get(ma.manager.EstateId) || Set<string>()
+      return state.set(ma.manager.EstateId, managers.add(ma.manager.uuid))
     default:
       return state
   }
@@ -176,6 +190,9 @@ export default function rootReducer(state = new StateModel(), action: Action): S
     .set('users', users(state.users, action))
     .set('pendingUsers', pendingUsers(state.pendingUsers, action))
     .set('groups', groups(state.groups, action))
+    .set('roles', roles(state.roles, action))
+    .set('members', members(state.members, action))
     .set('estates', estates(state.estates, action))
+    .set('managers', managers(state.managers, action))
     .set('jobs', jobs(state.jobs, action));
 }
