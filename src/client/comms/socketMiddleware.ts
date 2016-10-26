@@ -15,13 +15,16 @@ import {
   createMembershipAction,
   createRoleAction,
   createEstateAction,
+  createEstateDeletedAction,
   createManagerAction,
   createEstateMapAction,
   MyPasswordAction,
   createUpsertJobAction,
   RequestCreateHostAction,
   RequestDeleteHostAction,
-  createHostDeletedAction
+  createHostDeletedAction,
+  RequestCreateEstateAction,
+  RequestDeleteEstateAction
 } from '../redux/actions';
 import { Actions } from '../redux/types';
 
@@ -78,6 +81,10 @@ function handleSocket(store: Store<StateModel>) {
   sock.on(MessageTypes.ADD_ESTATE, (estate: IEstate) => {
     store.dispatch(createEstateAction(new Estate(estate)));
   })
+  sock.on(MessageTypes.ESTATE_DELETED, (id: number) => {
+    store.dispatch(createEstateDeletedAction(id));
+  })
+
   sock.on(MessageTypes.ADD_MANAGER, (manager: IManager) => {
     store.dispatch(createManagerAction(manager));
   })
@@ -133,7 +140,7 @@ function requestCreateHost(action: Action) {
     if (success) {
       alertify.success('Host ' + act.address + ' added');
     } else {
-      alertify.error('Could not add host ' + act.address + '+' + message);
+      alertify.error('Could not add host ' + act.address + ': ' + message);
     }
   })
 }
@@ -144,7 +151,29 @@ function requestDeleteHost(action: Action) {
     if (success) {
       alertify.success('Host ' + act.host.address + ' removed');
     } else {
-      alertify.error('Could not remove host ' + act.host.address + '+' + message);
+      alertify.error('Could not remove host ' + act.host.address + ': ' + message);
+    }
+  })
+}
+
+function requestCreateEstate(action: Action) {
+  let act = <RequestCreateEstateAction>action;
+  sock.emit(MessageTypes.REQUEST_CREATE_ESTATE, act.name, act.owner, (success: boolean, message: string) => {
+    if (success) {
+      alertify.success('Estate ' + act.name + ' created');
+    } else {
+      alertify.error('Could not create estate ' + act.name + ': ' + message);
+    }
+  })
+}
+
+function requestDeleteEstate(action: Action) {
+  let act = <RequestDeleteEstateAction>action;
+  sock.emit(MessageTypes.REQUEST_DELETE_ESTATE, act.id, (success: boolean, message: string) => {
+    if (success) {
+      alertify.success('Estate ' + act.name + ' deleted');
+    } else {
+      alertify.error('Could not delete estate ' + act.name + ': ' + message);
     }
   })
 }
@@ -177,6 +206,12 @@ export const socketMiddleWare = (store: Store<StateModel>) => (next: Dispatch<St
       break;
     case Actions.REQUEST_DELETE_HOST:
       requestDeleteHost(action);
+      break;
+    case Actions.REQUEST_CREATE_ESTATE:
+      requestCreateEstate(action);
+      break;
+    case Actions.REQUEST_DELETE_ESTATE:
+      requestDeleteEstate(action);
       break;
 
     // messages that we ignore, either because we don't care, or they come from us

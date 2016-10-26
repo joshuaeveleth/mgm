@@ -254,7 +254,7 @@ function handleAdmin(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB
   });
 
   sock.on(MessageTypes.REQUEST_DELETE_ESTATE, (estateID: number, cb: (success: boolean, message?: string) => void) => {
-    console.log('user ' + account.uuid + ' is deleting estate ' + name);
+    console.log('user ' + account.uuid + ' is deleting estate ' + estateID);
     // we cannot delete an estate with regions in it ....
     halDB.estateMap.findAll({
       where: {
@@ -272,10 +272,11 @@ function handleAdmin(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB
       halDB.estateBan.destroy({ where: { EstateID: estateID } });
       halDB.estateGroups.destroy({ where: { EstateID: estateID } });
       halDB.managers.destroy({ where: { EstateID: estateID } });
-      halDB.estateMap.destroy({ where: { EstateID: estateID } });
+      // don't need this one, we already know there are no regions on it
+      //halDB.estateMap.destroy({ where: { EstateID: estateID } });
       halDB.estateUsers.destroy({ where: { EstateID: estateID } });
       cb(true);
-      sock.emit(MessageTypes.HOST_DELETED, estateID);
+      sock.emit(MessageTypes.ESTATE_DELETED, estateID);
     }).catch((err: Error) => {
       cb(false, err.message);
     });

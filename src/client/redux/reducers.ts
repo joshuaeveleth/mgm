@@ -19,7 +19,8 @@ import {
   ManagerAction,
   EstateMapAction,
   JobAction,
-  HostDeletedAction
+  HostDeletedAction,
+  EstateDeletedAction
 } from './actions';
 import { Actions } from './types';
 
@@ -164,6 +165,9 @@ function estates(state = Map<number, Estate>(), action: Action) {
       let ea = <EstateAction>action;
       er = state.get(ea.estate.EstateID) || ea.estate
       return state.set(ea.estate.EstateID, er);
+    case Actions.ESTATE_DELETED:
+      let da = <EstateDeletedAction>action;
+      return state.delete(da.id);
     default:
       return state
   }
@@ -175,6 +179,9 @@ function managers(state = Map<number, Set<string>>(), action: Action): Map<numbe
       let ma = <ManagerAction>action;
       let managers = state.get(ma.manager.EstateId) || Set<string>()
       return state.set(ma.manager.EstateId, managers.add(ma.manager.uuid))
+    case Actions.ESTATE_DELETED:
+      let da = <EstateDeletedAction>action;
+      return state.delete(da.id);
     default:
       return state
   }

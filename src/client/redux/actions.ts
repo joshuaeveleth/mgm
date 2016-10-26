@@ -62,6 +62,16 @@ export interface EstateMapAction extends Action {
   region: IEstateMap
 }
 
+export interface RequestCreateEstateAction extends Action {
+  name: string
+  owner: string
+}
+
+export interface RequestDeleteEstateAction extends Action {
+  id: number
+  name: string
+}
+
 export interface RequestCreateHostAction extends Action {
   address: string
 }
@@ -69,6 +79,9 @@ export interface RequestDeleteHostAction extends Action {
   host: Host
 }
 export interface HostDeletedAction extends Action {
+  id: number
+}
+export interface EstateDeletedAction extends Action {
   id: number
 }
 
@@ -220,4 +233,30 @@ export function createHostDeletedAction(id: number): Action {
     id: id
   }
   return act;
+}
+
+export function createRequestCreateEstateAction(name: string, owner: string): Action {
+  let act: RequestCreateEstateAction = {
+    type: Actions.REQUEST_CREATE_ESTATE,
+    name: name,
+    owner: owner
+  }
+  return act;
+}
+
+export function createRequestDeleteEstateAction(id: number, name: string): Action {
+  let act: RequestDeleteEstateAction = {
+    type: Actions.REQUEST_DELETE_ESTATE,
+    id: id,
+    name: name
+  }
+  return act;
+}
+
+export function createEstateDeletedAction(id: number): Action {
+  let act: EstateDeletedAction = {
+    type: Actions.ESTATE_DELETED,
+    id: id
+  }
+  return act
 }
