@@ -4,19 +4,19 @@ import { IHost, IRegion, IPendingUser, IUser, IGroup, IRole, IMembership, IEstat
 import { MessageTypes } from '../common/MessageTypes';
 import { JobTypes } from '../common/jobTypes';
 import { Detail } from './auth';
-import { 
-  MGMDB, 
-  HALCYONDB, 
-  UserInstance, 
-  JobInstance, 
-  HostInstance, 
-  EstateInstance, 
-  ManagerInstance, 
-  EstateMapInstance, 
+import {
+  MGMDB,
+  HALCYONDB,
+  UserInstance,
+  JobInstance,
+  HostInstance,
+  EstateInstance,
+  ManagerInstance,
+  EstateMapInstance,
   GroupInstance,
   PendingUserInstance,
   MembershipInstance
- } from './mysql';
+} from './mysql';
 import { Credential } from './auth/Credential';
 
 /* the functions in this file involve querying the database for initial values, and interacting with the websocket.
@@ -211,12 +211,74 @@ function handleAdmin(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB
       where: {
         address: address
       }
-    }).then( () => {
+    }).then(() => {
       cb(true);
       sock.emit(MessageTypes.HOST_DELETED, address);
-    }).catch( (err: Error) => {
+    }).catch((err: Error) => {
       cb(false, err.message);
     })
+  });
+
+  sock.on(MessageTypes.REQUEST_CREATE_ESTATE, (name: string, owner: string, cb: (success: boolean, message?: string) => void) => {
+    console.log('user ' + account.uuid + ' is creating estate ' + name);
+    halDB.estates.create({
+      EstateName: name,
+      EstateOwner: owner,
+      AbuseEmailToEstateOwner: 0,
+      DenyAnonymous: 1,
+      ResetHomeOnTeleport: 0,
+      FixedSun: 0,
+      DenyTransacted: 0,
+      BlockDwell: 0,
+      DenyIdentified: 0,
+      AllowVoice: 0,
+      UseGlobalTime: 1,
+      PricePerMeter: 0,
+      TaxFree: 1,
+      AllowDirectTeleport: 1,
+      RedirectGridX: 0,
+      RedirectGridY: 0,
+      ParentEstateID: 0,
+      SunPosition: 0,
+      EstateSkipScripts: 0,
+      BillableFactor: 0,
+      PublicAccess: 1,
+      AbuseEmail: '',
+      DenyMinors: 0,
+    }).then((e: EstateInstance) => {
+      cb(true);
+      sock.emit(MessageTypes.ADD_ESTATE, e);
+    }).catch((err: Error) => {
+      cb(false, err.message);
+    })
+  });
+
+  sock.on(MessageTypes.REQUEST_DELETE_ESTATE, (estateID: number, cb: (success: boolean, message?: string) => void) => {
+    console.log('user ' + account.uuid + ' is deleting estate ' + name);
+    // we cannot delete an estate with regions in it ....
+    halDB.estateMap.findAll({
+      where: {
+        EstateID: estateID
+      }
+    }).then((mapper: EstateMapInstance[]) => {
+      if (mapper.length > 0) {
+        throw new Error('Cannot delete an estate with member regions');
+      }
+    }).then(() => {
+      // destroy the primary record in estate_settings
+      return halDB.estates.destroy({ where: { EstateID: estateID } });
+    }).then(() => {
+      //estate settings succeeded, ignore errors on the rest
+      halDB.estateBan.destroy({ where: { EstateID: estateID } });
+      halDB.estateGroups.destroy({ where: { EstateID: estateID } });
+      halDB.managers.destroy({ where: { EstateID: estateID } });
+      halDB.estateMap.destroy({ where: { EstateID: estateID } });
+      halDB.estateUsers.destroy({ where: { EstateID: estateID } });
+      cb(true);
+      sock.emit(MessageTypes.HOST_DELETED, estateID);
+    }).catch((err: Error) => {
+      cb(false, err.message);
+    });
   });
 }
 

@@ -16,7 +16,6 @@ interface loginProps {
 export class Login extends React.Component<loginProps, {}> {
 
     state: {
-        msg: string,
         username: string,
         password: string
     }
@@ -24,7 +23,6 @@ export class Login extends React.Component<loginProps, {}> {
     constructor(props: loginProps) {
         super(props);
         this.state = {
-            msg: this.props.errorMsg,
             username: '',
             password: ''
         };
@@ -74,8 +72,8 @@ export class Login extends React.Component<loginProps, {}> {
 
     render() {
         let errorMsg = <div></div>
-        if (this.state.msg) {
-            errorMsg = <Alert bsStyle="danger">{this.state.msg}</Alert>
+        if (this.props.errorMsg) {
+            errorMsg = <Alert bsStyle="danger">{this.props.errorMsg}</Alert>
         }
         return (
             <div>

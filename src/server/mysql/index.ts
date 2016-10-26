@@ -16,6 +16,9 @@ import { osGroupMembership, MembershipInstance, MembershipAttribute } from './mo
 import { estate_settings, EstateInstance, EstateAttribute } from './models/halcyon/estate_settings';
 import { estate_map, EstateMapInstance, EstateMapAttribute } from './models/halcyon/estate_map';
 import { estate_managers, ManagerInstance, ManagerAttribute } from './models/halcyon/estate_managers';
+import { estateban, EstateBanInstance, EstateBanAttribute } from './models/halcyon/estateban';
+import { estate_groups, EstateGroupInstance, EstateGroupAttribute } from './models/halcyon/estate_groups';
+import { estate_users, EstateUserInstance, EstateUserAttribute } from './models/halcyon/estate_users';
 
 import { jobs, JobInstance, JobAttribute } from './models/mgm/jobs';
 
@@ -37,20 +40,23 @@ export interface Config {
 }
 
 export interface MGMDB {
-  hosts: Sequelize.Model<HostInstance,HostAttribute>
-  regions: Sequelize.Model<RegionInstance,RegionAttribute>
-  pendingUsers: Sequelize.Model<PendingUserInstance,PendingUserAttribute>
-  jobs: Sequelize.Model<JobInstance,JobAttribute>
+  hosts: Sequelize.Model<HostInstance, HostAttribute>
+  regions: Sequelize.Model<RegionInstance, RegionAttribute>
+  pendingUsers: Sequelize.Model<PendingUserInstance, PendingUserAttribute>
+  jobs: Sequelize.Model<JobInstance, JobAttribute>
 }
 
 export interface HALCYONDB {
-  users: Sequelize.Model<UserInstance,UserAttribute>
+  users: Sequelize.Model<UserInstance, UserAttribute>
   groups: Sequelize.Model<GroupInstance, GroupAttribute>
   roles: Sequelize.Model<RoleInstance, RoleAttribute>
   members: Sequelize.Model<MembershipInstance, MembershipAttribute>
   estates: Sequelize.Model<EstateInstance, EstateAttribute>
   managers: Sequelize.Model<ManagerInstance, ManagerAttribute>
   estateMap: Sequelize.Model<EstateMapInstance, EstateMapAttribute>
+  estateBan: Sequelize.Model<EstateBanInstance, EstateBanAttribute>
+  estateGroups: Sequelize.Model<EstateGroupInstance, EstateGroupAttribute>
+  estateUsers: Sequelize.Model<EstateUserInstance, EstateUserAttribute>
 }
 
 export class Sql {
@@ -94,7 +100,10 @@ export class Sql {
       members: seq.import('osgroupmembership', osGroupMembership),
       estates: seq.import('estate_settings', estate_settings),
       managers: seq.import('estate_managers', estate_managers),
-      estateMap: seq.import('estate_map', estate_map)
+      estateMap: seq.import('estate_map', estate_map),
+      estateBan: seq.import('estateban', estateban),
+      estateGroups: seq.import('estate_groups', estate_groups),
+      estateUsers: seq.import('estate_users', estate_users)
     };
   }
 }

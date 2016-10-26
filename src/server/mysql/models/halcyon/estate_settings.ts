@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize';
 
 export interface EstateAttribute {
-  EstateID: number
+  EstateID?: number
   EstateName: string
   AbuseEmailToEstateOwner: number
   DenyAnonymous: number
