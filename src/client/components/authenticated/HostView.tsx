@@ -16,9 +16,13 @@ interface props {
 export class HostView extends React.Component<props, {}> {
 
   onRemoveHost() {
-    for (let id in this.props.regions) {
-      if (this.props.regions.get(id).slaveAddress === this.props.host.address)
-        return alertify.error('Cannot remove host ' + this.props.host.address + ', there are regions present');
+    let regionCount = 0;
+    this.props.regions.toList().map( (r: Region) => {
+      if(r.slaveAddress === this.props.host.address)
+        regionCount++;
+    })
+    if (regionCount != 0){
+        return alertify.error('Cannot remove host ' + this.props.host.address + ', there are ' + regionCount + ' regions assigned');
     }
     alertify.confirm('Are you sure you want to remove host ' + this.props.host.address + '?', () => {
       this.props.dispatch(createRequestDeleteHostAction(this.props.host));

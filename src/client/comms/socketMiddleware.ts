@@ -129,7 +129,7 @@ function setMyPassword(action: Action) {
 
 function requestCreateHost(action: Action) {
   let act = <RequestCreateHostAction>action;
-  sock.emit(MessageTypes.REQUEST_DELETE_HOST, act.address, (success: boolean, message: string) => {
+  sock.emit(MessageTypes.REQUEST_CREATE_HOST, act.address, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Host ' + act.address + ' added');
     } else {
@@ -140,7 +140,7 @@ function requestCreateHost(action: Action) {
 
 function requestDeleteHost(action: Action) {
   let act = <RequestDeleteHostAction>action;
-  sock.emit(MessageTypes.REQUEST_DELETE_HOST, act.host.address, (success: boolean, message: string) => {
+  sock.emit(MessageTypes.REQUEST_DELETE_HOST, act.host.id, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Host ' + act.host.address + ' removed');
     } else {

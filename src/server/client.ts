@@ -205,15 +205,15 @@ function handleAdmin(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB
     })
   })
 
-  sock.on(MessageTypes.REQUEST_DELETE_HOST, (address: string, cb: (success: boolean, message?: string) => void) => {
-    console.log('user ' + account.uuid + ' is removing host ' + address);
+  sock.on(MessageTypes.REQUEST_DELETE_HOST, (id: number, cb: (success: boolean, message?: string) => void) => {
+    console.log('user ' + account.uuid + ' is removing host ' + id);
     mgmDB.hosts.destroy({
       where: {
-        address: address
+        id: id
       }
     }).then(() => {
       cb(true);
-      sock.emit(MessageTypes.HOST_DELETED, address);
+      sock.emit(MessageTypes.HOST_DELETED, id);
     }).catch((err: Error) => {
       cb(false, err.message);
     })
