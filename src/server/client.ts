@@ -98,7 +98,6 @@ function handleUser(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB:
     })
   })
   halDB.roles.findAll().then((roles: IRole[]) => {
-    console.log(roles.length)
     roles.map((r: IRole) => {
       sock.emit(MessageTypes.ADD_ROLE, r);
     })
@@ -181,6 +180,7 @@ function handleAdmin(sock: SocketIO.Socket, account: Detail, mgmDB: MGMDB, halDB
   //send pending, blanking the password
   mgmDB.pendingUsers.findAll().then((users: PendingUserInstance[]) => {
     users.map((u: PendingUserInstance) => {
+      console.log(u.name);
       let user: IPendingUser = {
         name: u.name,
         gender: u.gender,

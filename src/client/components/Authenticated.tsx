@@ -134,7 +134,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         {navbar}
                         <PendingUserList
                             dispatch={ this.props.dispatch }
-                            users={this.props.state.get('pendingUsers') }/>
+                            users={this.props.state.pendingUsers }/>
                     </div>
                 )
             default:

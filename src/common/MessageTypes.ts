@@ -4,7 +4,7 @@ export const MessageTypes = {
   ADD_HOST: 'addHost',
   ADD_REGION: 'addRegion',
   ADD_USER: 'addUser',
-  ADD_PENDING_USER: 'addUser',
+  ADD_PENDING_USER: 'addPendingUser',
   ADD_GROUP: 'addGroup',
   ADD_ROLE: 'addRole',
   ADD_MEMBER: 'addMember',
