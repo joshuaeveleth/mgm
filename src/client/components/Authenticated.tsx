@@ -4,13 +4,15 @@ import { StateModel } from '../redux/model';
 import { createLogoutAction, createNavigateToAction } from '../redux/actions';
 import { Map } from 'immutable';
 
-import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-bootstrap';
 
-import { Account } from "./authenticated/Account";
-import { RegionList } from "./authenticated/RegionList";
-import { Grid } from "./authenticated/Grid";
-import { UserList } from "./authenticated/UserList";
-import { PendingUserList } from "./authenticated/PendingUserList";
+import { Account } from "./Account/Account";
+import { RegionList } from "./Regions/RegionList";
+import { EstateList } from './Estates/EstateList';
+import { GroupList } from './Groups/GroupList';
+import { HostList } from './Hosts/HostList';
+import { UserList } from "./Users/UserList";
+import { PendingUserList } from "./PendingUsers/PendingUserList";
 
 interface authenticatedProps {
     dispatch: (a: Action) => void,
@@ -34,7 +36,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
     }
 
     componentWillReceiveProps(newProps: authenticatedProps) {
-        if (this.state.url !== newProps.state.url ){
+        if (this.state.url !== newProps.state.url) {
             this.setState({
                 url: newProps.state.url
             })
@@ -60,32 +62,41 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                     <Nav>
                         <NavItem
                             active={this.state.url === "/account" || this.state.url === "/"}
-                            onClick={this.handleNav.bind(this, "/account") }>
+                            onClick={this.handleNav.bind(this, "/account")}>
                             Account
                         </NavItem>
                         <NavItem
                             active={this.state.url === "/regions"}
-                            onClick={this.handleNav.bind(this, "/regions") }>
+                            onClick={this.handleNav.bind(this, "/regions")}>
                             Regions
                         </NavItem>
-                        <NavItem
-                            active={this.state.url === "/grid"}
-                            onClick={this.handleNav.bind(this, "/grid") }>
-                            Grid
-                        </NavItem>
+                        <NavDropdown id="grid-dropdown" title="Grid">
+                            <MenuItem active={this.state.url === "/estates"}
+                                onClick={this.handleNav.bind(this, "/estates")}>
+                                Estates
+                            </MenuItem>
+                            <MenuItem active={this.state.url === "/groups"}
+                                onClick={this.handleNav.bind(this, "/groups")}>
+                                Groups
+                            </MenuItem>
+                            <MenuItem active={this.state.url === "/hosts"}
+                                onClick={this.handleNav.bind(this, "/hosts")}>
+                                Hosts
+                            </MenuItem>
+                        </NavDropdown>
                         <NavItem
                             active={this.state.url === "/users"}
-                            onClick={this.handleNav.bind(this, "/users") }>
+                            onClick={this.handleNav.bind(this, "/users")}>
                             Users
                         </NavItem >
                         <NavItem
                             active={this.state.url === "/pending"}
-                            onClick={this.handleNav.bind(this, "/pending") }>
+                            onClick={this.handleNav.bind(this, "/pending")}>
                             Pending Users
                         </NavItem >
                     </Nav >
                     <Nav pullRight>
-                        <NavItem><Button bsSize="xsmall" onClick={this.handleLogout.bind(this) }>Log Out</Button></NavItem>
+                        <NavItem><Button bsSize="xsmall" onClick={this.handleLogout.bind(this)}>Log Out</Button></NavItem>
                     </Nav>
                 </Navbar.Collapse >
             </Navbar >
@@ -95,28 +106,44 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                 return (
                     <div>
                         {navbar}
-                        <RegionList 
-                            dispatch={this.props.dispatch} 
+                        <RegionList
+                            dispatch={this.props.dispatch}
                             regions={this.props.state.regions}
                             estateMap={this.props.state.estateMap}
                             estates={this.props.state.estates} />
                     </div>
                 )
-            case '/grid':
+            case '/estates':
                 return (
                     <div>
                         {navbar}
-                        <Grid
+                        <EstateList
                             dispatch={this.props.dispatch}
                             estates={this.props.state.estates}
-                            hosts={this.props.state.hosts}
-                            groups={this.props.state.groups}
-                            members={this.props.state.members}
-                            roles={this.props.state.roles}
-                            users={this.props.state.users}
-                            regions={this.props.state.regions}
                             estateMap={this.props.state.estateMap}
-                            managers={this.props.state.managers} />
+                            managers={this.props.state.managers}
+                            users={this.props.state.users} />
+                    </div>
+                )
+            case '/groups':
+                return (
+                    <div>
+                        {navbar}
+                        <GroupList
+                            dispatch={this.props.dispatch}
+                            groups={this.props.state.groups}
+                            roles={this.props.state.roles}
+                            members={this.props.state.members} />
+                    </div>
+                )
+            case '/hosts':
+                return (
+                    <div>
+                        {navbar}
+                        <HostList
+                            dispatch={this.props.dispatch}
+                            hosts={this.props.state.hosts}
+                            regions={this.props.state.regions} />
                     </div>
                 )
             case '/users':
@@ -133,8 +160,8 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                     <div>
                         {navbar}
                         <PendingUserList
-                            dispatch={ this.props.dispatch }
-                            users={this.props.state.pendingUsers }/>
+                            dispatch={this.props.dispatch}
+                            users={this.props.state.pendingUsers} />
                     </div>
                 )
             default:

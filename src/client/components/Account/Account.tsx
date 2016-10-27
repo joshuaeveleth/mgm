@@ -8,7 +8,7 @@ import { createSetMyPasswordAction } from '../../redux/actions';
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 
 import { JobList } from './JobList';
-import { SetPasswordModal } from './SetPassword';
+import { SetPasswordModal } from '../SetPassword';
 
 interface props {
     dispatch: (a: Action) => void,

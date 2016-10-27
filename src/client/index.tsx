@@ -10,8 +10,8 @@ import reducer from "./redux/reducers";
 import { createNavigateToAction, createLoginAction } from "./redux/actions"
 
 //create the redux store, using our websocket middleware for MGM async
-import { socketMiddleWare } from "./comms/socketMiddleware";
-let store = createStore<StateModel>(reducer, applyMiddleware(socketMiddleWare));
+import { MGM } from "./mgmMiddleware";
+let store = createStore<StateModel>(reducer, applyMiddleware(MGM));
 
 
 // Update url to match internal state
@@ -54,6 +54,38 @@ store.subscribe(() => {
     }
 })
 
-import { App } from "./components/App";
+import { Authenticated } from "./components/Authenticated";
+import { Unauthenticated } from "./components/Unauthenticated";
 
-ReactDOM.render(<App store={store}/>, document.getElementById("app"));
+class App extends React.Component<{}, {}> {
+    private sub: Redux.Unsubscribe;
+    state: {
+        st: StateModel
+    };
+
+    constructor(props: any) {
+        super(props);
+        this.sub = store.subscribe(() => {
+            if (this.state.st !== store.getState()) {
+                this.setState({
+                    st: store.getState()
+                });
+            }
+        });
+        this.state = {
+            st: store.getState()
+        }
+    }
+
+    render() {
+        if (this.state.st.auth.loggedIn) {
+            // show authenticated tree
+            return <Authenticated state={this.state.st} dispatch={ store.dispatch } />
+        } else {
+            // show splash, login, registration tree
+            return <Unauthenticated route={this.state.st.url} dispatch={ store.dispatch } errorMsg={this.state.st.auth.errorMsg}/>
+        }
+    }
+}
+
+ReactDOM.render(<App />, document.getElementById("app"));

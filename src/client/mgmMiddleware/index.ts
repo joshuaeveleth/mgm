@@ -182,7 +182,7 @@ function requestDeleteEstate(action: Action) {
  * This is a redux middleware.  As most actions in MGM affect the server, and then are asynchronously affected in return,
  * this middleware intercepts the requests and proxies them to the server, then dispatching based on the result.
  */
-export const socketMiddleWare = (store: Store<StateModel>) => (next: Dispatch<StateModel>) => (action: Action) => {
+export const MGM = (store: Store<StateModel>) => (next: Dispatch<StateModel>) => (action: Action) => {
   switch (action.type) {
     case Actions.LOGIN:
       let act = <LoginAction>action;
