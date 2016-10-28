@@ -9,6 +9,7 @@
     },
     "files": [
         "../../typings/index.d.ts",
-        "./index.tsx"
+        "./index.tsx",
+        "./mgmMiddleware/MGM.ts"
     ]
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { User } from '../../redux/model';
+import { User } from '.';
 
 import { Row, Col } from 'react-bootstrap'
 

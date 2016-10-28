@@ -2,8 +2,9 @@ import * as React from "react";
 import { Action } from 'redux'
 import { Map, Set, Iterable } from 'immutable';
 
-import { Estate, User } from '../../redux/model';
-import { createRequestDeleteEstateAction } from '../../redux/actions';
+import { Estate } from '.';
+import { User } from '../Users';
+import { RequestDeleteEstate } from '../../mgmMiddleware';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 
@@ -22,7 +23,7 @@ export class EstateView extends React.Component<props, {}> {
         return alertify.error('Cannot remove Estate ' + this.props.estate.EstateName + ', there are ' + this.props.regionCount + ' regions assigned');
     }
     alertify.confirm('Are you sure you want to remove host ' + this.props.estate.EstateName + '?', () => {
-      this.props.dispatch(createRequestDeleteEstateAction(this.props.estate.EstateID, this.props.estate.EstateName));
+      RequestDeleteEstate(this.props.estate);
     });
   }
 

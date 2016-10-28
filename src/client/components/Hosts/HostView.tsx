@@ -2,8 +2,9 @@ import * as React from "react";
 import { Action } from 'redux';
 import { Map } from 'immutable';
 
-import { createRequestDeleteHostAction } from '../../redux/actions'
-import { Host, Region } from '../../redux/model'
+import { RequestDeleteHost } from '../../mgmMiddleware'
+import { Host } from '.'
+import { Region } from '../Regions';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 
@@ -25,7 +26,7 @@ export class HostView extends React.Component<props, {}> {
       return alertify.error('Cannot remove host ' + this.props.host.address + ', there are ' + regionCount + ' regions assigned');
     }
     alertify.confirm('Are you sure you want to remove host ' + this.props.host.address + '?', () => {
-      this.props.dispatch(createRequestDeleteHostAction(this.props.host));
+      RequestDeleteHost(this.props.host);
     });
   }
 

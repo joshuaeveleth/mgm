@@ -2,7 +2,8 @@ import * as React from "react";
 import { Action } from 'redux';
 import { Map } from 'immutable';
 
-import { User, Job } from '../../redux/model';
+import { Job } from '.';
+import { User } from '../Users';
 import { createSetMyPasswordAction } from '../../redux/actions';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';

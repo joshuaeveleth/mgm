@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Store } from 'redux'
-import { PendingUser } from '../../redux/model';
+import { PendingUser } from '.';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 

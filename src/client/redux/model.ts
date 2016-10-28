@@ -2,45 +2,13 @@
 import { IHost, IRegion, IUser, IPendingUser, IGroup, IMembership, IRole, IEstate, IManager, IEstateMap, IJob } from '../../common/messages'
 
 import { Map, Record, Set } from 'immutable';
-
-/** USERS */
-const UserClass = Record({
-  uuid: '',
-  name: '',
-  email: '',
-  godLevel: 0
-})
-
-export class User extends UserClass implements IUser {
-  readonly uuid: string
-  name: string
-  email: string
-  godLevel: number
-
-  set(key: string, value: string | number): User {
-    return <User>super.set(key, value);
-  }
-}
-
-const PendingUserClass = Record({
-  name: '',
-  email: '',
-  gender: '',
-  registered: Date,
-  summary: ''
-})
-
-export class PendingUser extends PendingUserClass implements IPendingUser {
-  name: string
-  email: string
-  gender: string
-  registered: Date
-  summary: string
-
-  set(key: string, value: string): User {
-    return <User>super.set(key, value);
-  }
-}
+import { User } from '../components/Users';
+import { Region } from '../components/Regions';
+import { Host } from '../components/Hosts';
+import { Estate } from '../components/Estates';
+import { Group, Role } from '../components/Groups';
+import { PendingUser } from '../components/PendingUsers';
+import { Job } from '../components/Account';
 
 /** AUTH */
 interface IAuth {
@@ -68,131 +36,6 @@ export class Auth extends AuthClass implements IAuth {
   }
 }
 
-/** HOSTS */
-const HostClass = Record({
-  id: 0,
-  address: '',
-  port: 0,
-  name: '',
-  slots: 0
-})
-
-export class Host extends HostClass implements IHost {
-  id: number
-  address: string
-  port: number
-  name: string
-  slots: number
-
-  set(key: string, value: string | number): Host {
-    return <Host>super.set(key, value);
-  }
-}
-
-/** REGIONS */
-const RegionClass = Record({
-  uuid: '',
-  name: '',
-  httpPort: 0,
-  locX: 0,
-  locY: 0,
-  externalAddress: '',
-  slaveAddress: ''
-})
-
-export class Region extends RegionClass implements IRegion {
-  readonly uuid: string
-  readonly name: string
-  readonly httpPort: number
-  readonly locX: number
-  readonly locY: number
-  readonly externalAddress: string
-  readonly slaveAddress: string
-
-  set(key: string, value: string | number): Region {
-    return <Region>super.set(key, value);
-  }
-}
-
-/** GROUPS */
-const GroupClass = Record({
-  GroupID: '',
-  Name: '',
-  FounderID: '',
-  OwnerRoleID: ''
-})
-
-export class Group extends GroupClass implements IGroup {
-  GroupID: string
-  Name: string
-  FounderID: string
-  OwnerRoleID: string
-
-  set(key: string, value: string): Group {
-    return <Group>super.set(key, value);
-  }
-}
-
-const RoleClass = Record({
-  GroupID: '',
-  RoleID: '',
-  Name: '',
-  Description: '',
-  Title: '',
-  Powers: 0
-})
-
-export class Role extends RoleClass implements IRole {
-  GroupID: string
-  RoleID: string
-  Name: string
-  Description: string
-  Title: string
-  Powers: number
-
-  set(key: string, value: string): Role {
-    return <Role>super.set(key, value);
-  }
-}
-
-/** ESTATE */
-const EstateClass = Record({
-  EstateID: 0,
-  EstateName: '',
-  EstateOwner: '',
-})
-
-export class Estate extends EstateClass implements IEstate {
-  EstateID: number
-  EstateName: string
-  EstateOwner: string
-
-  set(key: string, value: string | number): Estate {
-    return <Estate>super.set(key, value);
-  }
-}
-
-/** JOB */
-const JobClass = Record({
-  id: 0,
-  timestamp: '',
-  type: '',
-  user: '',
-  data: ''
-})
-
-export class Job extends JobClass implements IJob {
-  id: number
-  timestamp: string
-  type: string
-  user: string
-  data: string
-
-  set(key: string, value: string | number): Job {
-    return <Job>super.set(key, value);
-  }
-}
-
 /** APPLICATION STATE */
 
 export interface IStateModel {
@@ -200,7 +43,7 @@ export interface IStateModel {
   url: string
   hosts: Map<number, Host>
   regions: Map<string, Region>
-  estateMap: Map<string,number>
+  estateMap: Map<string, number>
   users: Map<string, User>
   pendingUsers: Map<string, PendingUser>
   groups: Map<string, Group>
@@ -216,7 +59,7 @@ const StateModelClass = Record({
   url: '',
   hosts: Map<number, Host>(),
   regions: Map<string, Region>(),
-  estateMap: Map<string,number>(),
+  estateMap: Map<string, number>(),
   users: Map<string, User>(),
   pendingUsers: Map<string, PendingUser>(),
   groups: Map<string, Group>(),
@@ -232,7 +75,7 @@ export class StateModel extends StateModelClass implements IStateModel {
   url: string
   hosts: Map<number, Host>
   regions: Map<string, Region>
-  estateMap: Map<string,number>
+  estateMap: Map<string, number>
   users: Map<string, User>
   pendingUsers: Map<string, PendingUser>
   groups: Map<string, Group>
@@ -242,7 +85,23 @@ export class StateModel extends StateModelClass implements IStateModel {
   managers: Map<number, Set<string>>
   jobs: Map<number, Job>
 
-  set(key: string, value: Auth | string | Map<string, any> | Map<number, any>): StateModel {
+  set(
+    key: string,
+    value:
+      Auth |
+      string |
+      Map<string, User> |
+      Map<number, Host> |
+      Map<string, Region> |
+      Map<string, number> |
+      Map<string, PendingUser> |
+      Map<string, Group> |
+      Map<string, Map<string, Role>> |
+      Map<number, Estate> |
+      Map<string, Set<string>> |
+      Map<number, Set<string>> |
+      Map<number, Job>
+  ): StateModel {
     return <StateModel>super.set(key, value);
   }
 }

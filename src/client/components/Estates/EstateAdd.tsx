@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Map } from 'immutable';
 
-import { Estate, User } from '../../redux/model'
+import { Estate } from '.'
+import { User } from '../Users';
 
 import { Modal, Form, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Map, Set, Iterable } from 'immutable';
 
-import { Group, Role } from '../../redux/model';
+import { Group, Role } from '.';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 

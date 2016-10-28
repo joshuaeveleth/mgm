@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Store } from 'redux'
-import { Region, Estate } from '../../redux/model';
+import { Estate } from '../Estates';
+import { Region } from '.';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 

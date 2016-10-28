@@ -2,8 +2,9 @@ import * as React from "react";
 import { Action } from 'redux';
 import { Map } from 'immutable';
 
-import { createRequestCreateHostAction } from '../../redux/actions';
-import { Host, Region } from '../../redux/model';
+import { RequestCreateHost } from '../../mgmMiddleware';
+import { Host } from '.';
+import { Region } from '../Regions';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
 
@@ -33,7 +34,7 @@ export class HostList extends React.Component<props, {}> {
     }
 
     onNewHost(address: string) {
-        this.props.dispatch(createRequestCreateHostAction(address));
+        RequestCreateHost(address);
         this.setState({
             showAdd: false
         })

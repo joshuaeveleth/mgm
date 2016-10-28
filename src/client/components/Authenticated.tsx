@@ -6,13 +6,13 @@ import { Map } from 'immutable';
 
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-bootstrap';
 
-import { Account } from "./Account/Account";
-import { RegionList } from "./Regions/RegionList";
-import { EstateList } from './Estates/EstateList';
-import { GroupList } from './Groups/GroupList';
-import { HostList } from './Hosts/HostList';
-import { UserList } from "./Users/UserList";
-import { PendingUserList } from "./PendingUsers/PendingUserList";
+import { Account } from "./Account";
+import { RegionList } from "./Regions";
+import { EstateList } from './Estates';
+import { GroupList } from './Groups';
+import { HostList } from './Hosts';
+import { UserList } from "./Users";
+import { PendingUserList } from "./PendingUsers";
 
 interface authenticatedProps {
     dispatch: (a: Action) => void,

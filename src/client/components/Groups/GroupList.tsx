@@ -2,7 +2,7 @@ import * as React from "react";
 import { Action } from "redux";
 import { Map, Set } from 'immutable';
 
-import { Group, Role } from '../../redux/model';
+import { Group, Role } from '.';
 import { GroupView } from './GroupView'
 
 import { Grid, Row, Col } from 'react-bootstrap';

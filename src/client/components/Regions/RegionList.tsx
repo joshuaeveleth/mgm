@@ -3,7 +3,8 @@ import { Action } from 'redux';
 import { Map } from 'immutable';
 
 import { RegionView } from './RegionView';
-import { Region, Estate } from '../../redux/model';
+import { Estate } from '../Estates';
+import { Region } from '.';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 

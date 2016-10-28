@@ -4,9 +4,10 @@ import { Map } from 'immutable';
 
 import { createStore, applyMiddleware, Store } from 'redux'
 
-import { Auth, StateModel, User } from "./redux/model";
+import { Auth, StateModel } from "./redux/model";
+import { User } from './components/Users';
 
-import reducer from "./redux/reducers";
+import reducer from "./redux/reducer";
 import { createNavigateToAction, createLoginAction } from "./redux/actions"
 
 //create the redux store, using our websocket middleware for MGM async

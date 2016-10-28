@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Job } from '../../redux/model';
+import { Job } from '.';
 
 import { Row, Col } from 'react-bootstrap'
 

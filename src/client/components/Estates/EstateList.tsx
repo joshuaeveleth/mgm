@@ -2,8 +2,9 @@ import * as React from "react";
 import { Action } from "redux";
 import { Map, Set } from 'immutable';
 
-import { createRequestCreateEstateAction } from '../../redux/actions';
-import { Estate, User } from '../../redux/model'
+import { RequestCreateEstate } from '../../mgmMiddleware';
+import { Estate } from '.'
+import { User } from '../Users';
 
 import { EstateView } from './EstateView';
 
@@ -38,7 +39,7 @@ export class EstateList extends React.Component<props, {}> {
     onNewEstate(name: string, owner: string) {
         console.log(owner);
         console.log(name);
-        this.props.dispatch(createRequestCreateEstateAction(name, owner));
+        RequestCreateEstate(name, owner);
         this.setState({
             showAdd: false
         })

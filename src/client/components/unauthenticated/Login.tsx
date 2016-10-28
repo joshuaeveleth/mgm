@@ -4,7 +4,7 @@ import { Action } from 'redux'
 import { Splash } from "../Splash";
 
 import { createLoginAction } from '../../redux/actions';
-import { User } from '../../redux/model';
+import { User } from '../Users';
 
 import { Form, FormGroup, FormControl, ControlLabel, Button, Alert } from "react-bootstrap"
 

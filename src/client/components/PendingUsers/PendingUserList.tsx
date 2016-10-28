@@ -2,7 +2,7 @@ import * as React from "react";
 import { Action } from 'redux';
 import { Map } from 'immutable';
 
-import { PendingUser } from '../../redux/model';
+import { PendingUser } from '.';
 import { PendingUserView } from './PendingUserView';
 
 import { Grid, Row, Col } from 'react-bootstrap';
