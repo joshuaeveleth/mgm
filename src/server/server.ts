@@ -10,16 +10,18 @@ import * as bodyParser from 'body-parser'
 
 var conf = require('../../settings.js');
 
-import { Sql } from './mysql';
+import { PersistanceLayer } from './database';
 import { Auth, Detail } from './auth';
-import { handleClient } from './client';
+
+import { ClientManager } from './ClientManager';
+import { Client } from './Client';
 
 //connect to the databases
-let mgmDB = Sql.connectMGM(conf.mgm.db);
-let halcyonDB = Sql.connectHalcyon(conf.halcyon.db);
+let db = new PersistanceLayer(conf.mgm.db, conf.halcyon.db);
 
 //initialize singletons
-new Auth(halcyonDB, conf.mgm.tokenKey, conf.halcyon.user_server);
+let auth = new Auth(db, conf.mgm.tokenKey, conf.halcyon.user_server);
+let cm = new ClientManager(db);
 
 let app = express();
 
@@ -29,7 +31,7 @@ app.use(bodyParser.urlencoded({
 
 //static file hosting optionally here
 
-app.post('/auth/login', bodyParser.json(), (req, res) => { Auth.instance().handleLogin(req, res) });
+app.post('/auth/login', bodyParser.json(), (req, res) => { auth.handleLogin(req, res) });
 
 let server = app.listen(3000, () => {
   console.log('mgm running on port 3000');
@@ -53,8 +55,8 @@ sio.sockets.on('connection', (sock: SocketIO.Socket) => {
       } else {
         sock.emit('authenticated');
 
-        //call client handler to wire up events
-        handleClient(sock, decoded, mgmDB, halcyonDB);
+        let c = new Client(sock, decoded);
+        cm.handleClient(c);
       }
     })
   })

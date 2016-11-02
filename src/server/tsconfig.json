@@ -9,22 +9,8 @@
     "noImplicitAny": false,
     "outDir": "../../dist"
   },
-  "filesGlob": [
-    "./**/*.ts"
-  ],
   "files": [
-    "./server.ts",
-    "./client.ts",
-    "./auth/index.ts",
-    "./auth/Credential.ts",
-    "./auth/HalcyonToken.ts",
-    "./mysql/index.ts",
-    "./mysql/models/halcyon/users.ts",
-    "./mysql/models/mgm/hosts.ts",
-    "./mysql/models/mgm/regions.ts",
-    "./mysql/models/halcyon/osgroup.ts",
-    "./mysql/models/halcyon/osrole.ts",
-    "./mysql/models/halcyon/osgroupmembership.ts"
+    "./server.ts"
   ],
   "atom": {
     "rewriteTsconfig": true

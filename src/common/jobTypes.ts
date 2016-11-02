@@ -1,4 +1,4 @@
 
 export const JobTypes = {
-  SetMyPassword: 'SetMyPassword'
+  SetMyPassword: 'SetPassword'
 }

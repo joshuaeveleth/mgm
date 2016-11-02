@@ -1,5 +1,5 @@
 
-import { HALCYONDB, UserInstance } from '../mysql';
+import { PersistanceLayer, UserInstance } from '../database';
 import { Credential } from './Credential';
 import { HalcyonToken } from './HalcyonToken';
 
@@ -12,39 +12,24 @@ export interface Detail {
 }
 
 export class Auth {
-  private static _instance: Auth = null;
 
-  private db: HALCYONDB;
+  private db: PersistanceLayer;
   private tokenKey: string;
   private userServerURI: string;
 
-  constructor(db: HALCYONDB, tokenKey: string, userServerURI: string) {
-    if (Auth._instance) {
-      throw new Error('Auth singleton has already been initialized');
-    }
+  constructor(db: PersistanceLayer, tokenKey: string, userServerURI: string) {
     this.db = db;
     this.tokenKey = tokenKey;
     this.userServerURI = userServerURI;
-    Auth._instance = this;
-  }
-
-  public static instance(): Auth {
-    return Auth._instance;
   }
 
   public handleLogin(req, res) {
     let auth = JSON.parse(req.body.payload);
     let username: string = auth.username || '';
     let password: string = auth.password || '';
-    let nameParts = username.split(' ');
     let candidateUser: UserInstance = null;
     //check if user exists
-    this.db.users.findOne({
-      where: {
-        username: nameParts[0],
-        lastname: nameParts[1]
-      }
-    }).then((u: UserInstance) => {
+    this.db.Users.getByName(username).then((u: UserInstance) => {
       if (!u) throw new Error('Account does not exist');
       candidateUser = u;
     }).then(() => {

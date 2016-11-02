@@ -9,7 +9,7 @@ export interface JobAttribute {
 }
 
 export interface JobInstance extends Sequelize.Instance<JobAttribute>, JobAttribute {
-
+  
 }
 
 export interface JobModel extends Sequelize.Model<JobInstance, JobAttribute> {

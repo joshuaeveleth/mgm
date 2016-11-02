@@ -1,5 +1,5 @@
 
-/// <reference path="../../../typings/index.d.ts" />
+/// <reference path="../../../../typings/index.d.ts" />
 
 import * as Sequelize from 'sequelize';
 
@@ -22,15 +22,20 @@ import { estate_users, EstateUserInstance, EstateUserAttribute } from './models/
 
 import { jobs, JobInstance, JobAttribute } from './models/mgm/jobs';
 
-export { UserInstance } from './models/halcyon/users';
-export { JobInstance } from './models/mgm/jobs';
-export { HostInstance } from './models/mgm/hosts';
-export { EstateInstance } from './models/halcyon/estate_settings';
-export { ManagerInstance } from './models/halcyon/estate_managers';
-export { EstateMapInstance } from './models/halcyon/estate_map';
-export { GroupInstance } from './models/halcyon/osgroup';
-export { PendingUserInstance } from './models/mgm/users';
-export { MembershipInstance } from './models/halcyon/osgroupmembership';
+export { UserInstance, UserAttribute } from './models/halcyon/users';
+export { JobInstance, JobAttribute } from './models/mgm/jobs';
+export { HostInstance, HostAttribute } from './models/mgm/hosts';
+export { EstateInstance, EstateAttribute } from './models/halcyon/estate_settings';
+export { ManagerInstance, ManagerAttribute } from './models/halcyon/estate_managers';
+export { EstateMapInstance, EstateMapAttribute } from './models/halcyon/estate_map';
+export { EstateBanInstance, EstateBanAttribute } from './models/halcyon/estateban';
+export { EstateGroupInstance, EstateGroupAttribute } from './models/halcyon/estate_groups';
+export { EstateUserInstance, EstateUserAttribute } from './models/halcyon/estate_users';
+export { GroupInstance, GroupAttribute } from './models/halcyon/osgroup';
+export { RoleInstance, RoleAttribute } from './models/halcyon/osrole';
+export { MembershipInstance, MembershipAttribute } from './models/halcyon/osgroupmembership';
+export { PendingUserInstance, PendingUserAttribute } from './models/mgm/users';
+export { RegionInstance, RegionAttribute } from './models/mgm/regions';
 
 export interface Config {
   host: string
