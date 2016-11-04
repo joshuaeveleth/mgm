@@ -6,6 +6,12 @@ While Halcyon supports oar files, not everything works perfectly.
 
 Halcyon does not support IAR files at this time, and there is no workaround.
 
+# Working
+Connect and run mgmNode against this instance.  Log into this instance.  Basic region and estate management.
+
+# Not Working
+Assign region to a host.  Start/Stop region.  Content Management.  React do-not-render shortcuts on immutable updates.
+
 # Upgrading
 
 This branch does not perform any MySQL migration, use at your own risk.
