@@ -3,6 +3,8 @@ import { Action, Dispatch, Middleware, Store } from 'redux';
 import * as io from "socket.io-client";
 import * as Promise from "bluebird";
 
+import { Connection } from './Connection';
+
 import {
   createSetAuthErrorMessageAction,
   createLogoutAction,
@@ -23,7 +25,7 @@ import { Role, Group, CreateGroupAction, CreateMemberAction, CreateRoleAction } 
 import { PendingUser, UpsertPendingUserAction } from '../components/PendingUsers';
 import { Job, UpsertJobAction } from '../components/Account';
 
-let sock: SocketIOClient.Socket = null;
+
 
 interface SockJwtError {
   message: string
@@ -35,73 +37,73 @@ interface SockJwtError {
 }
 
 function handleSocket(store: Store<StateModel>) {
-  sock.on(MessageTypes.ADD_JOB, (j: IJob) => {
+  Connection.instance().sock.on(MessageTypes.ADD_JOB, (j: IJob) => {
     store.dispatch(UpsertJobAction(new Job(j)));
   })
 
-  sock.on(MessageTypes.ADD_HOST, (h: IHost) => {
+  Connection.instance().sock.on(MessageTypes.ADD_HOST, (h: IHost) => {
     store.dispatch(UpsertHostAction(new Host(h)));
   })
-  sock.on(MessageTypes.HOST_DELETED, (id: number) => {
+  Connection.instance().sock.on(MessageTypes.HOST_DELETED, (id: number) => {
     store.dispatch(HostDeletedAction(id));
   })
 
-  sock.on(MessageTypes.ADD_REGION, (r: IRegion) => {
+  Connection.instance().sock.on(MessageTypes.ADD_REGION, (r: IRegion) => {
     store.dispatch(UpsertRegionAction(new Region(r)));
   })
 
-  sock.on(MessageTypes.ADD_USER, (u: IUser) => {
+  Connection.instance().sock.on(MessageTypes.ADD_USER, (u: IUser) => {
     store.dispatch(UpsertUserAction(new User(u)));
   })
 
-  sock.on(MessageTypes.ADD_PENDING_USER, (u: IPendingUser) => {
+  Connection.instance().sock.on(MessageTypes.ADD_PENDING_USER, (u: IPendingUser) => {
     store.dispatch(UpsertPendingUserAction(new PendingUser(u)));
   });
 
 
-  sock.on(MessageTypes.ADD_GROUP, (group: IGroup) => {
+  Connection.instance().sock.on(MessageTypes.ADD_GROUP, (group: IGroup) => {
     store.dispatch(CreateGroupAction(new Group(group)));
   })
-  sock.on(MessageTypes.ADD_ROLE, (role: IRole) => {
+  Connection.instance().sock.on(MessageTypes.ADD_ROLE, (role: IRole) => {
     store.dispatch(CreateRoleAction(new Role(role)));
   })
-  sock.on(MessageTypes.ADD_MEMBER, (member: IMembership) => {
+  Connection.instance().sock.on(MessageTypes.ADD_MEMBER, (member: IMembership) => {
     store.dispatch(CreateMemberAction(member));
   })
 
-  sock.on(MessageTypes.ADD_ESTATE, (estate: IEstate) => {
+  Connection.instance().sock.on(MessageTypes.ADD_ESTATE, (estate: IEstate) => {
     store.dispatch(UpsertEstateAction(new Estate(estate)));
   })
-  sock.on(MessageTypes.ESTATE_DELETED, (id: number) => {
+  Connection.instance().sock.on(MessageTypes.ESTATE_DELETED, (id: number) => {
     store.dispatch(EstateDeletedAction(id));
   })
 
-  sock.on(MessageTypes.ADD_MANAGER, (manager: IManager) => {
+  Connection.instance().sock.on(MessageTypes.ADD_MANAGER, (manager: IManager) => {
     store.dispatch(CreateManagerAction(manager));
   })
-  sock.on(MessageTypes.ADD_REGION_ESTATE, (region: IEstateMap) => {
+  Connection.instance().sock.on(MessageTypes.ADD_REGION_ESTATE, (region: IEstateMap) => {
     store.dispatch(AssignRegionEstateAction(region));
   })
 
-  sock.on(MessageTypes.HOST_STATUS, (id:number, stat: IHostStat) => {
+  Connection.instance().sock.on(MessageTypes.HOST_STATUS, (id:number, stat: IHostStat) => {
     store.dispatch(UpsertHostStatAction(id, new HostStat(stat)));
   })
 
-  sock.on(MessageTypes.REGION_STATUS, (stat: IRegionStat) => {
+  Connection.instance().sock.on(MessageTypes.REGION_STATUS, (stat: IRegionStat) => {
     store.dispatch(UpsertRegionStatAction(new RegionStat(stat)));
   })
 }
 
 function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    sock = io.connect({
+    Connection.instance().sock = io.connect({
       reconnection: false
     });
-    sock.on('connect_error', () => {
+    Connection.instance().sock.on('connect_error', () => {
       reject(new Error('Cannot connect to MGM socket server'));
     });
-    sock.on('connect', () => {
-      sock
+    Connection.instance().sock.on('connect', () => {
+      Connection.instance().sock
         .emit('authenticate', jwt)
         .on('authenticated', () => {
           //we are token-authenticated and ready to roll
@@ -116,15 +118,9 @@ function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
   });
 }
 
-function closeSocket() {
-  if (sock && sock.connected)
-    sock.close();
-  sock = null;
-}
-
 function setMyPassword(action: Action) {
   let act = <MyPasswordAction>action;
-  sock.emit(MessageTypes.SET_OWN_PASSWORD, act.password, (success: boolean, message: string) => {
+  Connection.instance().sock.emit(MessageTypes.SET_OWN_PASSWORD, act.password, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Password Updated Successfully');
     } else {
@@ -134,7 +130,7 @@ function setMyPassword(action: Action) {
 }
 
 export function RequestCreateHost(address: string) {
-  sock.emit(MessageTypes.REQUEST_CREATE_HOST, address, (success: boolean, message: string) => {
+  Connection.instance().sock.emit(MessageTypes.REQUEST_CREATE_HOST, address, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Host ' + address + ' added');
     } else {
@@ -144,7 +140,7 @@ export function RequestCreateHost(address: string) {
 }
 
 export function RequestDeleteHost(host: Host) {
-  sock.emit(MessageTypes.REQUEST_DELETE_HOST, host.id, (success: boolean, message: string) => {
+  Connection.instance().sock.emit(MessageTypes.REQUEST_DELETE_HOST, host.id, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Host ' + host.address + ' removed');
     } else {
@@ -154,7 +150,7 @@ export function RequestDeleteHost(host: Host) {
 }
 
 export function RequestCreateEstate(name: string, owner: string) {
-  sock.emit(MessageTypes.REQUEST_CREATE_ESTATE, name, owner, (success: boolean, message: string) => {
+  Connection.instance().sock.emit(MessageTypes.REQUEST_CREATE_ESTATE, name, owner, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Estate ' + name + ' created');
     } else {
@@ -164,7 +160,7 @@ export function RequestCreateEstate(name: string, owner: string) {
 }
 
 export function RequestDeleteEstate(e: Estate) {
-  sock.emit(MessageTypes.REQUEST_DELETE_ESTATE, e.EstateID, (success: boolean, message: string) => {
+  Connection.instance().sock.emit(MessageTypes.REQUEST_DELETE_ESTATE, e.EstateID, (success: boolean, message: string) => {
     if (success) {
       alertify.success('Estate ' + e.EstateName + ' deleted');
     } else {
@@ -191,7 +187,7 @@ export const MGM = (store: Store<StateModel>) => (next: Dispatch<StateModel>) =>
       })
       break;
     case APP_LOGOUT:
-      closeSocket();
+      Connection.instance().closeSocket();
       next(action);
       break;
     case APP_CHANGE_PASSWORD:
