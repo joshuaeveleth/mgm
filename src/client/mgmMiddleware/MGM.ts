@@ -12,20 +12,19 @@ import {
   MyPasswordAction,
 } from '../redux/actions';
 
-import { IHost, IRegion, IUser, IPendingUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob,
-  IHostStat, IRegionStat } from '../../common/messages'
+import { IHost, IRegion, IUser, IPendingUser, IGroup, IRole, IMembership, IJob, IHostStat, IRegionStat } from '../../common/messages'
 import { Auth, StateModel } from '../redux/model'
 import { MessageTypes } from '../../common/MessageTypes';
 
 import { User, UpsertUserAction } from '../components/Users';
 import { Region, UpsertRegionAction, RegionStat, UpsertRegionStatAction } from '../components/Regions';
 
-import { Estate, UpsertEstateAction, EstateDeletedAction, CreateManagerAction, AssignRegionEstateAction } from '../components/Estates';
 import { Role, Group, CreateGroupAction, CreateMemberAction, CreateRoleAction } from '../components/Groups'
 import { PendingUser, UpsertPendingUserAction } from '../components/PendingUsers';
 import { Job, UpsertJobAction } from '../components/Account';
 
 import { handleHostMessages } from './Host';
+import { handleEstateMessages } from './Estate';
 
 interface SockJwtError {
   message: string
@@ -64,20 +63,6 @@ function handleSocket(store: Store<StateModel>) {
     store.dispatch(CreateMemberAction(member));
   })
 
-  Connection.instance().sock.on(MessageTypes.ADD_ESTATE, (estate: IEstate) => {
-    store.dispatch(UpsertEstateAction(new Estate(estate)));
-  })
-  Connection.instance().sock.on(MessageTypes.ESTATE_DELETED, (id: number) => {
-    store.dispatch(EstateDeletedAction(id));
-  })
-
-  Connection.instance().sock.on(MessageTypes.ADD_MANAGER, (manager: IManager) => {
-    store.dispatch(CreateManagerAction(manager));
-  })
-  Connection.instance().sock.on(MessageTypes.ADD_REGION_ESTATE, (region: IEstateMap) => {
-    store.dispatch(AssignRegionEstateAction(region));
-  })
-
   Connection.instance().sock.on(MessageTypes.REGION_STATUS, (stat: IRegionStat) => {
     store.dispatch(UpsertRegionStatAction(new RegionStat(stat)));
   })
@@ -100,6 +85,7 @@ function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
           resolve();
           handleSocket(store);
           handleHostMessages(store);
+          handleEstateMessages(store);
         })
         .on('unauthorized', (error: SockJwtError) => {
           reject(new Error('Token expired, please log in again'));
@@ -117,26 +103,6 @@ function setMyPassword(action: Action) {
       alertify.error('Could not set password: ' + message);
     }
   });
-}
-
-export function RequestCreateEstate(name: string, owner: string) {
-  Connection.instance().sock.emit(MessageTypes.REQUEST_CREATE_ESTATE, name, owner, (success: boolean, message: string) => {
-    if (success) {
-      alertify.success('Estate ' + name + ' created');
-    } else {
-      alertify.error('Could not create estate ' + name + ': ' + message);
-    }
-  })
-}
-
-export function RequestDeleteEstate(e: Estate) {
-  Connection.instance().sock.emit(MessageTypes.REQUEST_DELETE_ESTATE, e.EstateID, (success: boolean, message: string) => {
-    if (success) {
-      alertify.success('Estate ' + e.EstateName + ' deleted');
-    } else {
-      alertify.error('Could not delete estate ' + e.EstateName + ': ' + message);
-    }
-  })
 }
 
 import { APP_LOGIN, APP_LOGOUT, APP_CHANGE_PASSWORD} from '../redux/actions';
