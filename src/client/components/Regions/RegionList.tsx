@@ -58,10 +58,9 @@ export class RegionList extends React.Component<props, {}> {
         return (
             <Grid>
                 <Row>
-                    <Col md={3}>Name</Col>
-                    <Col md={3}>Position</Col>
-                    <Col md={3}>Estate</Col>
-                    <Col md={3}>Host</Col>
+                    <Col md={2}>Name</Col>
+                    <Col md={2}>Estate</Col>
+                    <Col md={1}>Controls</Col>
                 </Row>
                 {regions}
                 { this.state.showManage ? <ManageModal dismiss={this.dismissManage.bind(this)} region={this.state.selectedRegion}/> : <span />}

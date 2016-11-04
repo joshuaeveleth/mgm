@@ -13,16 +13,19 @@ interface regionProps {
 
 export class RegionView extends React.Component<regionProps, {}> {
 
+  start(){
+    alertify.log('Start Region not implemented yet');
+  }
+
   render() {
     return (
       <Row>
-        <Col md={1}><Button bsSize='xsmall' onClick={this.props.onManage} >
-          <i className="fa fa-cog" aria-hidden="true"></i>
-        </Button></Col>
-        <Col md={2}>{this.props.region.name}</Col>
-        <Col md={3}>X: {this.props.region.locX}Y: {this.props.region.locY}</Col>
-        <Col md={3}>{this.props.estate ? this.props.estate.EstateName : '~'}</Col>
-        <Col md={3}>{this.props.region.slaveAddress}</Col>
+        <Col md={2}><i className="fa fa-cog" aria-hidden="true" onClick={this.props.onManage}></i>   {this.props.region.name}</Col>
+        <Col md={2}>{this.props.estate ? this.props.estate.EstateName : '~'}</Col>
+        <Col md={1}>
+          <i className="fa fa-play" aria-hidden="true" onClick={this.start.bind(this)}></i>
+        </Col>
+        <Col md={7}> ~~ performance view ~~ </Col>
       </Row>
     )
   }
