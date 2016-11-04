@@ -21,10 +21,6 @@ typings install
 typings install
 npm install
 cp settings.js.example settings.js && vim settings.js
-gulp && node dist/mgm.js
-
-to manually create users on the command line:
-node dist/cli.js createUser FNAME LNAME PASSWORD [EMAIL] [GODLEVEL]
 
 Initialize the mgm database by applying the sql files under doc in order.
 
@@ -40,16 +36,6 @@ npm run build-server
 
 This mgm installation is written against a similar branch for mgmNode, which has been rolled back to tag 1.0 for better windows support and to undo all python twisted modifications.
 
-This node application should be behind an nginx instance that serves the contents of the html folder, and proxies all calls for the router /server to the node process.
-
-bots.ts/bots.js
-this is a simple script to create/delete a lot of bots.  It operates over a text file called users.txt, which is composed of a series of json records, one per line.  The records should take the form:
-
-{
-  fname: 'firstName',
-  lname: 'lastName',
-  password: 'desiredPassword',
-  email: 'emailAddress'
-}
+This node application should be behind an nginx instance that serves the contents of the html folder, and proxies calls to the node application.
 
 Note that unlike on simiangrid, emailAddresses do not need to be unique.
