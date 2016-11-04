@@ -74,8 +74,7 @@ export const RegionsReducer = function(state = Map<string, Region>(), action: Ac
   switch (action.type) {
     case UPSERT_REGION:
       let act = <UpsertRegion>action;
-      let r = state.get(act.region.uuid) || act.region;
-      return state.set(act.region.uuid, r);
+      return state.set(act.region.uuid, act.region);
     default:
       return state;
   }
