@@ -3,14 +3,16 @@ import { Action } from 'redux';
 import { Map } from 'immutable';
 
 import { RequestDeleteHost } from '../../mgmMiddleware'
-import { Host } from '.'
+import { Host, HostStat } from '.'
 import { Region } from '../Regions';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
+import { HostStatView } from './HostStatView';
 
 interface props {
   dispatch: (a: Action) => void,
   host: Host
+  status: HostStat
   regions: Map<string, Region>
 }
 
@@ -38,13 +40,10 @@ export class HostView extends React.Component<props, {}> {
     })
     return (
       <Row>
-        <Col md={1}><Button bsSize='xsmall' onClick={this.onRemoveHost.bind(this)} >
-          <i className="fa fa-trash" aria-hidden="true"></i>
-        </Button></Col>
-        <Col md={3}>{this.props.host.name}</Col>
-        <Col md={3}>{this.props.host.address}</Col>
+        <Col md={2}><i className="fa fa-trash" aria-hidden="true" onClick={this.onRemoveHost.bind(this)}></i>   {this.props.host.name}</Col>
+        <Col md={1}>{this.props.host.address}</Col>
         <Col md={1}>{regionCount}</Col>
-        <Col md={4}>~~performance~~</Col>
+        <Col md={8}><HostStatView status={this.props.status} /></Col>
       </Row>
     )
   }

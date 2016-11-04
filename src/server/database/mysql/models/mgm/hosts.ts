@@ -5,6 +5,7 @@ export interface HostAttribute {
   address: string
   name?: string
   port?: number
+  slots?: number
   status: string
 }
 

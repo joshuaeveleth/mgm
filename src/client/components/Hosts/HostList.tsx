@@ -3,7 +3,7 @@ import { Action } from 'redux';
 import { Map } from 'immutable';
 
 import { RequestCreateHost } from '../../mgmMiddleware';
-import { Host } from '.';
+import { Host, HostStat } from '.';
 import { Region } from '../Regions';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
@@ -14,6 +14,7 @@ import { HostAddModal } from './HostAdd';
 interface props {
     dispatch: (a: Action) => void,
     hosts: Map<number,Host>
+    hostStats: Map<number, HostStat>
     regions: Map<string,Region>
 }
 
@@ -48,7 +49,7 @@ export class HostList extends React.Component<props, {}> {
 
     render() {
         let hosts = this.props.hosts.toList().map((h: Host) => {
-            return <HostView key={h.id} host={h} regions={this.props.regions} dispatch={this.props.dispatch} />
+            return <HostView key={h.id} host={h} status={this.props.hostStats.get(h.id)} regions={this.props.regions} dispatch={this.props.dispatch} />
         });
         let addHost = <span />
         if (this.state.showAdd) {
@@ -61,10 +62,10 @@ export class HostList extends React.Component<props, {}> {
         return (
             <Grid>
                 <Row>
-                    <Col md={3}>Name</Col>
-                    <Col md={3}>Address</Col>
+                    <Col md={2}>Name</Col>
+                    <Col md={1}>Address</Col>
                     <Col md={1}>Regions</Col>
-                    <Col md={4}>Performance</Col>
+                    <Col md={7}>Performance</Col>
                     <Col md={1}><Button onClick={this.showAddHost.bind(this) }>Add Host</Button></Col>
                 </Row>
                 { hosts }

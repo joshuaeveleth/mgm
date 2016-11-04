@@ -17,5 +17,7 @@ export const MessageTypes = {
   SET_OWN_PASSWORD: 'setOwnPassword',
   REQUEST_CREATE_HOST: 'requestCreateHost',
   REQUEST_DELETE_HOST: 'requestDeleteHost',
-  HOST_DELETED: 'hostDeleted'
+  HOST_DELETED: 'hostDeleted',
+  HOST_STATUS: 'hostStatus',
+  REGION_STATUS: 'regionStatus'
 }

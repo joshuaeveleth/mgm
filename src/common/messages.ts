@@ -77,3 +77,24 @@ export interface IJob {
   user: string
   data: string
 }
+
+export interface IHostStat {
+  memPercent: number
+  memKB: number
+  cpuPercent: number[]
+  timestamp: number
+  netSentPer: number
+  netRecvPer: number
+}
+
+export interface IRegionStat {
+  id: string
+  running: boolean
+  stats: {
+    timestamp: number
+    uptime: number
+    memPercent: number
+    memKB: number
+    cpuPercent: number
+  }
+}

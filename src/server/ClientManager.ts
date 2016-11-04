@@ -1,19 +1,25 @@
 import { Client } from './Client'
 import { PersistanceLayer } from './database'
 
-import { IHost, IRegion, IPendingUser, IUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob } from '../common/messages';
+import { IHost, IRegion, IPendingUser, IUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob,
+  IHostStat, IRegionStat } from '../common/messages';
 import { MessageTypes } from '../common/MessageTypes';
 import { JobTypes } from '../common/jobTypes';
 
-import { JobInstance } from './database';
+import { JobInstance, HostInstance } from './database';
 
 export class ClientManager {
   clients: { [key: string]: Client };
   database: PersistanceLayer
 
+  hostStats: { [key: number]: IHostStat }
+  regionStats: { [key: string]: IRegionStat }
+
   constructor(db: PersistanceLayer) {
     this.clients = {};
     this.database = db;
+    this.hostStats = {};
+    this.regionStats = {};
   }
 
 
@@ -101,6 +107,16 @@ export class ClientManager {
       users.map((user) => c.socket.emit(MessageTypes.ADD_PENDING_USER, user));
     })
 
+    //send current status
+    for(let id in this.hostStats){
+      c.socket.emit(MessageTypes.HOST_STATUS, parseInt(id), this.hostStats[id]);
+    }
+    for(let name in this.regionStats){
+      c.socket.emit(MessageTypes.REGION_STATUS, this.regionStats[name]);
+    }
+
+
+
   }
 
   private handleAdminUser(c: Client) {
@@ -143,6 +159,33 @@ export class ClientManager {
         cb(false, err.message);
       });
     });
+  }
 
+  hostUpdated(h: HostInstance) {
+    console.log('Received connection from node ' + h.address);
+    for (let id in this.clients) {
+      if (this.clients[id].godLevel >= 250) {
+        this.clients[id].socket.emit(MessageTypes.ADD_HOST, h);
+      }
+    }
+  }
+
+  hostStatus(h: HostInstance, stats: IHostStat) {
+    console.log('Updated stats from node ' + h.address);
+    this.hostStats[h.id] = stats;
+    for (let id in this.clients) {
+      if (this.clients[id].godLevel >= 250) {
+        this.clients[id].socket.emit(MessageTypes.HOST_STATUS, h.id, stats);
+      }
+    }
+  }
+
+  regionStatus(stats: IRegionStat) {
+    this.regionStats[stats.id] = stats;
+    for (let id in this.clients) {
+      if (this.clients[id].godLevel >= 250) {
+        this.clients[id].socket.emit(MessageTypes.REGION_STATUS, stats);
+      }
+    }
   }
 }

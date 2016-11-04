@@ -69,6 +69,7 @@ export class Auth {
         email: candidateUser.email,
         token: token
       }));
+      console.log('User ' + candidateUser.UUID + ' Successfully Authenticated')
     }).catch((err: Error) => {
       // An error blocked login somewhere, notify the client
       res.send(JSON.stringify({ Success: false, Message: err.message }));

@@ -13,6 +13,19 @@ export class Hosts {
     return this.db.findAll();
   }
 
+  getByAddress(address: string): Promise<HostInstance> {
+    return this.db.findAll({
+      where: {
+        address: address
+      }
+    }).then((hosts) => {
+      if(hosts.length == 0){
+        throw new Error('Host does not exist');
+      }
+      return hosts[0];
+    })
+  }
+
   create(address: string): Promise<HostInstance> {
     return this.db.create({
       address: address,

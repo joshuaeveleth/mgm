@@ -2,7 +2,9 @@
 import fs = require('fs');
 import * as path from "path";
 
-import { UUIDString } from '../../halcyon/UUID';
+function getShort(id: string): string {
+  return id.split('-').join('');
+}
 
 export class RegionLogs {
   private static _instance: RegionLogs = null;
@@ -29,23 +31,23 @@ export class RegionLogs {
     return RegionLogs._instance;
   }
 
-  append(region: UUIDString, lines: string[]): Promise<void> {
+  append(region: string, lines: string[]): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      fs.appendFile(path.join(this.dir, region.getShort()), lines.join(''), (err) => {
+      fs.appendFile(path.join(this.dir, getShort(region)), lines.join(''), (err) => {
         if (err) return reject(err);
         resolve();
       });
     });
   }
 
-  getFilePath(region: UUIDString): string {
-    return path.join(this.dir, region.getShort());
+  getFilePath(region: string): string {
+    return path.join(this.dir, getShort(region));
   }
 
-  read(region: UUIDString, offset: number): Promise<string[]> {
+  read(region: string, offset: number): Promise<string[]> {
     return new Promise<string[]>((resolve, reject) => {
       var lineReader = require('readline').createInterface({
-        input: require('fs').createReadStream(path.join(this.dir, region.getShort()))
+        input: require('fs').createReadStream(path.join(this.dir, getShort(region)))
       });
 
       let lineCount = 0;

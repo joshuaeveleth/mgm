@@ -16,6 +16,8 @@ import { Auth, Detail } from './auth';
 import { ClientManager } from './ClientManager';
 import { Client } from './Client';
 
+import { NodeHandler } from './node';
+
 //connect to the databases
 let db = new PersistanceLayer(conf.mgm.db, conf.halcyon.db);
 
@@ -33,6 +35,9 @@ app.use(bodyParser.urlencoded({
 
 app.post('/auth/login', bodyParser.json(), (req, res) => { auth.handleLogin(req, res) });
 
+// TODO: move node comms to a separate port
+app.use('/dispatch', NodeHandler(cm));
+
 let server = app.listen(3000, () => {
   console.log('mgm running on port 3000');
 });
@@ -41,21 +46,20 @@ let server = app.listen(3000, () => {
 let sio = io(server);
 
 sio.sockets.on('connection', (sock: SocketIO.Socket) => {
-  console.log('client connected');
   let timer = setTimeout(() => {
     sock.disconnect();
   }, 3000)
   sock.on('authenticate', (token: string) => {
     clearTimeout(timer);
-    console.log('authentication attempt received');
     jwt.verify(token, conf.mgm.tokenKey, {algorithms: ["HS256"]}, (err: Error, decoded: Detail) => {
       if(err){
         sock.emit('unauthorized', 'Could not decode token');
         sock.disconnect();
+        console.log('Connection failed, invalid token or handshake');
       } else {
         sock.emit('authenticated');
-
         let c = new Client(sock, decoded);
+        console.log('User ' + c.id + ' connected');
         cm.handleClient(c);
       }
     })

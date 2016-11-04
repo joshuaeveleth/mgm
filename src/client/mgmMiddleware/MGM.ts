@@ -10,13 +10,14 @@ import {
   MyPasswordAction,
 } from '../redux/actions';
 
-import { IHost, IRegion, IUser, IPendingUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob } from '../../common/messages'
+import { IHost, IRegion, IUser, IPendingUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob,
+  IHostStat, IRegionStat } from '../../common/messages'
 import { Auth, StateModel } from '../redux/model'
 import { MessageTypes } from '../../common/MessageTypes';
 
 import { User, UpsertUserAction } from '../components/Users';
 import { Region, UpsertRegionAction } from '../components/Regions';
-import { Host, UpsertHostAction, HostDeletedAction } from '../components/Hosts';
+import { Host, HostStat, UpsertHostStatAction, UpsertHostAction, HostDeletedAction } from '../components/Hosts';
 import { Estate, UpsertEstateAction, EstateDeletedAction, CreateManagerAction, AssignRegionEstateAction } from '../components/Estates';
 import { Role, Group, CreateGroupAction, CreateMemberAction, CreateRoleAction } from '../components/Groups'
 import { PendingUser, UpsertPendingUserAction } from '../components/PendingUsers';
@@ -80,6 +81,14 @@ function handleSocket(store: Store<StateModel>) {
   })
   sock.on(MessageTypes.ADD_REGION_ESTATE, (region: IEstateMap) => {
     store.dispatch(AssignRegionEstateAction(region));
+  })
+
+  sock.on(MessageTypes.HOST_STATUS, (id:number, stat: IHostStat) => {
+    store.dispatch(UpsertHostStatAction(id, new HostStat(stat)));
+  })
+
+  sock.on(MessageTypes.REGION_STATUS, (stat: IRegionStat) => {
+    console.log(stat);
   })
 }
 

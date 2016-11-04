@@ -143,6 +143,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         <HostList
                             dispatch={this.props.dispatch}
                             hosts={this.props.state.hosts}
+                            hostStats={this.props.state.hostStats}
                             regions={this.props.state.regions} />
                     </div>
                 )

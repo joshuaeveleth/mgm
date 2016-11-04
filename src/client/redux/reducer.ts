@@ -6,7 +6,7 @@ import { StateModel, Auth } from './model';
 
 import { UsersReducer } from '../components/Users';
 import { RegionsReducer } from '../components/Regions';
-import { HostsReducer } from '../components/Hosts';
+import { HostsReducer, HostStatReducer } from '../components/Hosts';
 import { EstatesReducer, ManagersReducer, EstateMapReducer } from '../components/Estates';
 import { GroupsReducer, MembersReducer, RolesReducer } from '../components/Groups';
 import { PendingUsersReducer } from '../components/PendingUsers';
@@ -64,6 +64,7 @@ export default function rootReducer(state = new StateModel(), action: Action): S
     .set('auth', auth(state.auth, action))
     .set('url', url(state.url, action))
     .set('hosts', HostsReducer(state.hosts, action))
+    .set('hostStats', HostStatReducer(state.hostStats, action))
     .set('regions', RegionsReducer(state.regions, action))
     .set('estateMap', EstateMapReducer(state.estateMap, action))
     .set('users', UsersReducer(state.users, action))
