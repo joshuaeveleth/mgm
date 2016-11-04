@@ -12,19 +12,19 @@ import {
   MyPasswordAction,
 } from '../redux/actions';
 
-import { IHost, IRegion, IUser, IPendingUser, IGroup, IRole, IMembership, IJob, IHostStat, IRegionStat } from '../../common/messages'
+import { IHost, IRegion, IUser, IPendingUser, IJob, IHostStat, IRegionStat } from '../../common/messages'
 import { Auth, StateModel } from '../redux/model'
 import { MessageTypes } from '../../common/MessageTypes';
 
 import { User, UpsertUserAction } from '../components/Users';
 import { Region, UpsertRegionAction, RegionStat, UpsertRegionStatAction } from '../components/Regions';
 
-import { Role, Group, CreateGroupAction, CreateMemberAction, CreateRoleAction } from '../components/Groups'
 import { PendingUser, UpsertPendingUserAction } from '../components/PendingUsers';
 import { Job, UpsertJobAction } from '../components/Account';
 
 import { handleHostMessages } from './Host';
 import { handleEstateMessages } from './Estate';
+import { handleGroupMessages } from './Group';
 
 interface SockJwtError {
   message: string
@@ -52,17 +52,6 @@ function handleSocket(store: Store<StateModel>) {
     store.dispatch(UpsertPendingUserAction(new PendingUser(u)));
   });
 
-
-  Connection.instance().sock.on(MessageTypes.ADD_GROUP, (group: IGroup) => {
-    store.dispatch(CreateGroupAction(new Group(group)));
-  })
-  Connection.instance().sock.on(MessageTypes.ADD_ROLE, (role: IRole) => {
-    store.dispatch(CreateRoleAction(new Role(role)));
-  })
-  Connection.instance().sock.on(MessageTypes.ADD_MEMBER, (member: IMembership) => {
-    store.dispatch(CreateMemberAction(member));
-  })
-
   Connection.instance().sock.on(MessageTypes.REGION_STATUS, (stat: IRegionStat) => {
     store.dispatch(UpsertRegionStatAction(new RegionStat(stat)));
   })
@@ -86,6 +75,7 @@ function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
           handleSocket(store);
           handleHostMessages(store);
           handleEstateMessages(store);
+          handleGroupMessages(store);
         })
         .on('unauthorized', (error: SockJwtError) => {
           reject(new Error('Token expired, please log in again'));
