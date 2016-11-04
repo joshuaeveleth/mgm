@@ -17,17 +17,20 @@ export class HostStatView extends React.Component<props, {}> {
   render() {
     if (!this.props.status)
       return <span>~ not connected to this instance ~</span>
+    let now = new Date().getTime()/1000;
+    if(now - this.props.status.timestamp > 60)
+      return <span>~ not connected to this instance ~</span>
 
     // convert to MiBps, these are also reversed from psutil for unknown reasons
     let upload = this.props.status.netSentPer / 1048576;
     let download = this.props.status.netRecvPer / 1048576;
     let mem = this.props.status.memKB / 1073741824;
-    let cpus = this.props.status.cpuPercent.map((p) => {
+    let cpus = this.props.status.cpuPercent.map((p, idx) => {
       let c = 255 - Math.floor((p / 100) * 255)
-      if (c > 255) c = 255;
+      if (c > 248) c = 248;
       if (c < 0) c = 0;
       let colorCode = c.toString(16);
-      return <i className="fa fa-square" aria-hidden="true" style={ {color: '#'+colorCode+colorCode+colorCode} }></i>
+      return <i key={idx} className="fa fa-square" aria-hidden="true" style={ {color: '#'+colorCode+colorCode+colorCode} }></i>
     });
 
     return (
