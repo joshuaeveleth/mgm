@@ -7,23 +7,21 @@ import { Connection } from './Connection';
 
 import {
   createSetAuthErrorMessageAction,
-  createLogoutAction,
+//  createLogoutAction,
   LoginAction,
   MyPasswordAction,
 } from '../redux/actions';
 
-import { IUser, IPendingUser, IJob } from '../../common/messages'
 import { Auth, StateModel } from '../redux/model'
 import { MessageTypes } from '../../common/MessageTypes';
-
-import { User, UpsertUserAction } from '../components/Users';
-import { PendingUser, UpsertPendingUserAction } from '../components/PendingUsers';
-import { Job, UpsertJobAction } from '../components/Account';
 
 import { handleHostMessages } from './Host';
 import { handleEstateMessages } from './Estate';
 import { handleGroupMessages } from './Group';
 import { handleRegionMessages} from './Region';
+import { handleJobMessages } from './Job';
+import { handleUserMessages } from './User';
+import { handlePendingUserMessages } from './PendingUser';
 
 interface SockJwtError {
   message: string
@@ -32,20 +30,6 @@ interface SockJwtError {
     message: string
     type: string
   }
-}
-
-function handleSocket(store: Store<StateModel>) {
-  Connection.instance().sock.on(MessageTypes.ADD_JOB, (j: IJob) => {
-    store.dispatch(UpsertJobAction(new Job(j)));
-  })
-
-  Connection.instance().sock.on(MessageTypes.ADD_USER, (u: IUser) => {
-    store.dispatch(UpsertUserAction(new User(u)));
-  })
-
-  Connection.instance().sock.on(MessageTypes.ADD_PENDING_USER, (u: IPendingUser) => {
-    store.dispatch(UpsertPendingUserAction(new PendingUser(u)));
-  });
 }
 
 function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
@@ -63,11 +47,13 @@ function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
           //we are token-authenticated and ready to roll
           console.log('client authenticated');
           resolve();
-          handleSocket(store);
           handleHostMessages(store);
           handleEstateMessages(store);
           handleGroupMessages(store);
           handleRegionMessages(store);
+          handleJobMessages(store);
+          handleUserMessages(store);
+          handlePendingUserMessages(store);
         })
         .on('unauthorized', (error: SockJwtError) => {
           reject(new Error('Token expired, please log in again'));
