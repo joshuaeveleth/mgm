@@ -19,13 +19,13 @@ import { MessageTypes } from '../../common/MessageTypes';
 
 import { User, UpsertUserAction } from '../components/Users';
 import { Region, UpsertRegionAction, RegionStat, UpsertRegionStatAction } from '../components/Regions';
-import { Host, HostStat, UpsertHostStatAction, UpsertHostAction, HostDeletedAction } from '../components/Hosts';
+
 import { Estate, UpsertEstateAction, EstateDeletedAction, CreateManagerAction, AssignRegionEstateAction } from '../components/Estates';
 import { Role, Group, CreateGroupAction, CreateMemberAction, CreateRoleAction } from '../components/Groups'
 import { PendingUser, UpsertPendingUserAction } from '../components/PendingUsers';
 import { Job, UpsertJobAction } from '../components/Account';
 
-
+import { handleHostMessages } from './Host';
 
 interface SockJwtError {
   message: string
@@ -39,13 +39,6 @@ interface SockJwtError {
 function handleSocket(store: Store<StateModel>) {
   Connection.instance().sock.on(MessageTypes.ADD_JOB, (j: IJob) => {
     store.dispatch(UpsertJobAction(new Job(j)));
-  })
-
-  Connection.instance().sock.on(MessageTypes.ADD_HOST, (h: IHost) => {
-    store.dispatch(UpsertHostAction(new Host(h)));
-  })
-  Connection.instance().sock.on(MessageTypes.HOST_DELETED, (id: number) => {
-    store.dispatch(HostDeletedAction(id));
   })
 
   Connection.instance().sock.on(MessageTypes.ADD_REGION, (r: IRegion) => {
@@ -85,10 +78,6 @@ function handleSocket(store: Store<StateModel>) {
     store.dispatch(AssignRegionEstateAction(region));
   })
 
-  Connection.instance().sock.on(MessageTypes.HOST_STATUS, (id:number, stat: IHostStat) => {
-    store.dispatch(UpsertHostStatAction(id, new HostStat(stat)));
-  })
-
   Connection.instance().sock.on(MessageTypes.REGION_STATUS, (stat: IRegionStat) => {
     store.dispatch(UpsertRegionStatAction(new RegionStat(stat)));
   })
@@ -110,6 +99,7 @@ function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
           console.log('client authenticated');
           resolve();
           handleSocket(store);
+          handleHostMessages(store);
         })
         .on('unauthorized', (error: SockJwtError) => {
           reject(new Error('Token expired, please log in again'));
@@ -127,26 +117,6 @@ function setMyPassword(action: Action) {
       alertify.error('Could not set password: ' + message);
     }
   });
-}
-
-export function RequestCreateHost(address: string) {
-  Connection.instance().sock.emit(MessageTypes.REQUEST_CREATE_HOST, address, (success: boolean, message: string) => {
-    if (success) {
-      alertify.success('Host ' + address + ' added');
-    } else {
-      alertify.error('Could not add host ' + address + ': ' + message);
-    }
-  })
-}
-
-export function RequestDeleteHost(host: Host) {
-  Connection.instance().sock.emit(MessageTypes.REQUEST_DELETE_HOST, host.id, (success: boolean, message: string) => {
-    if (success) {
-      alertify.success('Host ' + host.address + ' removed');
-    } else {
-      alertify.error('Could not remove host ' + host.address + ': ' + message);
-    }
-  })
 }
 
 export function RequestCreateEstate(name: string, owner: string) {

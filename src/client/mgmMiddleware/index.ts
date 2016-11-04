@@ -1,7 +1,7 @@
 export { 
   MGM,
-  RequestCreateHost,
-  RequestDeleteHost, 
   RequestCreateEstate, 
   RequestDeleteEstate 
 } from './MGM';
+
+export { RequestCreateHost, RequestDeleteHost } from './Host';
