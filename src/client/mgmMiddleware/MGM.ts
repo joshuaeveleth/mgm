@@ -12,19 +12,18 @@ import {
   MyPasswordAction,
 } from '../redux/actions';
 
-import { IHost, IRegion, IUser, IPendingUser, IJob, IHostStat, IRegionStat } from '../../common/messages'
+import { IUser, IPendingUser, IJob } from '../../common/messages'
 import { Auth, StateModel } from '../redux/model'
 import { MessageTypes } from '../../common/MessageTypes';
 
 import { User, UpsertUserAction } from '../components/Users';
-import { Region, UpsertRegionAction, RegionStat, UpsertRegionStatAction } from '../components/Regions';
-
 import { PendingUser, UpsertPendingUserAction } from '../components/PendingUsers';
 import { Job, UpsertJobAction } from '../components/Account';
 
 import { handleHostMessages } from './Host';
 import { handleEstateMessages } from './Estate';
 import { handleGroupMessages } from './Group';
+import { handleRegionMessages} from './Region';
 
 interface SockJwtError {
   message: string
@@ -40,10 +39,6 @@ function handleSocket(store: Store<StateModel>) {
     store.dispatch(UpsertJobAction(new Job(j)));
   })
 
-  Connection.instance().sock.on(MessageTypes.ADD_REGION, (r: IRegion) => {
-    store.dispatch(UpsertRegionAction(new Region(r)));
-  })
-
   Connection.instance().sock.on(MessageTypes.ADD_USER, (u: IUser) => {
     store.dispatch(UpsertUserAction(new User(u)));
   })
@@ -51,10 +46,6 @@ function handleSocket(store: Store<StateModel>) {
   Connection.instance().sock.on(MessageTypes.ADD_PENDING_USER, (u: IPendingUser) => {
     store.dispatch(UpsertPendingUserAction(new PendingUser(u)));
   });
-
-  Connection.instance().sock.on(MessageTypes.REGION_STATUS, (stat: IRegionStat) => {
-    store.dispatch(UpsertRegionStatAction(new RegionStat(stat)));
-  })
 }
 
 function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
@@ -76,6 +67,7 @@ function connectSocket(store: Store<StateModel>, jwt: string): Promise<void> {
           handleHostMessages(store);
           handleEstateMessages(store);
           handleGroupMessages(store);
+          handleRegionMessages(store);
         })
         .on('unauthorized', (error: SockJwtError) => {
           reject(new Error('Token expired, please log in again'));
