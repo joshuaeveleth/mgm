@@ -16,7 +16,7 @@ import { Auth, StateModel } from '../redux/model'
 import { MessageTypes } from '../../common/MessageTypes';
 
 import { User, UpsertUserAction } from '../components/Users';
-import { Region, UpsertRegionAction } from '../components/Regions';
+import { Region, UpsertRegionAction, RegionStat, UpsertRegionStatAction } from '../components/Regions';
 import { Host, HostStat, UpsertHostStatAction, UpsertHostAction, HostDeletedAction } from '../components/Hosts';
 import { Estate, UpsertEstateAction, EstateDeletedAction, CreateManagerAction, AssignRegionEstateAction } from '../components/Estates';
 import { Role, Group, CreateGroupAction, CreateMemberAction, CreateRoleAction } from '../components/Groups'
@@ -88,7 +88,7 @@ function handleSocket(store: Store<StateModel>) {
   })
 
   sock.on(MessageTypes.REGION_STATUS, (stat: IRegionStat) => {
-    console.log(stat);
+    store.dispatch(UpsertRegionStatAction(new RegionStat(stat)));
   })
 }
 

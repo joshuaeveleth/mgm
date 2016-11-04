@@ -109,6 +109,7 @@ export class Authenticated extends React.Component<authenticatedProps, {}> {
                         <RegionList
                             dispatch={this.props.dispatch}
                             regions={this.props.state.regions}
+                            regionStats={this.props.state.regionStats}
                             estateMap={this.props.state.estateMap}
                             estates={this.props.state.estates} />
                     </div>

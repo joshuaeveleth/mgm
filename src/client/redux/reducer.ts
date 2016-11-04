@@ -5,7 +5,7 @@ import { IMembership, IRole, IManager, IEstateMap } from '../../common/messages'
 import { StateModel, Auth } from './model';
 
 import { UsersReducer } from '../components/Users';
-import { RegionsReducer } from '../components/Regions';
+import { RegionsReducer, RegionStatsReducer } from '../components/Regions';
 import { HostsReducer, HostStatReducer } from '../components/Hosts';
 import { EstatesReducer, ManagersReducer, EstateMapReducer } from '../components/Estates';
 import { GroupsReducer, MembersReducer, RolesReducer } from '../components/Groups';
@@ -66,6 +66,7 @@ export default function rootReducer(state = new StateModel(), action: Action): S
     .set('hosts', HostsReducer(state.hosts, action))
     .set('hostStats', HostStatReducer(state.hostStats, action))
     .set('regions', RegionsReducer(state.regions, action))
+    .set('regionStats', RegionStatsReducer(state.regionStats, action))
     .set('estateMap', EstateMapReducer(state.estateMap, action))
     .set('users', UsersReducer(state.users, action))
     .set('pendingUsers', PendingUsersReducer(state.pendingUsers, action))

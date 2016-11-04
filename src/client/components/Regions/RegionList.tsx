@@ -4,7 +4,7 @@ import { Map } from 'immutable';
 
 import { RegionView } from './RegionView';
 import { Estate } from '../Estates';
-import { Region } from '.';
+import { Region, RegionStat } from '.';
 
 import { ManageModal } from './Manage';
 
@@ -13,6 +13,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 interface props {
     dispatch: (a: Action) => void,
     regions: Map<string, Region>,
+    regionStats: Map<string, RegionStat>,
     estateMap: Map<string, number>,
     estates: Map<number, Estate>
 }
@@ -51,6 +52,7 @@ export class RegionList extends React.Component<props, {}> {
             return <RegionView
                 key={r.uuid}
                 region={r}
+                status={this.props.regionStats.get(r.uuid)}
                 estate={e ? e : null}
                 onManage={this.onManageRegion.bind(this, r)} />
         })

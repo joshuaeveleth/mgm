@@ -1,3 +1,3 @@
 
 export { RegionList } from './RegionList'
-export { Region, UpsertRegionAction, RegionsReducer } from './RegionsRedux';
+export { Region, RegionStat, UpsertRegionAction, RegionsReducer, UpsertRegionStatAction, RegionStatsReducer } from './RegionsRedux';

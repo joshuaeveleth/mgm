@@ -1,7 +1,7 @@
 
 import { Map, Record, Set } from 'immutable';
 import { User } from '../components/Users';
-import { Region } from '../components/Regions';
+import { Region, RegionStat } from '../components/Regions';
 import { Host, HostStat } from '../components/Hosts';
 import { Estate } from '../components/Estates';
 import { Group, Role } from '../components/Groups';
@@ -42,6 +42,7 @@ export interface IStateModel {
   hosts: Map<number, Host>
   hostStats: Map<number, HostStat>
   regions: Map<string, Region>
+  regionStats: Map<string, RegionStat>
   estateMap: Map<string, number>
   users: Map<string, User>
   pendingUsers: Map<string, PendingUser>
@@ -59,6 +60,7 @@ const StateModelClass = Record({
   hosts: Map<number, Host>(),
   hostStats: Map<number, HostStat>(),
   regions: Map<string, Region>(),
+  regionStats: Map<string, RegionStat>(),
   estateMap: Map<string, number>(),
   users: Map<string, User>(),
   pendingUsers: Map<string, PendingUser>(),
@@ -76,6 +78,7 @@ export class StateModel extends StateModelClass implements IStateModel {
   hosts: Map<number, Host>
   hostStats: Map<number, HostStat>
   regions: Map<string, Region>
+  regionStats: Map<string, RegionStat>
   estateMap: Map<string, number>
   users: Map<string, User>
   pendingUsers: Map<string, PendingUser>
@@ -102,7 +105,8 @@ export class StateModel extends StateModelClass implements IStateModel {
       Map<string, Set<string>> |
       Map<number, Set<string>> |
       Map<number, Job> | 
-      Map<number, HostStat>
+      Map<number, HostStat> |
+      Map<string, RegionStat>
   ): StateModel {
     return <StateModel>super.set(key, value);
   }

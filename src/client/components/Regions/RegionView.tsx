@@ -1,12 +1,14 @@
 import * as React from "react";
 import { Store } from 'redux'
 import { Estate } from '../Estates';
-import { Region } from '.';
+import { Region, RegionStat } from '.';
 
 import { Grid, Row, Col, Button } from 'react-bootstrap';
+import { RegionStatView } from './RegionStatView';
 
 interface regionProps {
   region: Region,
+  status: RegionStat,
   estate: Estate,
   onManage: () => void
 }
@@ -25,7 +27,7 @@ export class RegionView extends React.Component<regionProps, {}> {
         <Col md={1}>
           <i className="fa fa-play" aria-hidden="true" onClick={this.start.bind(this)}></i>
         </Col>
-        <Col md={7}> ~~ performance view ~~ </Col>
+        <Col md={7}><RegionStatView status={this.props.status}/></Col>
       </Row>
     )
   }
