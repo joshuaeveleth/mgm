@@ -93,8 +93,7 @@ export const RegionStatsReducer = function(state = Map<string, RegionStat>(), ac
   switch (action.type) {
     case UPSERT_REGIONSTAT:
       let act = <UpsertRegionStat>action;
-      let r = state.get(act.status.id) || act.status;
-      return state.set(act.status.id, r);
+      return state.set(act.status.id, act.status);
     default:
       return state;
   }
