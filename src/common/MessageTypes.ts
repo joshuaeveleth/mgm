@@ -19,5 +19,6 @@ export const MessageTypes = {
   REQUEST_DELETE_HOST: 'requestDeleteHost',
   HOST_DELETED: 'hostDeleted',
   HOST_STATUS: 'hostStatus',
-  REGION_STATUS: 'regionStatus'
+  REGION_STATUS: 'regionStatus',
+  START_REGION: 'requestStartRegion'
 }

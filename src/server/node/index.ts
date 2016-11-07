@@ -51,37 +51,7 @@ export function NodeHandler(mgm: ClientManager): express.Router {
     }).catch((e: Error) => {
       console.log(e.stack);
       res.send(e.message);
-    })
-
-
-    /*HostMgr.instance().get(remoteIP).then((host: Host) => {
-      //this is from mgmNode, which isnt following the rules
-      let stats = JSON.parse(req.body.json);
-
-      let workers = [];
-      host.setStatus(stats.host);
-
-      let halted = 0;
-      let running = 0;
-      for (let proc of stats.processes) {
-        let w = RegionMgr.instance().getRegion(new UUIDString(proc.id)).then((r: Region) => {
-          if (proc.running.toUpperCase() === 'FALSE' ? false : true)
-            running++;
-          else
-            halted++;
-          r.setRunning(proc.running.toUpperCase() === 'FALSE' ? false : true);
-          r.setStats(proc.stats)
-        });
-        workers.push(w);
-      }
-
-      return Promise.all(workers).then(() => {
-        res.send('Stats recieved: ' + running + ' running processes, and ' + halted + ' halted processes');
-      });
-
-    }).catch((err: Error) => {
-      res.send(JSON.stringify({ Success: false, Message: err.message }));
-    });*/
+    });
   });
 
   router.post('/node', (req, res) => {
@@ -108,60 +78,59 @@ export function NodeHandler(mgm: ClientManager): express.Router {
     })
   });
 
-  // nodes do not ask for this, we give it to them with an order
-  //router.get('/region/:id', (req, res) => {
-  /*let uuid = new UUIDString(req.params.id);
-  //validate host
-  let remoteIP: string = req.ip.split(':').pop();
-  RegionMgr.instance().getRegion(uuid).then((r: Region) => {
-    if (r.getNodeAddress() === remoteIP) {
-      return r;
-    }
-    throw new Error('Requested region does not exist on the requesting host');
-  }).then((r: Region) => {
-    res.send(JSON.stringify({
-      Success: true,
-      Region: {
-        Name: r.getName(),
-        RegionUUID: r.getUUID().toString(),
-        LocationX: r.getX(),
-        LocationY: r.getY(),
-        InternalPort: r.getPort(),
-        ExternalHostName: r.getExternalAddress()
+  router.get('/region/:id', (req, res) => {
+    /*let uuid = new UUIDString(req.params.id);
+    //validate host
+    let remoteIP: string = req.ip.split(':').pop();
+    RegionMgr.instance().getRegion(uuid).then((r: Region) => {
+      if (r.getNodeAddress() === remoteIP) {
+        return r;
       }
-    }));
-  }).catch((err: Error) => {
-    res.send(JSON.stringify({ Success: false, Message: err.message }));
-    return;
-  });*/
-  //});
+      throw new Error('Requested region does not exist on the requesting host');
+    }).then((r: Region) => {
+      res.send(JSON.stringify({
+        Success: true,
+        Region: {
+          Name: r.getName(),
+          RegionUUID: r.getUUID().toString(),
+          LocationX: r.getX(),
+          LocationY: r.getY(),
+          InternalPort: r.getPort(),
+          ExternalHostName: r.getExternalAddress()
+        }
+      }));
+    }).catch((err: Error) => {
+      res.send(JSON.stringify({ Success: false, Message: err.message }));
+      return;
+    });*/
+  });
 
   // we give this information to the node when we request a start
-  //router.get('/process/:id', (req, res) => {
-  /*let uuid = new UUIDString(req.params.id);
-  let httpPort = req.query.httpPort;
-  let consolePort = req.query.consolePort;
-  let externalAddress = req.query.externalAddress;
-  //validate host
-  let remoteIP: string = req.ip.split(':').pop();
-  RegionMgr.instance().getRegion(uuid).then((r: Region) => {
-    if (r.getNodeAddress() === remoteIP) {
-      return r;
-    }
-    throw new Error('Requested region does not exist on the requesting host');
-  }).then((r: Region) => {
-    return r.setPort(httpPort);
-  }).then((r: Region) => {
-    return r.setExternalAddress(externalAddress);
-  }).then((r: Region) => {
-    return mgm.getRegionINI(r);
-  }).then((config: { [key: string]: { [key: string]: string } }) => {
-    res.send(JSON.stringify({ Success: true, Region: config }));
-  }).catch((err: Error) => {
-    res.send(JSON.stringify({ Success: false, Message: err.message }));
-    return;
-  });*/
-  //});
+  router.get('/process/:id', (req, res) => {
+    /*let uuid = new UUIDString(req.params.id);
+    let httpPort = req.query.httpPort;
+    let consolePort = req.query.consolePort;
+    let externalAddress = req.query.externalAddress;
+    //validate host
+    let remoteIP: string = req.ip.split(':').pop();
+    RegionMgr.instance().getRegion(uuid).then((r: Region) => {
+      if (r.getNodeAddress() === remoteIP) {
+        return r;
+      }
+      throw new Error('Requested region does not exist on the requesting host');
+    }).then((r: Region) => {
+      return r.setPort(httpPort);
+    }).then((r: Region) => {
+      return r.setExternalAddress(externalAddress);
+    }).then((r: Region) => {
+      return mgm.getRegionINI(r);
+    }).then((config: { [key: string]: { [key: string]: string } }) => {
+      res.send(JSON.stringify({ Success: true, Region: config }));
+    }).catch((err: Error) => {
+      res.send(JSON.stringify({ Success: false, Message: err.message }));
+      return;
+    });*/
+  });
 
   return router;
 }

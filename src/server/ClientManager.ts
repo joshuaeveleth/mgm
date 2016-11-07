@@ -1,12 +1,18 @@
 import { Client } from './Client'
 import { PersistanceLayer } from './database'
 
-import { IHost, IRegion, IPendingUser, IUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob,
-  IHostStat, IRegionStat } from '../common/messages';
+var urllib = require('urllib');
+
+import {
+  IHost, IRegion, IPendingUser, IUser, IGroup, IRole, IMembership, IEstate, IManager, IEstateMap, IJob,
+  IHostStat, IRegionStat
+} from '../common/messages';
 import { MessageTypes } from '../common/MessageTypes';
 import { JobTypes } from '../common/jobTypes';
 
 import { JobInstance, HostInstance } from './database';
+
+interface Callback { (success: boolean, message?: string): void }
 
 export class ClientManager {
   clients: { [key: string]: Client };
@@ -73,7 +79,7 @@ export class ClientManager {
   }
 
   private handleNormalUser(c: Client) {
-    c.socket.on(MessageTypes.SET_OWN_PASSWORD, (password: string, cb: (success: boolean, message?: string) => void) => {
+    c.socket.on(MessageTypes.SET_OWN_PASSWORD, (password: string, cb: Callback) => {
       let j: JobInstance
       console.log('user ' + c.id + ' is updating their password');
       return this.database.Jobs.create(JobTypes.SetMyPassword, c.id, JSON.stringify({ status: 'Pending' })).then((job) => {
@@ -108,19 +114,17 @@ export class ClientManager {
     })
 
     //send current status
-    for(let id in this.hostStats){
+    for (let id in this.hostStats) {
       c.socket.emit(MessageTypes.HOST_STATUS, parseInt(id), this.hostStats[id]);
     }
-    for(let name in this.regionStats){
+    for (let name in this.regionStats) {
       c.socket.emit(MessageTypes.REGION_STATUS, this.regionStats[name]);
     }
-
-
 
   }
 
   private handleAdminUser(c: Client) {
-    c.socket.on(MessageTypes.REQUEST_CREATE_HOST, (address: string, cb: (success: boolean, message?: string) => void) => {
+    c.socket.on(MessageTypes.REQUEST_CREATE_HOST, (address: string, cb: Callback) => {
       console.log('user ' + c.id + ' is adding host ' + address);
       this.database.Hosts.create(address).then((host) => {
         cb(true);
@@ -130,7 +134,7 @@ export class ClientManager {
       })
     })
 
-    c.socket.on(MessageTypes.REQUEST_DELETE_HOST, (id: number, cb: (success: boolean, message?: string) => void) => {
+    c.socket.on(MessageTypes.REQUEST_DELETE_HOST, (id: number, cb: Callback) => {
       console.log('user ' + c.id + ' is removing host ' + id);
       this.database.Hosts.destroy(id).then(() => {
         cb(true);
@@ -140,7 +144,7 @@ export class ClientManager {
       })
     });
 
-    c.socket.on(MessageTypes.REQUEST_CREATE_ESTATE, (name: string, owner: string, cb: (success: boolean, message?: string) => void) => {
+    c.socket.on(MessageTypes.REQUEST_CREATE_ESTATE, (name: string, owner: string, cb: Callback) => {
       console.log('user ' + c.id + ' is creating estate ' + name);
       this.database.Estates.create(name, owner).then((e) => {
         cb(true);
@@ -150,12 +154,35 @@ export class ClientManager {
       })
     });
 
-    c.socket.on(MessageTypes.REQUEST_DELETE_ESTATE, (estateID: number, cb: (success: boolean, message?: string) => void) => {
+    c.socket.on(MessageTypes.REQUEST_DELETE_ESTATE, (estateID: number, cb: Callback) => {
       console.log('user ' + c.id + ' is deleting estate ' + estateID);
       this.database.Estates.destroy(estateID).then(() => {
         cb(true);
         c.socket.emit(MessageTypes.ESTATE_DELETED, estateID);
       }).catch((err: Error) => {
+        cb(false, err.message);
+      });
+    });
+
+    c.socket.on(MessageTypes.START_REGION, (regionID: string, cb: Callback) => {
+      if (this.regionStats[regionID] && this.regionStats[regionID].running)
+        return cb(false, 'region is already running');
+
+      this.database.Regions.getByUUID(regionID).then((r) => {
+        if (!r.slaveAddress || r.slaveAddress === '')
+          throw new Error('Not assigned to a host');
+        return this.database.Hosts.getByAddress(r.slaveAddress);
+      }).then((h) => {
+        let url = 'http://' + h.address + ':' + h.port + '/start/' + regionID;
+        return urllib.request(url).then((body) => {
+          let result = JSON.parse(body.data);
+          if (!result.Success) {
+            throw new Error(result.Message);
+          }
+        });
+      }).then( () => {
+        cb(true);
+      }).catch( (err: Error) => {
         cb(false, err.message);
       });
     });

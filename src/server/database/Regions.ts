@@ -21,4 +21,16 @@ export class Regions {
       }
     })
   }
+
+  getByUUID(uuid: string): Promise<RegionInstance> {
+    return this.db.findAll({
+      where: {
+        uuid: uuid
+      }
+    }).then((regions) => {
+      if (regions.length == 0)
+        throw new Error('Region DNE');
+      return regions[0];
+    })
+  }
 }
