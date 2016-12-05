@@ -9,12 +9,12 @@ export class Freeswitch {
     this.idMap = {};
   }
 
-  config(body: any): string {
+  config(): string {
     let context = 'default';
     let realm = this.voiceIP;
     let sipProxy = realm;
     let attemptUseStun = false;
-    let echoServer = '';
+    let echoServer = this.voiceIP;
     let echoPort = 50505;
     let defaultTimeout = 5000;
     let resetUrl = '';
@@ -41,7 +41,10 @@ export class Freeswitch {
     let realm = this.voiceIP;
     let reqDomain = body.domain;
 
+    console.log(body);
+
     if (reqDomain !== realm) {
+      console.log('domain !== realm, returning empty');
       return '';
     }
 
@@ -109,20 +112,19 @@ export class Freeswitch {
 
   signin(body: any) {
     let userId = body.userid;
+    let pos = 0;
 
-    console.log(userId);
-
-    '<response xsi:schemaLocation=""/xsd/signin.xsd"">' +
+    return '<response xsi:schemaLocation="/xsd/signin.xsd">' +
     '<level0>' +
     '<status>OK</status>' +
     '<body>' +
     '<code>200</code>' +
     '<cookie_name>lib_session</cookie_name>' +
-    '<cookie>{0}:{1}:9303959503950::</cookie>' +
-    '<auth_token>{0}:{1}:9303959503950::</auth_token>' +
+    '<cookie>'+userId+':'+pos+':9303959503950::</cookie>' +
+    '<auth_token>'+userId+':'+pos+':9303959503950::</auth_token>' +
     '<primary>1</primary>' +
-    '<account_id>{1}</account_id>' +
-    '<displayname>{2}</displayname>' +
+    '<account_id>'+pos+'</account_id>' +
+    '<displayname>Johnny User</displayname>' +
     '<msg>auth successful</msg>' +
     '</body>' +
     '</level0>' +

@@ -10,7 +10,44 @@
     "outDir": "../../dist"
   },
   "files": [
-    "./server.ts"
+    "auth/Credential.ts",
+    "auth/HalcyonToken.ts",
+    "auth/index.ts",
+    "Client.ts",
+    "ClientManager.ts",
+    "database/Estates.ts",
+    "database/Groups.ts",
+    "database/Hosts.ts",
+    "database/index.ts",
+    "database/Jobs.ts",
+    "database/mysql/index.ts",
+    "database/mysql/models/halcyon/estate_groups.ts",
+    "database/mysql/models/halcyon/estate_managers.ts",
+    "database/mysql/models/halcyon/estate_map.ts",
+    "database/mysql/models/halcyon/estate_settings.ts",
+    "database/mysql/models/halcyon/estate_users.ts",
+    "database/mysql/models/halcyon/estateban.ts",
+    "database/mysql/models/halcyon/osgroup.ts",
+    "database/mysql/models/halcyon/osgroupmembership.ts",
+    "database/mysql/models/halcyon/osrole.ts",
+    "database/mysql/models/halcyon/users.ts",
+    "database/mysql/models/mgm/hosts.ts",
+    "database/mysql/models/mgm/jobs.ts",
+    "database/mysql/models/mgm/regions.ts",
+    "database/mysql/models/mgm/users.ts",
+    "database/PendingUsers.ts",
+    "database/Regions.ts",
+    "database/Users.ts",
+    "Freeswitch/Freeswitch.ts",
+    "Freeswitch/FreeswitchHandler.ts",
+    "Freeswitch/index.ts",
+    "node/index.ts",
+    "node/RegionLogs.ts",
+    "server.ts"
+  ],
+  "filesGlob": [
+    "**/*.ts",
+    "**/*/tsx"
   ],
   "atom": {
     "rewriteTsconfig": true

@@ -38,4 +38,4 @@ export class PersistanceLayer {
   }
 }
 
-export { Config, JobInstance, HostInstance, UserInstance } from './mysql';
+export { Config, JobInstance, HostInstance, UserInstance, RegionInstance } from './mysql';

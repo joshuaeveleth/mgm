@@ -17,6 +17,7 @@ import { ClientManager } from './ClientManager';
 import { Client } from './Client';
 
 import { NodeHandler } from './node';
+import { Freeswitch, FreeswitchHandler } from  './Freeswitch';
 
 //connect to the databases
 let db = new PersistanceLayer(conf.mgm.db, conf.halcyon.db);
@@ -37,6 +38,10 @@ app.post('/auth/login', bodyParser.json(), (req, res) => { auth.handleLogin(req,
 
 // TODO: move node comms to a separate port
 app.use('/dispatch', NodeHandler(cm));
+
+// freeswitch components
+let fs = new Freeswitch(conf.mgm.voiceIP);
+app.use('/fsapi', FreeswitchHandler(fs));
 
 let server = app.listen(3000, () => {
   console.log('mgm running on port 3000');

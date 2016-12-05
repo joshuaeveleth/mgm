@@ -2,8 +2,8 @@
 import * as express from 'express';
 
 import { ClientManager } from '../ClientManager';
-/*import { Region, RegionMgr } from '../Region';
-import { Host, HostMgr } from '../Host';
+import { RegionInstance } from '../database';
+/*import { Host, HostMgr } from '../Host';
 import { UUIDString } from '../../halcyon/UUID';*/
 import { RegionLogs } from './RegionLogs';
 import { IHostStat, IRegionStat } from '../../common/messages';
@@ -78,6 +78,7 @@ export function NodeHandler(mgm: ClientManager): express.Router {
     })
   });
 
+  // Regions.ini service
   router.get('/region/:id', (req, res) => {
     /*let uuid = new UUIDString(req.params.id);
     //validate host
@@ -105,31 +106,32 @@ export function NodeHandler(mgm: ClientManager): express.Router {
     });*/
   });
 
-  // we give this information to the node when we request a start
+  // Halcyon.ini service
   router.get('/process/:id', (req, res) => {
-    /*let uuid = new UUIDString(req.params.id);
+    let uuid = new req.params.id;
     let httpPort = req.query.httpPort;
     let consolePort = req.query.consolePort;
     let externalAddress = req.query.externalAddress;
     //validate host
     let remoteIP: string = req.ip.split(':').pop();
-    RegionMgr.instance().getRegion(uuid).then((r: Region) => {
-      if (r.getNodeAddress() === remoteIP) {
+    mgm.database.Regions.getByUUID(uuid).then((r: RegionInstance) => {
+      if (r.slaveAddress === remoteIP) {
         return r;
       }
       throw new Error('Requested region does not exist on the requesting host');
-    }).then((r: Region) => {
-      return r.setPort(httpPort);
-    }).then((r: Region) => {
-      return r.setExternalAddress(externalAddress);
-    }).then((r: Region) => {
-      return mgm.getRegionINI(r);
+    }).then((r: RegionInstance) => {
+      r.httpPort = httpPort;
+      r.externalAddress = externalAddress;
+      return r.save();
+    }).then((r: RegionInstance) => {
+      //return mgm.getRegionINI(r);
+      return {};
     }).then((config: { [key: string]: { [key: string]: string } }) => {
       res.send(JSON.stringify({ Success: true, Region: config }));
     }).catch((err: Error) => {
       res.send(JSON.stringify({ Success: false, Message: err.message }));
       return;
-    });*/
+    });
   });
 
   return router;
